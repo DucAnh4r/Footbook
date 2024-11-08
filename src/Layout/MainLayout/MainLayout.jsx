@@ -1,13 +1,20 @@
 import React from "react";
-import Header from "./Header";
+import { Layout } from "antd";
+import Header from "./Header"; // Your custom header component
+const { Sider, Content} = Layout; // Destructure from Layout
 
 const MainLayout = (props) => {
     return (
-        <>
-        <Header />
-        <div className="page-content">{props.children}</div>
-        </>
-
+        <Layout>
+            <Header>header</Header> {/* Custom Header */}
+            <Layout>
+                <Sider width={360} style={{ background: 'white' }}>left sidebar</Sider>
+                <Content>
+                    <div className="page-content">{props.children}</div>
+                </Content>
+                <Sider width={360} style={{ background: 'white' }}>right sidebar</Sider>
+            </Layout>
+        </Layout>
     );
 };
 
