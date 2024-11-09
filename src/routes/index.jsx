@@ -1,7 +1,7 @@
 import React, { Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 import { homeRoutes } from "./allRoutes";
-import MainLayout from "../Layout/MainLayout/MainLayout";
+import MainLayout from "../Layout/MainLayout";
 import ErrorPage from "../Pages/ExtendPage/ErrorPage";
 
 const Index = () => {
