@@ -1,0 +1,53 @@
+[
+    {
+      "name": "Neymar Jr",
+      "imageSrc": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjcb-QfSoa-xZIAYPz8b-ZJ0xIhb8SpXqeCQ&s",
+      "isOnline": true
+    },
+    {
+      "name": "Lionel Messi",
+      "imageSrc": "https://photo.znews.vn/w660/Uploaded/bpivpawv/2024_11_10/2024_11_10T003752Z_2065754795_MT1USATODAY24722541_RTRMADP_3_MLS_MLS_CUP_PLAYOFFS_ROUND_ONE_ATLANTA_UNITED_FC_AT_INTER_MIAMI_CF.JPG",
+      "isOnline": false
+    },
+    {
+      "name": "Cristiano Ronaldo",
+      "imageSrc": "https://sortitoutsidospaces.b-cdn.net/megapacks/cutoutfaces/originals/2024.10/735216.png",
+      "isOnline": true
+    },
+    {
+      "name": "Kylian Mbappé",
+      "imageSrc": "https://fifastatic.fifaindex.com/FIFA22/players/231747.png",
+      "isOnline": false
+    },
+    {
+      "name": "Mohamed Salah",
+      "imageSrc": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6gsv3C_JJ4mA2F14kREPwDK-wFy7nEJcB7Q&s",
+      "isOnline": true
+    },
+    {
+      "name": "Kevin De Bruyne",
+      "imageSrc": "https://fifastatic.fifaindex.com/FIFA22/players/192985.png",
+      "isOnline": false
+    },
+    {
+      "name": "Eden Hazard",
+      "imageSrc": "https://cdn.fifacm.com/content/media/imgs/fifa21/players/p183277.png?v=22",
+      "isOnline": true
+    },
+    {
+      "name": "Sergio Ramos",
+      "imageSrc": "https://cdn.fifacm.com/content/media/imgs/fifa20/players/p155862.png?v=22",
+      "isOnline": false
+    },
+    {
+      "name": "Harry Kane",
+      "imageSrc": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8SEGip0QkBIxE00aAuQJRka6x12R2Sl8TdQ&s",
+      "isOnline": true
+    },
+    {
+      "name": "Robert Lewandowski",
+      "imageSrc": "https://cdn.fifacm.com/content/media/imgs/fifa23/players/p188545.png?v=22",
+      "isOnline": false
+    }
+  ]
+  
