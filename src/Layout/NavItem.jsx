@@ -5,7 +5,11 @@ import { Tooltip } from 'antd';
 const NavItem = ({ item, selected, handleSelect }) => (
   <Tooltip title={item.tooltip}>
     <div
-      onClick={() => handleSelect(item.key)}
+      onClick={(e) => {
+        e.currentTarget.style.backgroundColor = 'transparent';
+        e.currentTarget.style.borderRadius = '0px';
+        handleSelect(item.key);
+      }}
       style={{
         cursor: 'pointer',
         borderBottom: selected === item.key ? '2px solid #1877f2' : 'none',
@@ -15,7 +19,7 @@ const NavItem = ({ item, selected, handleSelect }) => (
         alignItems: 'center',
         height: '100%',
         transition: 'background-color 0.3s, transform 0.3s, border-radius 0.3s',
-        fontSize: '25px', 
+        fontSize: '25px',
       }}
       onMouseEnter={(e) => {
         if (selected !== item.key) {

@@ -1,22 +1,37 @@
-// /src/components/Header.jsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Layout, Input, Avatar, Row, Col, Tooltip, Popover } from 'antd';
 import { GoSearch } from "react-icons/go";
 import NavItem from './NavItem';
 import ProfileContent from './ProfileContent';
 import NotificationContent from './NotificationContent';
-import MessageContent from './MessageContent';
 import AppStoreContent from './AppStoreContent.jsx';
 import { navItems, iconData } from '../assets/icons.jsx';
 import { FaUser } from "react-icons/fa";
+import MessageContent from './Message/MessageContent.jsx';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const { Header: AntHeader } = Layout;
 
 const Header = () => {
   const [selected, setSelected] = useState('home');
   const [selectedIcon, setSelectedIcon] = useState(null);
+  const navigate = useNavigate(); // Initialize navigate
+  const location = useLocation();
 
-  const handleSelect = (key) => setSelected(key);
+  const handleSelect = (key, path) => {
+    setSelected(key);
+    if (path) {
+      navigate(path); // Navigate to the specified path
+    }
+  };
+
+  useEffect(() => {
+    const allowedPaths = ['/', '/friends', '/pages', '/groups'];
+    if (!allowedPaths.includes(location.pathname)) {
+      setSelected('');
+    }
+  }, [location.pathname]);
+  
   const handleIconClick = (iconName) => {
     setSelectedIcon((prev) => (prev === iconName ? null : iconName));
   };
@@ -45,7 +60,12 @@ const Header = () => {
 
         <div style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '24px', alignItems: 'center', height: '100%' }}>
           {navItems.map((item) => (
-            <NavItem key={item.key} item={item} selected={selected} handleSelect={handleSelect} />
+            <NavItem
+              key={item.key}
+              item={item}
+              selected={selected}
+              handleSelect={() => handleSelect(item.key, item.path)} // Pass path to handleSelect
+            />
           ))}
         </div>
 
