@@ -45,12 +45,11 @@ const Post = () => {
 
 const styles = {
   postContainer: {
-    maxWidth: '680px',
     width: '100%', // Đảm bảo responsive trên màn hình nhỏ
     backgroundColor: '#fff',
     borderRadius: '8px',
     boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
-    margin: '20px auto',
+    margin: '0px auto',
     padding: '16px',
     boxSizing: 'border-box',
   },

@@ -43,12 +43,13 @@ const Reels = () => {
 const styles = {
   container: {
     width: '100%',
-    maxWidth: '680px',
     backgroundColor: '#fff',
     borderRadius: '8px',
     boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
     padding: '16px',
     marginBottom: '16px',
+    margin: '10px auto'
+
   },
   header: {
     display: 'flex',

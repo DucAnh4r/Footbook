@@ -11,7 +11,6 @@ const StatusInput = () => {
       borderRadius: '8px',
       boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
       marginBottom: '16px',
-      maxWidth: '680px',
       width: '100%',
       margin: '0 auto'
     }}>

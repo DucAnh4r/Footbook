@@ -26,6 +26,10 @@ const Header = () => {
   };
 
   useEffect(() => {
+    setSelectedIcon(null); // Close any open popover on navigation
+  }, [location.pathname]);
+
+  useEffect(() => {
     const allowedPaths = ['/', '/friends', '/pages', '/groups'];
     if (!allowedPaths.includes(location.pathname)) {
       setSelected('');
@@ -58,7 +62,7 @@ const Header = () => {
           <Input placeholder="Tìm kiếm trên Facebook" prefix={<GoSearch style={{ fontSize: '20px' }} />} style={{ borderRadius: '20px', width: '300px' }} />
         </Col>
 
-        <div style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '24px', alignItems: 'center', height: '100%' }}>
+        <div style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '24px', alignItems: 'center', height: '100%', overflow: 'hidden' }}>
           {navItems.map((item) => (
             <NavItem
               key={item.key}

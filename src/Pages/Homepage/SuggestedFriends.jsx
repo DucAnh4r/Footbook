@@ -8,6 +8,13 @@ const suggestedFriends = [
   { name: 'Luqman', image: 'https://via.placeholder.com/150', followers: '123 người theo dõi' },
   { name: 'Vo Hang', image: 'https://via.placeholder.com/150' },
   { name: 'Lê Thành', image: 'https://via.placeholder.com/150' },
+  { name: 'Lê Thành', image: 'https://via.placeholder.com/150' },
+  { name: 'Lê Thành', image: 'https://via.placeholder.com/150' },
+  { name: 'Lê Thành', image: 'https://via.placeholder.com/150' },
+  { name: 'Lê Thành', image: 'https://via.placeholder.com/150' },
+  { name: 'Lê Thành', image: 'https://via.placeholder.com/150' },
+  { name: 'Lê Thành', image: 'https://via.placeholder.com/150' },
+  { name: 'Lê Thành', image: 'https://via.placeholder.com/150' },
   // Add more friends here if needed
 ];
 
@@ -47,6 +54,8 @@ const styles = {
     boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
     padding: '16px',
     marginBottom: '16px',
+    margin: '10px auto'
+
   },
   header: {
     display: 'flex',

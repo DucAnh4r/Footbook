@@ -46,9 +46,9 @@ const styles = {
     padding: '10px 0',
     backgroundColor: '#f0f2f5',
     borderRadius: '8px',
-    maxWidth: '680px',
     width: '100%',
     whiteSpace: 'nowrap',
+    margin: '10px auto'
   },
   storyCard: {
     width: '100px',

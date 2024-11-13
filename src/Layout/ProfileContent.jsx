@@ -7,6 +7,7 @@ import {
   FaInfoCircle, FaKeyboard, FaStar
 } from "react-icons/fa";
 import { MdOutlineArrowForwardIos } from "react-icons/md";
+import { useNavigate } from 'react-router-dom';
 
 const { Text, Title } = Typography;
 
@@ -32,6 +33,11 @@ const ProfileContent = () => {
   const [singleKeyShortcuts, setSingleKeyShortcuts] = useState('off'); // 'off', 'on'
   const [isModalVisible, setIsModalVisible] = useState(false);
 
+
+  const navigate = useNavigate();
+  const handleProfileClick = () => {
+      navigate('/profile');
+  };
   const handleBackClick = () => {
     const viewMapping = {
       languageList: 'language',
@@ -53,8 +59,23 @@ const ProfileContent = () => {
       {view === 'main' && (
         <div>
           <Space direction="vertical" style={{ width: '100%', alignItems: 'center' }}>
+          <div 
+            style={{
+              width: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px', 
+              padding: '10px',
+              borderRadius: '10px',
+              cursor: 'pointer',
+              transition: 'background-color 0.3s ease', // Hiệu ứng chuyển màu khi hover
+            }}
+            onClick={handleProfileClick}
+            
+          >
             <Avatar icon={<FaUser />} size="large" />
             <Text strong style={{ fontSize: '16px' }}>Duc Manh</Text>
+          </div>
             <Button type="link" style={{ padding: 0, color: 'black' }}>Xem tất cả trang cá nhân</Button>
           </Space>
           <Divider />

@@ -3,10 +3,12 @@ import { Layout } from 'antd';
 import StatusInput from './StatusInput';
 import StoryList from './StoryList';
 import Post from './Post';
-import SuggestedFriends from './SuggestedFriends';
+
 import Reels from './Reels';
 import LeftSidebar from './LeftSidebar/LeftSidebar';
 import RightSidebar from './RightSidebar/RightSidebar';
+import './Homepage.scss'
+import SuggestedFriends from '../ProfilePage/UserProfilePage/SuggestedFriends';
 
 const { Sider, Content } = Layout;
 

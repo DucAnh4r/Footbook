@@ -94,7 +94,7 @@ const styles = {
     margin: '0 auto',
     display: 'flex',
     flexDirection: 'column',
-    height: '93vh',
+    height: 'inherit',
     border: '1px solid #f0f0f0',
     borderRadius: '8px',
     overflow: 'hidden',

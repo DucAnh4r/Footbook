@@ -5,10 +5,11 @@ import Header from "./Header";
 import MessageLeftSidebar from "../Pages/Homepage/LeftSidebar/MessageLeftSidebar";
 import MessageRightSidebar from "../Pages/Homepage/RightSidebar/MessageRightSidebar";
 import Messagepage from "../Pages/MessagePage/Messagepage";
+import './MessageLayout.scss'
 
 const { Sider, Content } = Layout;
 
-const MassageLayout = (props) => {
+const MessageLayout = (props) => {
   // State to hold selected chat details
   const [selectedChat, setSelectedChat] = useState(null);
   const [isRightSidebarVisible, setRightSidebarVisible] = useState(true);
@@ -24,7 +25,7 @@ const MassageLayout = (props) => {
         
         {/* Main Content */}
         <Content className="content">
-          <div className="content-inner">
+          <div style={{height: '100%'}} className="content-inner">
             {/* Pass selectedChat details to Messagepage */}
             <Messagepage selectedChat={selectedChat} toggleRightSidebar = {setRightSidebarVisible}/>
           </div>
@@ -41,4 +42,4 @@ const MassageLayout = (props) => {
   );
 };
 
-export default MassageLayout;
+export default MessageLayout;

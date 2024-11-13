@@ -3,7 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import { homeRoutes, messageRoutes } from "./allRoutes";
 import MainLayout from "../Layout/MainLayout";
 import ErrorPage from "../Pages/ExtendPage/ErrorPage";
-import MassageLayout from "../Layout/MassageLayout";
+import MessageLayout from "../Layout/MessageLayout";
 
 const Index = () => {
     return (
@@ -17,7 +17,7 @@ const Index = () => {
                         </Route>
                         <Route>
                             {messageRoutes.map((route, idx) => (
-                                <Route path={route.path} element={<MassageLayout>{route.component}</MassageLayout>} key={idx} exact={true} />
+                                <Route path={route.path} element={<MessageLayout>{route.component}</MessageLayout>} key={idx} exact={true} />
                             ))}
                         </Route>
                         <Route path="*" element={<MainLayout><ErrorPage/></MainLayout>} />

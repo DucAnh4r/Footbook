@@ -1,10 +1,8 @@
-// * {
-//     margin: 0;
-//     padding: 0;
-//     box-sizing: border-box;
-// }
-
-body{margin: 0;}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
 .scroll-on-hover {
     overflow: hidden !important;
@@ -13,6 +11,10 @@ body{margin: 0;}
 
 .scroll-on-hover:hover {
     overflow-y: auto !important;
+}
+
+.page-content {
+    padding: 16px;
 }
 
 /* Tùy chọn thiết kế thanh cuộn (nếu cần) */
@@ -31,6 +33,7 @@ body{margin: 0;}
 }
 
 .page-content {
+    padding: 16px;
     overflow: hidden; /* Giữ thanh cuộn ẩn khi không hover */
 }
 
@@ -53,6 +56,3 @@ body{margin: 0;}
     background-color: #ccc;
     border-radius: 4px;
 }
-
-
-  
