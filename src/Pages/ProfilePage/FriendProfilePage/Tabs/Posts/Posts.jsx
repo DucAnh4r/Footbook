@@ -23,7 +23,6 @@ const Posts = () => {
       </Col>
       <Col style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }} span={14}>
         <Space direction="vertical" size="middle" style={{ width: '100%' }}>
-          <StatusInput />
           <PostFilter />
           <Post />
           <Post />
