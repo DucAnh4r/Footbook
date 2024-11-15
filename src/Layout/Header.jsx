@@ -30,7 +30,7 @@ const Header = () => {
   }, [location.pathname]);
 
   useEffect(() => {
-    const allowedPaths = ['/', '/friends', '/pages', '/groups'];
+    const allowedPaths = ['/', '/pages', '/groups'];
     if (!allowedPaths.includes(location.pathname)) {
       setSelected('');
     }

@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './LeftSidebar.module.scss'
-import FriendImg from '../../../assets/image/Homepage/LeftSidebar/friend.png'
-import MessImg from '../../../assets/image/Homepage/LeftSidebar/messenger.png'
+import FriendImg from '../../assets/image/Homepage/LeftSidebar/friend.png'
+import MessImg from '../../assets/image/Homepage/LeftSidebar/messenger.png'
 import { useNavigate } from 'react-router-dom';
 
 
@@ -18,13 +18,17 @@ const LeftSidebar = () => {
     
   return (
     <div className={styles['container']}>
+        <div className={styles['header']}>
+            <h1 style={{marginLeft: '20px', fontSize: '24px'}}>Bạn bè</h1>
+
+        </div>
         <ul className={styles['list-container']}>
-            <li className={styles['list-item']} onClick={() => handleProfileClick()}>
+            <li style={{backgroundColor: 'rgb(218, 218, 218)'}} className={styles['list-item']} onClick={() => handleProfileClick()}>
                 <div className={styles['element-container']}>
                     <div className={styles['image-container']}>
-                        <img className={styles['image']} src="https://cdn.tuoitre.vn/thumb_w/480/471584752817336320/2024/7/6/2024-07-05t210215z828248098up1ek751mfqfvrtrmadp3soccer-euro-por-fra-report-1-1720260083640639014392.jpg" alt="" />
+                        <img className={styles['icon']} src={FriendImg} alt="" />
                     </div>
-                    <span className={styles['text']}>Nguyễn Đức Anh</span>
+                    <span className={styles['text']}>Trang chủ</span>
                 </div>
             </li>
             <li className={styles['list-item']} onClick={() => handleFriendsClick()}>
@@ -32,7 +36,7 @@ const LeftSidebar = () => {
                     <div className={styles['image-container']}>
                         <img className={styles['icon']} src={FriendImg} alt="" />
                     </div>
-                    <span className={styles['text']}>Bạn bè</span>
+                    <span className={styles['text']}>Lời mời kết bạn</span>
                 </div>
             </li>
             <li className={styles['list-item']}>
@@ -48,7 +52,15 @@ const LeftSidebar = () => {
                             alt=""
                         />
                     </div>
-                    <span className={styles['text']}>Messenger</span>
+                    <span className={styles['text']}>Gợi ý</span>
+                </div>
+            </li>
+            <li className={styles['list-item']} onClick={() => handleFriendsClick()}>
+                <div className={styles['element-container']}>
+                    <div className={styles['image-container']}>
+                        <img className={styles['icon']} src={FriendImg} alt="" />
+                    </div>
+                    <span className={styles['text']}>Tất cả bạn bè</span>
                 </div>
             </li>
         </ul>

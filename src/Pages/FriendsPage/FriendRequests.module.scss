@@ -1,0 +1,39 @@
+.friendRequestsContainer {
+    padding: 20px;
+  }
+  
+  .friendRequestsList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  
+  .friendRequestCard {
+    width: 150px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .friendImage {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  
+  .friendDetails {
+    text-align: center;
+  }
+  
+  .buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+  }
+  
+  button {
+    width: 80px;
+  }
+  

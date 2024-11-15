@@ -3,7 +3,7 @@ import { Button, Space } from 'antd';
 import { AppstoreOutlined, BarsOutlined, FilterOutlined, SettingOutlined } from '@ant-design/icons';
 import styles from './PostFilter.module.scss';
 
-const PostFilter = ( {isFriend} ) => {
+const PostFilter = () => {
   const [viewMode, setViewMode] = useState('list'); // 'list' hoặc 'grid'
 
   const handleViewChange = (mode) => {
@@ -16,13 +16,9 @@ const PostFilter = ( {isFriend} ) => {
         <div className={styles.title}>Bài viết</div>
         <div className={styles.actions}>
           <Button icon={<FilterOutlined />} className={styles.button}>Bộ lọc</Button>
-          {isFriend && (
           <Button icon={<SettingOutlined />} className={styles.button}>Quản lý bài viết</Button>
-          )}
         </div>
       </div>
-      {isFriend && (
-      <>
       <div className={styles.separator} />
       <div className={styles.viewModes}>
         <Space size="middle">
@@ -40,8 +36,6 @@ const PostFilter = ( {isFriend} ) => {
           </span>
         </Space>
       </div>
-      </>
-      )}
     </div>
   );
 };

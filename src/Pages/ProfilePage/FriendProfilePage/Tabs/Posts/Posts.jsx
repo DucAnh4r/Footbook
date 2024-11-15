@@ -1,7 +1,6 @@
 import React from 'react';
 import AboutSection from './AboutSection';
 import { Col, Row, Space } from 'antd';
-import StatusInput from '../../../../Homepage/StatusInput';
 import Post from '../../../../Homepage/Post';
 import PostFilter from './PostFilter';
 import PhotoGallery from './PhotoGallery';

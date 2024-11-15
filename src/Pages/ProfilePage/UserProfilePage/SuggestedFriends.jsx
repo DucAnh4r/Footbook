@@ -3,7 +3,7 @@ import Slider from "react-slick";
 import styles from "./SuggestedFriends.module.scss";
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
-import "./slickOverrides.scss";
+import "./SlickOverrides.scss";
 
 const friends = [
   { id: 1, name: "Phương Ly", mutualFriends: 3, image: "path/to/image1.jpg" },
