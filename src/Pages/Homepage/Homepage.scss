@@ -20,7 +20,7 @@
 /* Tùy chọn thiết kế thanh cuộn (nếu cần) */
 .scroll-on-hover::-webkit-scrollbar,
 .page-content::-webkit-scrollbar {
-    width: 8px;/* src/components/CustomLayout.css */
+    width: 8px;
 
 .scroll-on-hover {
     position: relative; /* Đảm bảo các phần tử không bị đẩy đi khi thanh cuộn xuất hiện */

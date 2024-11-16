@@ -1,20 +1,3 @@
-
-.container{
-    width: 100%;
-    padding-bottom: 50px;    
-}
-
-// .friend-request-container{
-//     // background: beige;
-// }
-
-.flex-between {
-    display: flex;
-    justify-content: space-between; /* Căn đều hai phần tử, đưa một cái sang trái và một cái sang phải */
-    align-items: center; /* Căn giữa theo chiều dọc */
-    padding: 8px 12px;
-}
-
 .content {
     width: 100%;
     height: 86px;
@@ -39,6 +22,12 @@
     }
 }
 
+.flex-between {
+    display: flex;
+    justify-content: space-between; /* Căn đều hai phần tử, đưa một cái sang trái và một cái sang phải */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    padding: 8px 12px;
+}
 
 .image-container{
     width: 60px;
@@ -77,30 +66,5 @@
 
     &:hover{
         background: #d2d7dd;
-    }
-}
-
-.icon{
-    font-size: 20px;
-    padding: 0 4px;
-    color: #65686c;
-    border-radius: 30px;
-    padding: 8px;
-
-    &:hover{
-        cursor: pointer;
-        background: #d8d8d8;
-        
-    }
-}
-
-.friend-list-container{
-    padding-bottom: 40px;
-}
-
-.friend-container{
-    border-radius: 10px;
-    &:hover{
-        background: #d8d8d8;
     }
 }

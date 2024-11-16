@@ -1,0 +1,47 @@
+.headerRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .backButton {
+    font-size: 16px;
+    color: #1890ff; /* Ant Design primary color */
+  }
+  
+  .titleCol {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #000;
+  }
+  
+  .subTitle {
+    font-size: 16px;
+    color: #555;
+  }
+  
+  .statsRow {
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .actionRow {
+    margin-top: 8px;
+    font-size: 14px;
+    color: #1890ff;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  
+  .actionRow:hover {
+    opacity: 0.7;
+  }
+  

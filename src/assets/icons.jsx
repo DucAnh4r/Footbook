@@ -7,7 +7,7 @@ import { Badge } from 'antd';
 
 export const navItems = [
   { key: 'home', icon: <RiHome2Line />, selectedIcon: <RiHome2Fill style={{ color: '#1877f2' }} />, tooltip: 'Home', path: '/' },
-  { key: 'team', icon: <RiTeamLine />, selectedIcon: <RiTeamFill style={{ color: '#1877f2' }} />, tooltip: 'Team', path: '/friends' },
+  { key: 'team', icon: <RiTeamLine />, selectedIcon: <RiTeamFill style={{ color: '#1877f2' }} />, tooltip: 'Friend', path: '/friends' },
   { key: 'flag', icon: <FaRegFlag />, selectedIcon: <FaFlag style={{ color: '#1877f2' }} />, tooltip: 'Flag', path: '/pages' },
   { key: 'group', icon: <RiGroup2Line />,selectedIcon: <RiGroup2Line style={{ color: '#1877f2' }} />, tooltip: 'Group', path: '/groups' }
 ];

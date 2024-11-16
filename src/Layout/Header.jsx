@@ -9,6 +9,9 @@ import { navItems, iconData } from '../assets/icons.jsx';
 import { FaUser } from "react-icons/fa";
 import MessageContent from './Message/MessageContent.jsx';
 import { useLocation, useNavigate } from 'react-router-dom';
+import LogoImg from '../assets/image/Header/logo.png';
+import styles from './Header.module.scss'; 
+
 
 const { Header: AntHeader } = Layout;
 
@@ -17,6 +20,11 @@ const Header = () => {
   const [selectedIcon, setSelectedIcon] = useState(null);
   const navigate = useNavigate(); // Initialize navigate
   const location = useLocation();
+
+  // Hàm điều hướng khi click vào từng mục
+  const handleLogoClick = () => {
+    navigate('/'); // Điều hướng đến URL với tham số type
+  };
 
   const handleSelect = (key, path) => {
     setSelected(key);
@@ -32,10 +40,10 @@ const Header = () => {
   useEffect(() => {
     const allowedPaths = ['/', '/pages', '/groups'];
     if (!allowedPaths.includes(location.pathname)) {
-      setSelected('');
+      setSelected(''); // Reset selected item when on non-allowed path
     }
   }, [location.pathname]);
-  
+
   const handleIconClick = (iconName) => {
     setSelectedIcon((prev) => (prev === iconName ? null : iconName));
   };
@@ -54,15 +62,18 @@ const Header = () => {
   };
 
   return (
-    <AntHeader style={{ backgroundColor: '#fff', padding: '0 16px', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)', position: 'relative', zIndex: 1, lineHeight: '0px' }}>
-      <Row align="middle" justify="space-between" style={{ height: '100%' }}>
-
-        <Col style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <Avatar shape="square" size="large" style={{ backgroundColor: '#1877f2', color: '#fff', fontSize: '24px' }}>F</Avatar>
-          <Input placeholder="Tìm kiếm trên Facebook" prefix={<GoSearch style={{ fontSize: '20px' }} />} style={{ borderRadius: '20px', width: '300px' }} />
+    <AntHeader className={styles.header}>
+      <Row align="middle" justify="space-between" className={styles['header-row']}>
+        <Col className={styles['header-logo']}>
+          <img src={LogoImg} className={styles['logo-img']} onClick={handleLogoClick} alt="Footbook" />
+          <Input
+            placeholder="Tìm kiếm trên Facebook"
+            prefix={<GoSearch style={{ fontSize: '20px' }} />}
+            className={styles['search-input']}
+          />
         </Col>
 
-        <div style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '24px', alignItems: 'center', height: '100%', overflow: 'hidden' }}>
+        <div className={styles['nav-items-container']}>
           {navItems.map((item) => (
             <NavItem
               key={item.key}
@@ -76,7 +87,7 @@ const Header = () => {
         <Col>
           <Row gutter={16} align="middle">
             {iconData.map(({ name, icon, tooltip }) => (
-              <Col key={name} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Col key={name} className={styles['icon-container']}>
                 <Tooltip title={tooltip}>
                   {['notifications', 'messages', 'appStore'].includes(name) ? (
                     <Popover
@@ -86,13 +97,13 @@ const Header = () => {
                       open={selectedIcon === name}
                       onOpenChange={(visible) => handleIconClick(visible ? name : null)}
                     >
-                      <div style={{ backgroundColor: selectedIcon === name ? '#E8F0FE' : '#f0f0f0', borderRadius: '50%', padding: '8px' }}>
+                      <div className={`${styles['icon-wrapper']} ${selectedIcon === name ? styles['icon-selected'] : ''}`}>
                         {icon}
                       </div>
                     </Popover>
                   ) : (
                     <div
-                      style={{ backgroundColor: selectedIcon === name ? '#E8F0FE' : '#f0f0f0', borderRadius: '50%', padding: '8px' }}
+                      className={`${styles['icon-wrapper']} ${selectedIcon === name ? styles['icon-selected'] : ''}`}
                       onClick={() => handleIconClick(name)}
                     >
                       {icon}
@@ -101,9 +112,16 @@ const Header = () => {
                 </Tooltip>
               </Col>
             ))}
-            <Col style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Popover content={<ProfileContent />} trigger="click" placement="bottomRight" open={selectedIcon === 'profile'} onOpenChange={(visible) => handleIconClick(visible ? 'profile' : null)}>
-                <div style={{ padding: '8px', cursor: 'pointer', borderRadius: '50%' }}>
+
+            <Col className={styles['icon-container']}>
+              <Popover
+                content={<ProfileContent />}
+                trigger="click"
+                placement="bottomRight"
+                open={selectedIcon === 'profile'}
+                onOpenChange={(visible) => handleIconClick(visible ? 'profile' : null)}
+              >
+                <div className={styles['avatar-wrapper']}>
                   <Avatar icon={<FaUser />} style={{ backgroundColor: selectedIcon === 'profile' ? '#E8F0FE' : '#87d068' }} />
                 </div>
               </Popover>
