@@ -5,7 +5,6 @@ import styles from './ShowFriendsPage.module.scss';
 import FriendInvitations from './Sidebars/FriendInvitations';
 import FriendRequestItem from '../Components/FriendRequestItem';
 import SuggestedFriends from './Sidebars/SuggestedFriends'; // Import SuggestedFriends
-import FriendPicture from 'C:/Users/ADMIN/Desktop/Hoc/Nam4/BE Java springboot/Footbook/src/assets/image/FriendPage/friends.png';
 
 const { Sider, Content } = Layout;
 

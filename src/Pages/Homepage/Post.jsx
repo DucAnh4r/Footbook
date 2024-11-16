@@ -1,10 +1,16 @@
-// /src/components/Post.jsx
 import React from 'react';
 import { Avatar, Button } from 'antd';
 import { LikeOutlined, CommentOutlined, ShareAltOutlined, SendOutlined } from '@ant-design/icons';
 import { FaLaugh, FaSmile } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const Post = () => {
+  const navigate = useNavigate();
+
+  const handleImageClick = () => {
+    navigate('/photo')
+  };
+
   return (
     <div style={styles.postContainer}>
       <div style={styles.header}>
@@ -17,7 +23,12 @@ const Post = () => {
       
       <div style={styles.content}>
         <p>KongFung</p>
-        <img src="https://via.placeholder.com/680x400" alt="post content" style={styles.mainImage} />
+        <img 
+          src="https://via.placeholder.com/680x400" 
+          alt="post content" 
+          style={styles.mainImage} 
+          onClick={handleImageClick} // Thêm sự kiện click
+        />
       </div>
 
       <div style={styles.linkContainer}>
@@ -45,7 +56,7 @@ const Post = () => {
 
 const styles = {
   postContainer: {
-    width: '100%', // Đảm bảo responsive trên màn hình nhỏ
+    width: '100%',
     backgroundColor: '#fff',
     borderRadius: '8px',
     boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
@@ -77,10 +88,10 @@ const styles = {
   },
   mainImage: {
     width: '100%',
-    maxWidth: '100%', // Đảm bảo hình ảnh không vượt quá chiều rộng
+    maxWidth: '100%',
     borderRadius: '8px',
     marginTop: '8px',
-    objectFit: 'cover', // Đảm bảo hình ảnh hiển thị tốt trên màn hình nhỏ
+    cursor: 'pointer', // Thêm hiệu ứng trỏ chuột
   },
   linkContainer: {
     textAlign: 'center',
@@ -90,7 +101,7 @@ const styles = {
     borderRadius: '4px',
     fontWeight: 'bold',
     fontSize: '14px',
-    overflowWrap: 'break-word', // Đảm bảo text không bị tràn
+    overflowWrap: 'break-word',
   },
   reactionsContainer: {
     display: 'flex',
@@ -99,7 +110,7 @@ const styles = {
     marginTop: '8px',
     borderBottom: '1px solid #f0f2f5',
     paddingBottom: '8px',
-    fontSize: '14px', // Kích thước nhỏ hơn trên màn hình di động
+    fontSize: '14px',
   },
   reactions: {
     display: 'flex',
@@ -120,7 +131,7 @@ const styles = {
     justifyContent: 'space-around',
     marginTop: '8px',
     paddingTop: '8px',
-    flexWrap: 'wrap', // Cho phép các nút xuống hàng trên màn hình nhỏ
+    flexWrap: 'wrap',
   },
   linkText: {
     color: '#000',

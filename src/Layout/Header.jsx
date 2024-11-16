@@ -1,29 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import { Layout, Input, Avatar, Row, Col, Tooltip, Popover } from 'antd';
+import React, { useContext, useEffect, useState } from "react";
+import { Layout, Input, Avatar, Row, Col, Tooltip, Popover } from "antd";
 import { GoSearch } from "react-icons/go";
-import NavItem from './NavItem';
-import ProfileContent from './ProfileContent';
-import NotificationContent from './NotificationContent';
-import AppStoreContent from './AppStoreContent.jsx';
-import { navItems, iconData } from '../assets/icons.jsx';
+import NavItem from "./NavItem";
+import ProfileContent from "./ProfileContent";
+import NotificationContent from "./NotificationContent";
+import AppStoreContent from "./AppStoreContent.jsx";
+import { navItems, iconData } from "../assets/icons.jsx";
 import { FaUser } from "react-icons/fa";
-import MessageContent from './Message/MessageContent.jsx';
-import { useLocation, useNavigate } from 'react-router-dom';
-import LogoImg from '../assets/image/Header/logo.png';
-import styles from './Header.module.scss'; 
-
+import MessageContent from "./Message/MessageContent.jsx";
+import { useLocation, useNavigate } from "react-router-dom";
+import LogoImg from "../assets/image/Header/logo.png";
+import styles from "./Header.module.scss";
+import { HeaderContext } from "../Context/HeaderContext.jsx";
 
 const { Header: AntHeader } = Layout;
 
 const Header = () => {
-  const [selected, setSelected] = useState('home');
+  const { showHeader } = useContext(HeaderContext); // Lấy trạng thái showHeader từ Context
+  const [selected, setSelected] = useState("home");
   const [selectedIcon, setSelectedIcon] = useState(null);
   const navigate = useNavigate(); // Initialize navigate
   const location = useLocation();
 
-  // Hàm điều hướng khi click vào từng mục
   const handleLogoClick = () => {
-    navigate('/'); // Điều hướng đến URL với tham số type
+    navigate("/"); // Điều hướng đến URL với tham số type
   };
 
   const handleSelect = (key, path) => {
@@ -38,9 +38,9 @@ const Header = () => {
   }, [location.pathname]);
 
   useEffect(() => {
-    const allowedPaths = ['/', '/pages', '/groups'];
+    const allowedPaths = ["/", "/pages", "/groups"];
     if (!allowedPaths.includes(location.pathname)) {
-      setSelected(''); // Reset selected item when on non-allowed path
+      setSelected(""); // Reset selected item when on non-allowed path
     }
   }, [location.pathname]);
 
@@ -50,30 +50,33 @@ const Header = () => {
 
   const getPopoverContent = (name) => {
     switch (name) {
-      case 'notifications':
+      case "notifications":
         return <NotificationContent />;
-      case 'messages':
+      case "messages":
         return <MessageContent />;
-      case 'appStore':
+      case "appStore":
         return <AppStoreContent />;
       default:
         return null;
     }
   };
 
+  // Nếu `showHeader` là `false`, không render Header
+  if (!showHeader) return null;
+
   return (
     <AntHeader className={styles.header}>
-      <Row align="middle" justify="space-between" className={styles['header-row']}>
-        <Col className={styles['header-logo']}>
-          <img src={LogoImg} className={styles['logo-img']} onClick={handleLogoClick} alt="Footbook" />
+      <Row align="middle" justify="space-between" className={styles["header-row"]}>
+        <Col className={styles["header-logo"]}>
+          <img src={LogoImg} className={styles["logo-img"]} onClick={handleLogoClick} alt="Footbook" />
           <Input
             placeholder="Tìm kiếm trên Facebook"
-            prefix={<GoSearch style={{ fontSize: '20px' }} />}
-            className={styles['search-input']}
+            prefix={<GoSearch style={{ fontSize: "20px" }} />}
+            className={styles["search-input"]}
           />
         </Col>
 
-        <div className={styles['nav-items-container']}>
+        <div className={styles["nav-items-container"]}>
           {navItems.map((item) => (
             <NavItem
               key={item.key}
@@ -87,9 +90,9 @@ const Header = () => {
         <Col>
           <Row gutter={16} align="middle">
             {iconData.map(({ name, icon, tooltip }) => (
-              <Col key={name} className={styles['icon-container']}>
+              <Col key={name} className={styles["icon-container"]}>
                 <Tooltip title={tooltip}>
-                  {['notifications', 'messages', 'appStore'].includes(name) ? (
+                  {["notifications", "messages", "appStore"].includes(name) ? (
                     <Popover
                       content={getPopoverContent(name)}
                       trigger="click"
@@ -97,13 +100,15 @@ const Header = () => {
                       open={selectedIcon === name}
                       onOpenChange={(visible) => handleIconClick(visible ? name : null)}
                     >
-                      <div className={`${styles['icon-wrapper']} ${selectedIcon === name ? styles['icon-selected'] : ''}`}>
+                      <div
+                        className={`${styles["icon-wrapper"]} ${selectedIcon === name ? styles["icon-selected"] : ""}`}
+                      >
                         {icon}
                       </div>
                     </Popover>
                   ) : (
                     <div
-                      className={`${styles['icon-wrapper']} ${selectedIcon === name ? styles['icon-selected'] : ''}`}
+                      className={`${styles["icon-wrapper"]} ${selectedIcon === name ? styles["icon-selected"] : ""}`}
                       onClick={() => handleIconClick(name)}
                     >
                       {icon}
@@ -113,16 +118,19 @@ const Header = () => {
               </Col>
             ))}
 
-            <Col className={styles['icon-container']}>
+            <Col className={styles["icon-container"]}>
               <Popover
                 content={<ProfileContent />}
                 trigger="click"
                 placement="bottomRight"
-                open={selectedIcon === 'profile'}
-                onOpenChange={(visible) => handleIconClick(visible ? 'profile' : null)}
+                open={selectedIcon === "profile"}
+                onOpenChange={(visible) => handleIconClick(visible ? "profile" : null)}
               >
-                <div className={styles['avatar-wrapper']}>
-                  <Avatar icon={<FaUser />} style={{ backgroundColor: selectedIcon === 'profile' ? '#E8F0FE' : '#87d068' }} />
+                <div className={styles["avatar-wrapper"]}>
+                  <Avatar
+                    icon={<FaUser />}
+                    style={{ backgroundColor: selectedIcon === "profile" ? "#E8F0FE" : "#87d068" }}
+                  />
                 </div>
               </Popover>
             </Col>

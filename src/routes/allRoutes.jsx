@@ -1,5 +1,6 @@
 import React, { lazy } from 'react';
 import ShowFriendsPage from '../Pages/FriendsPage/Pages/ShowFriendsPage';
+const PhotoPage = lazy(() => import('../Pages/Photo/PhotoPage'));
 const Homepage = lazy(() => import('../Pages/Homepage/Homepage'));
 const Messagepage = lazy(() => import('../Pages/MessagePage/Messagepage'));
 const FriendsPage = lazy(() => import('../Pages/FriendsPage/FriendsHomePage'));
@@ -16,7 +17,7 @@ const homeRoutes = [
     { path: "/friends/:type", component: <ShowFriendsPage /> },
     { path: "/pages", component: <FlagPage/>},
     { path: "/groups", component: <GroupsPage/>},
-
+    { path: "/photo", component: <PhotoPage/>},
 ];
 
 const messageRoutes = [

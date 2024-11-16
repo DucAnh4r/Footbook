@@ -2,18 +2,24 @@
 import React, { useState } from 'react';
 import {
   Avatar, Button, Collapse, Divider, Space, Tooltip, Typography, Switch, Tabs, Image,
-  List
+  List,
+  Input
 } from 'antd';
-import { BellOutlined, SearchOutlined, EditOutlined, FileImageOutlined, FileOutlined, LinkOutlined, SmileOutlined, FontSizeOutlined, TeamOutlined, LeftOutlined } from '@ant-design/icons';
-import { MdPushPin } from "react-icons/md";
+import { BellOutlined, SearchOutlined, EditOutlined, FileImageOutlined, FileOutlined, LinkOutlined, SmileOutlined, FontSizeOutlined, TeamOutlined, LeftOutlined, CloseOutlined } from '@ant-design/icons';
+import { MdPushPin, MdBlockFlipped, MdReportProblem, MdCommentsDisabled } from "react-icons/md";
 import { BiExit } from 'react-icons/bi';
 import { AiOutlineWarning } from 'react-icons/ai';
-import { FaRegUserCircle } from "react-icons/fa";
+import { FaRegUserCircle, FaThumbsUp } from "react-icons/fa";
 import PinnedMessagesModal from '../../../Modal/PinnedMessagesModal';
 import ThemePickerModal from '../../../Modal/ThemePickerModal';
 import EmojiPickerModal from '../../../Modal/EmojiPickerModal';
 import NicknameModal from '../../../Modal/NicknameModal';
-
+import NotificationMuteModal from '../../../Modal/NotificationMuteModal';
+import { PiClockCountdownLight } from "react-icons/pi";
+import SelfDestructMessageModal from '../../../Modal/SelfDestructMessageModal';
+import RestrictUserModal from '../../../Modal/RestrictUserModal';
+import BlockUserModal from '../../../Modal/BlockUserModal';
+import ReportUserModal from '../../../Modal/ReportUserModal';
 
 const { Text, Title } = Typography;
 const { Panel } = Collapse;
@@ -52,6 +58,12 @@ const fileList = [
 const MessageRightSidebar = ({ selectedChat }) => {
   const [isPinnedMessagesVisible, setPinnedMessagesVisible] = useState(false);
   const [isThemePickerVisible, setThemePickerVisible] = useState(false);
+  const [isNotificationMuteVisible, setNotificationMuteVisible] = useState(false);
+  const [isSelfDestructVisible, setSelfDestructVisible] = useState(false);
+  const [isRestrictUserVisible, setRestrictUserVisible] = useState(false);
+  const [isBlockUserVisible, setBlockUserVisible] = useState(false);
+  const [isReportUserVisible, setReportUserVisible] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [selectedColor, setSelectedColor] = useState('#4D4D4D');
   const [isEmojiPickerVisible, setEmojiPickerVisible] = useState(false);
   const [isNicknameModalVisible, setNicknameModalVisible] = useState(false);
@@ -59,6 +71,7 @@ const MessageRightSidebar = ({ selectedChat }) => {
   const showMainView = () => setViewMode('default');
   const showMediaFilesView = () => setViewMode('mediaFiles');
   const showFileListView = () => setViewMode('fileList');
+  const showSearchView = () => setViewMode('search');
 
   const handleThemeChange = (color) => {
     setSelectedColor(color);
@@ -70,6 +83,28 @@ const MessageRightSidebar = ({ selectedChat }) => {
     setEmojiPickerVisible(false);
   };
 
+  const handleMuteNotifications = () => {
+    console.log("Notifications muted");
+    setNotificationMuteVisible(false);
+  };
+
+  const handleSaveSelfDestruct = (option) => {
+    console.log("Self-destruct option selected:", option);
+    setSelfDestructVisible(false);
+  };
+
+  const handleRestrictUser = () => {
+    console.log("User has been restricted");
+    setRestrictUserVisible(false);
+  };
+
+  const handleSearch = (e) => {
+    if (e.key === 'Enter') {
+      console.log(`Searching for: ${searchQuery}`);
+      // Thực hiện tìm kiếm dựa trên `searchQuery`
+    }
+  };
+
   return (
     <div style={styles.sidebar}>
       {viewMode === 'default' ? (
@@ -79,14 +114,6 @@ const MessageRightSidebar = ({ selectedChat }) => {
             <Avatar src={selectedChat?.avatar} size={80} />
             <Title level={5} style={styles.profileName}>{selectedChat?.name}</Title>
             <Text type="secondary">Đang hoạt động</Text>
-            <Button type="text" style={styles.encryptionButton}>
-              {!selectedChat?.isGroup && (
-                <>
-                  <span role="img" aria-label="lock">🔒</span>
-                  <span>Được mã hóa đầu cuối</span>
-                </>
-              )}
-            </Button>
             <Space size="middle">
               {!selectedChat?.isGroup && (
                 <Tooltip title="Trang cá nhân">
@@ -94,10 +121,16 @@ const MessageRightSidebar = ({ selectedChat }) => {
                 </Tooltip>
               )}
               <Tooltip title="Tắt thông báo">
-                <Button shape="circle" icon={<BellOutlined />} />
+                <Button shape="circle" onClick={() => setNotificationMuteVisible(true)} icon={<BellOutlined />} />
               </Tooltip>
               <Tooltip title="Tìm kiếm">
-                <Button shape="circle" icon={<SearchOutlined />} />
+                <Button shape="circle"
+                  onClick={() => {
+                    showSearchView();
+                    setSearchQuery('');
+                  }}
+                  icon={<SearchOutlined />}
+                />
               </Tooltip>
             </Space>
           </div>
@@ -122,7 +155,7 @@ const MessageRightSidebar = ({ selectedChat }) => {
                     <Button type="text" icon={<FileImageOutlined />} style={styles.linkButton}>Thay đổi ảnh</Button>
                   </>
                 )}
-                <Button type="text" onClick={() => setThemePickerVisible(true)} icon={<SmileOutlined />} style={styles.linkButton}>Đổi chủ đề</Button>
+                <Button type="text" onClick={() => setThemePickerVisible(true)} icon={<FaThumbsUp />} style={styles.linkButton}>Đổi chủ đề</Button>
                 <ThemePickerModal
                   visible={isThemePickerVisible}
                   onClose={() => setThemePickerVisible(false)}
@@ -168,7 +201,7 @@ const MessageRightSidebar = ({ selectedChat }) => {
 
             <Panel header="Quyền riêng tư & hỗ trợ" key="6">
               <Space direction="vertical" align="start" style={{ width: '100%' }}>
-                <Button type="text" icon={<BellOutlined />} style={styles.linkButton}>Tắt thông báo</Button>
+                <Button type="text" icon={<BellOutlined />} onClick={() => setNotificationMuteVisible(true)} style={styles.linkButton}>Tắt thông báo</Button>
                 {selectedChat?.isGroup ? (
                   <>
                     <Button type="text" icon={<AiOutlineWarning />} style={styles.linkButton}>Báo cáo</Button>
@@ -177,11 +210,10 @@ const MessageRightSidebar = ({ selectedChat }) => {
                   </>
                 ) : (
                   <>
-                    <Button type="text" icon={<BellOutlined />} style={styles.linkButton}>Tin nhắn tự hủy</Button>
-                    <Button type="text" icon={<BellOutlined />} style={styles.linkButton}>Xác minh mã hóa đầu cuối</Button>
-                    <Button type="text" icon={<BellOutlined />} style={styles.linkButton}>Hạn chế</Button>
-                    <Button type="text" icon={<BellOutlined />} style={styles.linkButton}>Chặn</Button>
-                    <Button type="text" icon={<BellOutlined />} style={styles.linkButton}>Báo cáo</Button>
+                    <Button type="text" icon={<PiClockCountdownLight />} onClick={() => setSelfDestructVisible(true)} style={styles.linkButton}>Tin nhắn tự hủy</Button>
+                    <Button type="text" icon={<MdCommentsDisabled />} onClick={() => setRestrictUserVisible(true)} style={styles.linkButton}>Hạn chế</Button>
+                    <Button type="text" icon={<MdBlockFlipped />} onClick={() => setBlockUserVisible(true)} style={styles.linkButton}>Chặn</Button>
+                    <Button type="text" icon={<MdReportProblem />} onClick={() => setReportUserVisible(true)} style={styles.linkButton}>Báo cáo</Button>
                   </>
                 )}
               </Space>
@@ -252,7 +284,37 @@ const MessageRightSidebar = ({ selectedChat }) => {
             </TabPane>
           </Tabs>
         </>
-      ) : null}
+      ) : <div style={styles.container}>
+        {/* Header */}
+        <Space align="center" style={styles.header}>
+          <Button
+            type="text"
+            icon={<LeftOutlined />}
+            onClick={showMainView}
+            style={{ fontSize: '16px' }}
+          />
+          <Title level={5} style={{ margin: '0' }}>Tìm kiếm</Title>
+        </Space>
+
+        {/* Search Input */}
+        <Input
+          placeholder="Tìm kiếm"
+          prefix={<SearchOutlined />}
+          suffix={searchQuery && <CloseOutlined onClick={() => setSearchQuery('')} style={{ cursor: 'pointer' }} />}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyPress={handleSearch}
+          style={styles.searchInput}
+        />
+
+        {/* Hint */}
+        {searchQuery && (
+        <div style={styles.hintContainer}>
+          <Text type="secondary">Nhấn "Enter" để tìm kiếm.</Text>
+        </div>
+      )}
+      </div>
+      }
 
       <PinnedMessagesModal
         visible={isPinnedMessagesVisible}
@@ -275,6 +337,33 @@ const MessageRightSidebar = ({ selectedChat }) => {
         visible={isNicknameModalVisible}
         onClose={() => setNicknameModalVisible(false)}
         participants={participants}
+      />
+      <NotificationMuteModal
+        visible={isNotificationMuteVisible}
+        onClose={() => setNotificationMuteVisible(false)}
+        onMute={handleMuteNotifications}
+      />
+      <SelfDestructMessageModal
+        visible={isSelfDestructVisible}
+        onClose={() => setSelfDestructVisible(false)}
+        onSave={handleSaveSelfDestruct}
+      />
+      <RestrictUserModal
+        visible={isRestrictUserVisible}
+        onClose={() => setRestrictUserVisible(false)}
+        onRestrict={handleRestrictUser}
+        avatar={selectedChat?.avatar}
+        name={selectedChat?.name}
+      />
+      <BlockUserModal
+        visible={isBlockUserVisible}
+        onClose={() => setBlockUserVisible(false)}
+        name={selectedChat?.name}
+      />
+      <ReportUserModal
+        visible={isReportUserVisible}
+        onClose={() => setReportUserVisible(false)}
+        name={selectedChat?.name}
       />
     </div>
   );
@@ -326,9 +415,28 @@ const styles = {
     color: 'gray',
     paddingTop: '8px',
   },
-  encryptionButton: {
-    color: '#1890ff',
-    fontWeight: 'bold',
+  container: {
+    padding: '16px',
+    width: '100%',
+    maxWidth: '390px',
+    margin: '0 auto',
+    backgroundColor: '#fff',
+    height: '100vh',
+  },
+  header: {
+    display: 'flex',
+    alignItems: 'center',
+    marginBottom: '16px',
+  },
+  searchInput: {
+    borderRadius: '20px',
+    padding: '8px',
+    fontSize: '16px',
+    marginBottom: '16px',
+  },
+  hintContainer: {
+    textAlign: 'center',
+    marginTop: '20px',
   },
 };
 

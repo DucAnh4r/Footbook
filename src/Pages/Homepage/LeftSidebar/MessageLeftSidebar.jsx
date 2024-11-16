@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Avatar, Badge, Button, Input, List, Tabs, Tooltip, Typography, Dropdown, Menu } from 'antd';
 import { EllipsisOutlined, EditOutlined } from '@ant-design/icons';
+import { FaCog, FaUserShield, FaQuestionCircle, FaDesktop, FaEnvelope, FaArchive, FaShieldAlt } from 'react-icons/fa';
+import SettingsMessageModal from '../../../Modal/SettingsMessageModal';
+import RestrictedAccountsView from './RestrictedAccountsView'; // Import view cho "Tài khoản đã hạn chế"
 
 const { Text, Title } = Typography;
 const { TabPane } = Tabs;
@@ -16,6 +19,25 @@ const messages = [
 
 const MessageLeftSidebar = ({ onSelectChat }) => {
   const [selectedChatId, setSelectedChatId] = useState(messages[0].id); // Default to the first message
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isRestrictedView, setIsRestrictedView] = useState(false);
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setIsModalVisible(false);
+  };
+
+  const openRestrictedView = () => {
+    setIsModalVisible(false); // Đóng modal trước khi chuyển view
+    setIsRestrictedView(true);
+  };
+
+  const goBackToMainView = () => {
+    setIsRestrictedView(false);
+  };
 
   useEffect(() => {
     onSelectChat(messages[0]);
@@ -29,17 +51,18 @@ const MessageLeftSidebar = ({ onSelectChat }) => {
   // Dropdown menu options
   const menu = (
     <Menu>
-      <Menu.Item key="1">Tùy chọn</Menu.Item>
-      <Menu.Item key="2">Tin nhắn đang chờ</Menu.Item>
-      <Menu.Item key="3">Đoạn chat đã lưu trữ</Menu.Item>
-      <Menu.Item key="4">Tài khoản đã hạn chế</Menu.Item>
-      <Menu.Item key="5">Quyền riêng tư & an toàn</Menu.Item>
-      <Menu.Item key="6">Trợ giúp</Menu.Item>
-      <Menu.Item key="7">Dùng thử Messenger dành cho máy tính</Menu.Item>
+      <Menu.Item key="1" onClick={showModal} icon={<FaCog />}>Tùy chọn</Menu.Item>
+      <Menu.Item key="2" icon={<FaEnvelope />}>Tin nhắn đang chờ</Menu.Item>
+      <Menu.Item key="3" icon={<FaArchive />}>Đoạn chat đã lưu trữ</Menu.Item>
+      <Menu.Item key="4" onClick={openRestrictedView} icon={<FaUserShield />}>Tài khoản đã hạn chế</Menu.Item> {/* Thay đổi onClick để mở RestrictedAccountsView */}
+      <Menu.Item key="5" icon={<FaShieldAlt />}>Quyền riêng tư & an toàn</Menu.Item>
+      <Menu.Item key="6" icon={<FaQuestionCircle />}>Trợ giúp</Menu.Item>
+      <Menu.Item key="7" icon={<FaDesktop />}>Dùng thử Messenger dành cho máy tính</Menu.Item>
     </Menu>
   );
 
   return (
+    !isRestrictedView ? (
     <div style={styles.sidebar}>
       <div style={styles.header}>
         <Title level={5} style={styles.title}>Đoạn chat</Title>
@@ -65,7 +88,12 @@ const MessageLeftSidebar = ({ onSelectChat }) => {
           {/* Content for "Cộng đồng" */}
         </TabPane>
       </Tabs>
+      
+      <SettingsMessageModal visible={isModalVisible} onClose={closeModal} />
     </div>
+  ) : (
+    <RestrictedAccountsView onBack={goBackToMainView} />
+  )
   );
 };
 
