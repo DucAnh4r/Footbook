@@ -2,10 +2,18 @@ import React from 'react';
 import styles from './FriendRequestItem.module.scss';
 import { Row, Col } from 'antd';
 
-const FriendRequestItem = ({ userId, onSelectUser }) => {
+const FriendRequestItem = ({ userId, onSelectUser, isSelected  }) => {
+  const handleClick = () => {
+    if (onSelectUser) {
+      onSelectUser(userId); // Gọi hàm onSelectUser khi người dùng chọn thẻ
+    }
+  };
   return (
     <>
-      <div className={styles['content']}>
+      <div
+        className={`${styles.content} ${isSelected ? styles.selected : ''}`} // Thêm class "selected" nếu là item đang được chọn
+        onClick={handleClick}
+      >
         <Row onClick={() => onSelectUser(userId)} style={{ cursor: 'pointer' }}>
           <Col span={5}>
             <div className={styles['image-container']}>

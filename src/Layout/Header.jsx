@@ -38,7 +38,7 @@ const Header = () => {
   }, [location.pathname]);
 
   useEffect(() => {
-    const allowedPaths = ["/", "/pages", "/groups"];
+    const allowedPaths = ['/', '/friends', '/pages', '/groups'];
     if (!allowedPaths.includes(location.pathname)) {
       setSelected(""); // Reset selected item when on non-allowed path
     }

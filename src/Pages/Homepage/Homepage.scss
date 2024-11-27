@@ -13,10 +13,6 @@
     overflow-y: auto !important;
 }
 
-.page-content {
-    padding: 16px;
-}
-
 /* Tùy chọn thiết kế thanh cuộn (nếu cần) */
 .scroll-on-hover::-webkit-scrollbar,
 .page-content::-webkit-scrollbar {
@@ -33,7 +29,6 @@
 }
 
 .page-content {
-    padding: 16px;
     overflow: hidden; /* Giữ thanh cuộn ẩn khi không hover */
 }
 

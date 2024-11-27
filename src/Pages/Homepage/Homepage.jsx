@@ -33,7 +33,7 @@ const Homepage = () => {
       </Sider>
       
       <Content style={{ padding: '70px 370px', minHeight: '100vh', overflow: 'unset' }}>
-        <div className="page-content">
+        <div className="page-content" style={{padding: '16px'}}>
           <StatusInput />
           <StoryList />
           <Post />

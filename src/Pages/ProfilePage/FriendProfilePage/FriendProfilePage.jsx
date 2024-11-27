@@ -110,7 +110,8 @@ const FriendProfilePage = () => {
                   Nhắn tin
                 </button>
                 <button 
-                  style={{ alignItems: 'center', padding: '0 16px'}} className={styles['white-button']}
+                  style={{ alignItems: 'center', padding: '0 16px'}} 
+                  className={styles['small-button']}
                   onClick={toggleFriendSuggestion}
                 >
                   <IoIosArrowDown
@@ -140,7 +141,7 @@ const FriendProfilePage = () => {
               <Tabs.TabPane tab={<span className={styles.tab}>Xem thêm</span>} key="7" />
             </Tabs>
             <Dropdown overlay={menu} trigger={['click']}>
-              <button style={{ alignItems: 'center', padding: '0 16px'}} className={styles['white-button']}>
+              <button style={{ alignItems: 'center', padding: '0 16px'}} className={styles['small-button']}>
                 <EllipsisOutlined />
               </button>
             </Dropdown>

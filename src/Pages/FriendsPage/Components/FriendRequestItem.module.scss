@@ -22,6 +22,10 @@
     }
 }
 
+.selected {
+    background-color: #d8d8d8; // Màu nền khi thẻ được chọn
+  }
+
 .flex-between {
     display: flex;
     justify-content: space-between; /* Căn đều hai phần tử, đưa một cái sang trái và một cái sang phải */

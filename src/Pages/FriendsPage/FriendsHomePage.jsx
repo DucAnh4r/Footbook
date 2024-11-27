@@ -3,43 +3,42 @@ import { Card, Button, Row, Col } from 'antd';
 import styles from './FriendsHomePage.module.scss';
 import LeftSidebar from './Components/LeftSidebar';
 import { Layout } from 'antd';
-import FriendRequests from './Components/FriendRequestsList';
+import FriendRequestsList from './Components/FriendRequestsList';
 
 const { Sider, Content } = Layout;
 
 const FriendsPage = () => {
   // Dữ liệu ví dụ cho "Lời mời kết bạn"
   const friendRequests = [
-    { name: 'Trần Thịnh', image: 'link_to_image_3.jpg', mutualFriends: 1 },
-    { name: 'Hà My', image: 'link_to_image_4.jpg', mutualFriends: 2 },
-    { name: 'Trần Thịnh', image: 'link_to_image_3.jpg', mutualFriends: 1 },
-    { name: 'Hà My', image: 'link_to_image_4.jpg', mutualFriends: 2 },{ name: 'Trần Thịnh', image: 'link_to_image_3.jpg', mutualFriends: 1 },
-    { name: 'Hà My', image: 'link_to_image_4.jpg', mutualFriends: 2 },{ name: 'Trần Thịnh', image: 'link_to_image_3.jpg', mutualFriends: 1 },
-    { name: 'Hà My', image: 'link_to_image_4.jpg', mutualFriends: 2 },{ name: 'Trần Thịnh', image: 'link_to_image_3.jpg', mutualFriends: 1 },
-    { name: 'Hà My', image: 'link_to_image_4.jpg', mutualFriends: 2 },
-    { name: 'Hà My', image: 'link_to_image_4.jpg', mutualFriends: 2 },
-    { name: 'Hà My', image: 'link_to_image_4.jpg', mutualFriends: 2 },
-    { name: 'Hà My', image: 'link_to_image_4.jpg', mutualFriends: 2 },
-    { name: 'Hà My', image: 'link_to_image_4.jpg', mutualFriends: 2 },
-    { name: 'Hà My', image: 'link_to_image_4.jpg', mutualFriends: 2 },
-    { name: 'Hà My', image: 'link_to_image_4.jpg', mutualFriends: 2 },
-    { name: 'Hà My', image: 'link_to_image_4.jpg', mutualFriends: 2 },
-    // Thêm dữ liệu lời mời kết bạn khác ở đây...
+    { name: 'John Doe', image: 'https://cdn.britannica.com/37/231937-050-9228ECA1/Drake-rapper-2019.jpg?w=400&h=300&c=crop', mutualFriends: 5 }
+    ,{ name: 'John Doe', image: 'https://cdn.britannica.com/37/231937-050-9228ECA1/Drake-rapper-2019.jpg?w=400&h=300&c=crop', mutualFriends: 5 },
+    ,{ name: 'John Doe', image: 'https://cdn.britannica.com/37/231937-050-9228ECA1/Drake-rapper-2019.jpg?w=400&h=300&c=crop', mutualFriends: 5 },
+    ,{ name: 'John Doe', image: 'https://cdn.britannica.com/37/231937-050-9228ECA1/Drake-rapper-2019.jpg?w=400&h=300&c=crop', mutualFriends: 5 },
+    ,{ name: 'John Doe', image: 'https://cdn.britannica.com/37/231937-050-9228ECA1/Drake-rapper-2019.jpg?w=400&h=300&c=crop', mutualFriends: 5 },
+    ,{ name: 'John Doe', image: 'https://cdn.britannica.com/37/231937-050-9228ECA1/Drake-rapper-2019.jpg?w=400&h=300&c=crop', mutualFriends: 5 },
+    ,{ name: 'John Doe', image: 'https://cdn.britannica.com/37/231937-050-9228ECA1/Drake-rapper-2019.jpg?w=400&h=300&c=crop', mutualFriends: 5 },
+    ,{ name: 'John Doe', image: 'https://cdn.britannica.com/37/231937-050-9228ECA1/Drake-rapper-2019.jpg?w=400&h=300&c=crop', mutualFriends: 5 },
+    ,{ name: 'John Doe', image: 'https://cdn.britannica.com/37/231937-050-9228ECA1/Drake-rapper-2019.jpg?w=400&h=300&c=crop', mutualFriends: 5 },
+    ,{ name: 'John Doe', image: 'https://cdn.britannica.com/37/231937-050-9228ECA1/Drake-rapper-2019.jpg?w=400&h=300&c=crop', mutualFriends: 5 },
+    ,
+    ,
+    // Thêm dữ liệu những người bạn có thể biết ở đây...
   ];
 
   // Dữ liệu ví dụ cho "Những người bạn có thể biết"
   const suggestedFriends = [
-    { name: 'John Doe', image: 'link_to_image_1.jpg', mutualFriends: 5 },{ name: 'John Doe', image: 'link_to_image_1.jpg', mutualFriends: 5 },
-    { name: 'Jane Smith', image: 'link_to_image_2.jpg', mutualFriends: 3 },{ name: 'John Doe', image: 'link_to_image_1.jpg', mutualFriends: 5 },
-    { name: 'Jane Smith', image: 'link_to_image_2.jpg', mutualFriends: 3 },{ name: 'John Doe', image: 'link_to_image_1.jpg', mutualFriends: 5 },
-    { name: 'Jane Smith', image: 'link_to_image_2.jpg', mutualFriends: 3 },{ name: 'John Doe', image: 'link_to_image_1.jpg', mutualFriends: 5 },
-    { name: 'Jane Smith', image: 'link_to_image_2.jpg', mutualFriends: 3 },{ name: 'John Doe', image: 'link_to_image_1.jpg', mutualFriends: 5 },
-    { name: 'Jane Smith', image: 'link_to_image_2.jpg', mutualFriends: 3 },{ name: 'John Doe', image: 'link_to_image_1.jpg', mutualFriends: 5 },
-    { name: 'Jane Smith', image: 'link_to_image_2.jpg', mutualFriends: 3 },{ name: 'John Doe', image: 'link_to_image_1.jpg', mutualFriends: 5 },
-    { name: 'Jane Smith', image: 'link_to_image_2.jpg', mutualFriends: 3 },{ name: 'John Doe', image: 'link_to_image_1.jpg', mutualFriends: 5 },
-    { name: 'Jane Smith', image: 'link_to_image_2.jpg', mutualFriends: 3 },{ name: 'John Doe', image: 'link_to_image_1.jpg', mutualFriends: 5 },
-    { name: 'Jane Smith', image: 'link_to_image_2.jpg', mutualFriends: 3 },
-    { name: 'Jane Smith', image: 'link_to_image_2.jpg', mutualFriends: 3 },
+    { name: 'John Doe', image: 'https://cdn.britannica.com/37/231937-050-9228ECA1/Drake-rapper-2019.jpg?w=400&h=300&c=crop', mutualFriends: 5 }
+    ,{ name: 'John Doe', image: 'https://cdn.britannica.com/37/231937-050-9228ECA1/Drake-rapper-2019.jpg?w=400&h=300&c=crop', mutualFriends: 5 },
+    ,{ name: 'John Doe', image: 'https://cdn.britannica.com/37/231937-050-9228ECA1/Drake-rapper-2019.jpg?w=400&h=300&c=crop', mutualFriends: 5 },
+    ,{ name: 'John Doe', image: 'https://cdn.britannica.com/37/231937-050-9228ECA1/Drake-rapper-2019.jpg?w=400&h=300&c=crop', mutualFriends: 5 },
+    ,{ name: 'John Doe', image: 'https://cdn.britannica.com/37/231937-050-9228ECA1/Drake-rapper-2019.jpg?w=400&h=300&c=crop', mutualFriends: 5 },
+    ,{ name: 'John Doe', image: 'https://cdn.britannica.com/37/231937-050-9228ECA1/Drake-rapper-2019.jpg?w=400&h=300&c=crop', mutualFriends: 5 },
+    ,{ name: 'John Doe', image: 'https://cdn.britannica.com/37/231937-050-9228ECA1/Drake-rapper-2019.jpg?w=400&h=300&c=crop', mutualFriends: 5 },
+    ,{ name: 'John Doe', image: 'https://cdn.britannica.com/37/231937-050-9228ECA1/Drake-rapper-2019.jpg?w=400&h=300&c=crop', mutualFriends: 5 },
+    ,{ name: 'John Doe', image: 'https://cdn.britannica.com/37/231937-050-9228ECA1/Drake-rapper-2019.jpg?w=400&h=300&c=crop', mutualFriends: 5 },
+    ,{ name: 'John Doe', image: 'https://cdn.britannica.com/37/231937-050-9228ECA1/Drake-rapper-2019.jpg?w=400&h=300&c=crop', mutualFriends: 5 },
+    ,
+    ,
     // Thêm dữ liệu những người bạn có thể biết ở đây...
   ];
 
@@ -54,20 +53,23 @@ const FriendsPage = () => {
           position: 'fixed',
           top: '64px',
           left: '0',
-          zIndex: '100'
+          zIndex: '100',
+          boxShadow: '4px 0 10px rgba(0, 0, 0, 0.1)', 
         }}
         className="scroll-on-hover"
       >
         <LeftSidebar />
       </Sider>
 
-      <Content style={{ padding: '70px 0px 70px 370px', minHeight: '100vh', overflow: 'auto' }}>
+      <Content style={{ padding: '70px 0px 70px 380px', minHeight: '100vh', overflow: 'auto' }}>
         <div className="page-content">
           {/* Hiển thị Lời mời kết bạn */}
-          <FriendRequests requestsType="friendRequests" data={friendRequests} />
+          <FriendRequestsList requestsType="friendRequests" data={friendRequests} />
+
+          {/* <div style={{height: '40px'}}></div> */}
 
           {/* Hiển thị Những người bạn có thể biết */}
-          <FriendRequests requestsType="suggestedFriends" data={suggestedFriends} />
+          <FriendRequestsList requestsType="suggestedFriends" data={suggestedFriends} />
         </div>
       </Content>
     </Layout>
