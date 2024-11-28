@@ -15,7 +15,7 @@ import { HeaderContext } from "../Context/HeaderContext.jsx";
 
 const { Header: AntHeader } = Layout;
 
-const Header = () => {
+const Header = ({ onMessageClick }) => {
   const { showHeader } = useContext(HeaderContext); // Lấy trạng thái showHeader từ Context
   const [selected, setSelected] = useState("home");
   const [selectedIcon, setSelectedIcon] = useState(null);
@@ -53,7 +53,12 @@ const Header = () => {
       case "notifications":
         return <NotificationContent />;
       case "messages":
-        return <MessageContent />;
+        return (
+          <MessageContent
+            onMessageClick={onMessageClick}
+            onClose={() => setSelectedIcon(null)} // Đóng Popover khi click
+          />
+        );
       case "appStore":
         return <AppStoreContent />;
       default:

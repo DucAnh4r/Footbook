@@ -17,7 +17,7 @@ const homeRoutes = [
     { path: "/friends/:type", component: <ShowFriendsPage /> },
     { path: "/pages", component: <FlagPage/>},
     { path: "/groups", component: <GroupsPage/>},
-    { path: "/photo", component: <PhotoPage/>},
+    { path: "/photo", component: <PhotoPage />},
 ];
 
 const messageRoutes = [

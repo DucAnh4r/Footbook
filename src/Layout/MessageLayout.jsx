@@ -6,6 +6,7 @@ import MessageLeftSidebar from "../Pages/Homepage/LeftSidebar/MessageLeftSidebar
 import MessageRightSidebar from "../Pages/Homepage/RightSidebar/MessageRightSidebar";
 import Messagepage from "../Pages/MessagePage/Messagepage";
 import './MessageLayout.scss'
+import { HeaderProvider } from "../Context/HeaderContext";
 
 const { Sider, Content } = Layout;
 
@@ -16,6 +17,7 @@ const MessageLayout = (props) => {
 
   return (
     <Layout className="main-layout">
+            <HeaderProvider>
       <Header>header</Header>
       <Layout className="inner-layout">
         {/* Left Sidebar */}
@@ -38,6 +40,7 @@ const MessageLayout = (props) => {
           </Sider>
         )}
       </Layout>
+      </HeaderProvider>
     </Layout>
   );
 };

@@ -31,19 +31,19 @@ const PhotoPage = () => {
   const handleZoomIn = () => {
     setZoomLevel((prev) => Math.min(prev + 0.1, 2)); // Phóng to tối đa 200%
   };
-  
+
   const handleZoomOut = () => {
     setZoomLevel((prev) => Math.max(prev - 0.1, 0.5)); // Thu nhỏ tối đa 50%
   };
-  
+
   const handleFullScreen = () => {
     setIsFullScreen((prev) => !prev); // Chuyển đổi giữa true và false
   };
-  
-  useEffect(() => {
-    setShowHeader(false); // Ẩn Header khi vào trang này
-    return () => setShowHeader(true); // Hiển thị lại Header khi rời khỏi trang
-  }, [setShowHeader]);
+
+  // useEffect(() => {
+  //   setShowHeader(false); // Ẩn Header khi vào trang này
+  //   return () => setShowHeader(true); // Hiển thị lại Header khi rời khỏi trang
+  // }, [setShowHeader]);
 
   useEffect(() => {
     // Thêm lớp để khóa cuộn khi vào trang
@@ -53,19 +53,6 @@ const PhotoPage = () => {
       document.body.classList.remove("no-scroll");
     };
   }, []);
-
-  const getPopoverContent = (name) => {
-    switch (name) {
-      case "notifications":
-        return <NotificationContent />;
-      case "messages":
-        return <MessageContent />;
-      case "appStore":
-        return <AppStoreContent />;
-      default:
-        return null;
-    }
-  };
 
   useEffect(() => {
     setSelectedIcon(null); // Close any open popover on navigation
@@ -88,7 +75,7 @@ const PhotoPage = () => {
     cursor: "pointer",
     fontSize: "18px",
   };
-  
+
 
   const comments = [
     {
@@ -162,109 +149,60 @@ const PhotoPage = () => {
     <Layout>
       <Row >
         {/* Slider Ảnh */}
-        <Col xs={24}     
-        lg={isFullScreen ? 24 : 19} // Chiếm toàn bộ màn hình nếu isFullScreen
-        style={{ paddingLeft: '0px', paddingRight: '0px' }}>
-        <div style={{
-        position: "absolute",
-        top: "10px",
-        right: "10px",
-        display: "flex",
-        gap: "10px",
-        zIndex: 10,
-      }}>
-        <button
-          style={buttonStyle}
-          onClick={() => handleZoomIn()}
-        >
-          <AiOutlineZoomIn />
-        </button>
-        <button
-          style={buttonStyle}
-          onClick={() => handleZoomOut()}
-        >
-          <AiOutlineZoomOut />
-        </button>
-        <button
-          style={buttonStyle}
-          onClick={() => handleFullScreen()}
-        >
-          {isFullScreen ? <AiOutlineFullscreenExit /> : <AiOutlineFullscreen /> }
-        </button>
-      </div>
-      <Slider {...sliderSettings}>
-  {images.map((image, index) => (
-    <div key={index}>
-      <img
-        src={image}
-        alt={`Slide ${index}`}
-        style={{
-          width: "100%",
-          height: "100vh",
-          objectFit: "cover",
-          borderRadius: "8px",
-          transform: `scale(${zoomLevel})`, // Áp dụng zoom
-          transition: "transform 0.3s ease", // Tạo hiệu ứng mượt khi zoom
-        }}
-      />
-    </div>
-  ))}
-</Slider>
+        <Col xs={24}
+          lg={isFullScreen ? 24 : 19} // Chiếm toàn bộ màn hình nếu isFullScreen
+          style={{ paddingLeft: '0px', paddingRight: '0px' }}>
+          <div style={{
+            position: "absolute",
+            top: "10px",
+            right: "10px",
+            display: "flex",
+            gap: "10px",
+            zIndex: 10,
+          }}>
+            <button
+              style={buttonStyle}
+              onClick={() => handleZoomIn()}
+            >
+              <AiOutlineZoomIn />
+            </button>
+            <button
+              style={buttonStyle}
+              onClick={() => handleZoomOut()}
+            >
+              <AiOutlineZoomOut />
+            </button>
+            <button
+              style={buttonStyle}
+              onClick={() => handleFullScreen()}
+            >
+              {isFullScreen ? <AiOutlineFullscreenExit /> : <AiOutlineFullscreen />}
+            </button>
+          </div>
+          <Slider {...sliderSettings}>
+            {images.map((image, index) => (
+              <div key={index}>
+                <img
+                  src={image}
+                  alt={`Slide ${index}`}
+                  style={{
+                    width: "100%",
+                    height: "100vh",
+                    objectFit: "cover",
+                    borderRadius: "8px",
+                    transform: `scale(${zoomLevel})`, // Áp dụng zoom
+                    transition: "transform 0.3s ease", // Tạo hiệu ứng mượt khi zoom
+                  }}
+                />
+              </div>
+            ))}
+          </Slider>
         </Col>
 
         {/* Bình luận */}
         <Col xs={24} lg={5} style={{ paddingLeft: '0px', paddingRight: '0px' }}>
-          <div style={{padding:'24px', paddingRight:'0px'}}>
-            <Row gutter={16} align="middle" style={{ display: 'flex', justifyContent: 'end' }}>
-              {iconData.map(({ name, icon, tooltip }) => (
-                <Col key={name} className={styles["icon-container"]} style={{ lineHeight: '0px' }}>
-                  <Tooltip title={tooltip}>
-                    {["notifications", "messages", "appStore"].includes(name) ? (
-                      <Popover
-                        content={getPopoverContent(name)}
-                        trigger="click"
-                        placement="bottomRight"
-                        open={selectedIcon === name}
-                        onOpenChange={(visible) => handleIconClick(visible ? name : null)}
-                      >
-                        <div
-                          className={`${styles["icon-wrapper"]} ${selectedIcon === name ? styles["icon-selected"] : ""}`}
-                        >
-                          {icon}
-                        </div>
-                      </Popover>
-                    ) : (
-                      <div
-                        className={`${styles["icon-wrapper"]} ${selectedIcon === name ? styles["icon-selected"] : ""}`}
-                        onClick={() => handleIconClick(name)}
-                      >
-                        {icon}
-                      </div>
-                    )}
-                  </Tooltip>
-                </Col>
-              ))}
-
-              <Col className={styles["icon-container"]} >
-                <Popover
-                  content={<ProfileContent />}
-                  trigger="click"
-                  placement="bottomRight"
-                  open={selectedIcon === "profile"}
-                  onOpenChange={(visible) => handleIconClick(visible ? "profile" : null)}
-                >
-                  <div className={styles["avatar-wrapper"]}>
-                    <Avatar
-                      icon={<FaUser />}
-                      style={{ backgroundColor: selectedIcon === "profile" ? "#E8F0FE" : "#87d068" }}
-                    />
-                  </div>
-                </Popover>
-              </Col>
-            </Row>
-
+          <div style={{ padding: '24px', paddingRight: '0px' }}>
             {/* Cần cuộn */}
-            <Divider />
             <div className="scrollable-area">
               <div style={{ marginBottom: "16px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "10px", justifyContent: 'space-between' }}>
