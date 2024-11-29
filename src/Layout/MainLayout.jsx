@@ -64,10 +64,10 @@ const MainLayout = ({ children }) => {
     };
 
     return (
-        <Layout style={{ height: '100vh' }}>
+        <Layout style={{ height: '100vh'}}>
             <HeaderProvider>
                 <Header onMessageClick={handleMessageClick} /> {/* Truyền xuống Header */}
-                <Layout>{children}</Layout>
+                <Layout style={{ minHeight: 'auto' }}>{children}</Layout>
             </HeaderProvider>
             {/* Bong bóng chat (hiển thị tin nhắn ẩn) */}
             <FloatButton.Group shape="circle" style={{ bottom: '14px', right: '24px' }}>
