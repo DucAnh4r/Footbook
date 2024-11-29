@@ -1,0 +1,73 @@
+.container {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    width: 70%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Thêm bóng đổ nhẹ */
+  }
+  
+  .sectionHeader {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    position: relative;
+  
+    /* Sử dụng ::after để thêm đường kẻ ngang */
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: -16px;
+      left: 0;
+      width: 100%;
+      height: 0.8px;
+      background-color: #ccc;
+    }
+  }
+  
+  .description {
+    margin-bottom: 16px;
+  }
+  
+  .infoList {
+    margin-top: 26px;
+  
+  }
+  
+  .infoItem {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px; /* Khoảng cách giữa các mục */
+  }
+  
+  .infoItem svg {
+    margin-right: 10px; /* Khoảng cách giữa icon và text */
+    color: #3498db; /* Màu icon */
+  }
+  
+  .info-text {
+    font-size: 14px;
+    color: #333; /* Màu chữ */
+    line-height: 1.5;
+  }
+  
+
+  .white-button {
+    min-width: 200px;
+    width: 100%;
+    height: 36px;
+    border-radius: 7px;
+    border: none;
+    background: #e6e6e6;
+    color: black;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 0 10px;
+  
+    &:hover {
+      cursor: pointer;
+      background: #d1d1d1;
+    }
+  }
