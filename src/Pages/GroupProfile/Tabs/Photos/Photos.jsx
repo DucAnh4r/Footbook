@@ -43,13 +43,13 @@ const Photos = () => {
         />
       )}
     </div>
-  );      
+  );
 
 
   return (
-    <div style={{ padding: '20px', margin: 'auto' }}>
+    <div style={{ padding: '20px', margin: 'auto', backgroundColor: '#ffffff' }}>
       <Row justify="space-between" align="middle" style={{ marginBottom: '16px' }}>
-        <h2>Ảnh</h2>
+        <h2>File phương tiện</h2>
         <div>
           <Button type="link" icon={<PlusOutlined />}>
             Thêm ảnh/video
@@ -68,7 +68,7 @@ const Photos = () => {
         </div>
       </Row>
       <Tabs defaultActiveKey="tagged">
-        <TabPane tab="Ảnh có mặt bạn" key="tagged">
+        <TabPane tab="Ảnh" key="photo">
           <Row gutter={16}>
             {photosData.map((photo) => (
               <Col span={6} key={photo.id}>
@@ -77,7 +77,7 @@ const Photos = () => {
             ))}
           </Row>
         </TabPane>
-        <TabPane tab="Ảnh của bạn" key="yourPhotos">
+        <TabPane tab="Video" key="video">
           <Row gutter={16}>
             {/* Add your own photos here */}
           </Row>

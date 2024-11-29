@@ -64,7 +64,7 @@ const MainLayout = ({ children }) => {
     };
 
     return (
-        <Layout style={{ height: '100vh'}}>
+        <Layout style={{ height: '100vh' }}>
             <HeaderProvider>
                 <Header onMessageClick={handleMessageClick} /> {/* Truyền xuống Header */}
                 <Layout style={{ minHeight: 'auto' }}>{children}</Layout>

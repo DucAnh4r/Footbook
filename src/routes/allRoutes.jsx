@@ -16,10 +16,10 @@ const homeRoutes = [
     { path: "/friendprofile", component: <FriendProfilePage /> },
     { path: "/friends", component: <FriendsPage /> },
     { path: "/friends/:type", component: <ShowFriendsPage /> },
-    { path: "/pages", component: <FlagPage/>},
-    { path: "/groups", component: <GroupsPage/>},
-    { path: "/group/a", component: <GroupsProfile/>},
-    { path: "/photo", component: <PhotoPage/>},
+    { path: "/pages", component: <FlagPage /> },
+    { path: "/groups", component: <GroupsPage /> },
+    { path: "/group/a", component: <GroupsProfile /> },
+    { path: "/photo", component: <PhotoPage /> },
 ];
 
 const messageRoutes = [

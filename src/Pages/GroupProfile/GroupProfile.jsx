@@ -7,11 +7,13 @@ import { MdGroups } from "react-icons/md";
 import { FaPen, FaLock, FaShare } from "react-icons/fa6";
 import { EllipsisOutlined } from '@ant-design/icons';
 import AboutTab from './Tabs/About/AboutTab.jsx';
-import Friends from './Tabs/Friends/Friends.jsx';
-import Photos from './Tabs/Photos/Photos.jsx';
-import Videos from './Tabs/Videos/Videos.jsx';
+import Members from './Tabs/Members/Members.jsx';
+import Events from './Tabs/Events/Events.jsx';
 import FriendSuggestion from '../ProfilePage/UserProfilePage/SuggestedFriends.jsx';
 import Discussion from './Tabs/Discussion/Discussion.jsx';
+import Noticeable from './Tabs/Noticeable/Noticeable.jsx';
+import Photos from './Tabs/Photos/Photos.jsx';
+import Files from './Tabs/Files/Files.jsx';
 
 const GroupProfile = () => {
   const [activeTab, setActiveTab] = useState("1");
@@ -34,15 +36,15 @@ const GroupProfile = () => {
       case "2":
         return <Discussion />;
       case "3":
-        return <Friends />;
+        return <Noticeable />;
       case "4":
-        return <Photos />;
+        return <Members />;
       case "5":
-        return <Videos />;
+        return <Events />;
       case "6":
-        return <div style={{ minHeight: '1000px' }}>Nội dung của tab Reels</div>;
+        return <Photos />;
       case "7":
-        return <div style={{ minHeight: '1000px' }}>Nội dung của tab Xem thêm</div>;
+        return <Files />;
       default:
         return null;
     }
@@ -107,16 +109,16 @@ const GroupProfile = () => {
                 <FaLock style={{ color: '#65686c' }} />
                 <span style={{ color: '#65686c' }}> Nhóm riêng tư ·  </span>
                 <a
-                    style={{
+                  style={{
                     fontSize: '16px',
                     fontWeight: 500,
                     color: '#65686c',
                     textDecoration: 'none',
-                    }}
-                    onMouseEnter={(e) => e.target.style.textDecoration = 'underline'}
-                    onMouseLeave={(e) => e.target.style.textDecoration = 'none'}
+                  }}
+                  onMouseEnter={(e) => e.target.style.textDecoration = 'underline'}
+                  onMouseLeave={(e) => e.target.style.textDecoration = 'none'}
                 >
-                    392K thành viên
+                  392K thành viên
                 </a>
               </div>
             </Col>
@@ -125,19 +127,19 @@ const GroupProfile = () => {
             <Col style={{ paddingRight: '0px' }} span={9}>
               <div className={styles['info-btn-container']} style={{ marginTop: '40px', textAlign: 'right' }}>
                 <button className={styles['blue-button']}>
-                    <IoMdAdd />
-                    Mời
+                  <IoMdAdd />
+                  Mời
                 </button>
                 <button className={styles['white-button']}>
-                    <FaShare />
-                    Chia sẻ
+                  <FaShare />
+                  Chia sẻ
                 </button>
                 <Dropdown overlay={menu1} trigger={['click']}>
-                    <button style={{ alignItems: 'center', padding: '0 16px' }} className={styles['white-button']}>
-                        <MdGroups />
-                        Đã tham gia
-                        <TiArrowSortedDown />
-                    </button>
+                  <button style={{ alignItems: 'center', padding: '0 16px' }} className={styles['white-button']}>
+                    <MdGroups />
+                    Đã tham gia
+                    <TiArrowSortedDown />
+                  </button>
                 </Dropdown>
                 <button
                   style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 16px' }}
@@ -147,9 +149,9 @@ const GroupProfile = () => {
                   <IoIosArrowDown
                     className={`${styles.arrowIcon} ${isFriendSuggestionVisible ? styles.arrowIconRotated : ''}`} // Thêm lớp xoay mũi tên
                   />
-                </button>    
+                </button>
               </div>
-           
+
             </Col>
 
           </Row>
