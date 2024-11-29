@@ -2,14 +2,13 @@ import React from 'react';
 import AboutSection from './AboutSection';
 import { Col, Row, Space } from 'antd';
 import StatusInput from '../../../../Homepage/StatusInput';
-import Post from '../../../../Homepage/Post';
+import Post from '../../../../../Components/Post';
 import PostFilter from './PostFilter';
 import PhotoGallery from './PhotoGallery';
 import FriendsList from './FriendsList';
 import styles from './Posts.module.scss';
 
 const Posts = () => {
-  const isFriend = true
   return (
     <Row gutter={16}>
       <Col

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Col, Row, Space } from 'antd';
 import StatusInput from '../../../Homepage/StatusInput';
-import Post from '../../../Homepage/Post';
+import Post from '../../../../Components/Post';
 import PostFilter from './PostFilter';
 import styles from './Discussion.module.scss';
 import AboutCard from '../About/AboutCard';
