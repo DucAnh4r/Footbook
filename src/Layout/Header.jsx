@@ -104,6 +104,7 @@ const Header = ({ onMessageClick }) => {
                       placement="bottomRight"
                       open={selectedIcon === name}
                       onOpenChange={(visible) => handleIconClick(visible ? name : null)}
+                      getPopupContainer={(triggerNode) => triggerNode.parentNode} 
                     >
                       <div
                         className={`${styles["icon-wrapper"]} ${selectedIcon === name ? styles["icon-selected"] : ""}`}
@@ -130,6 +131,7 @@ const Header = ({ onMessageClick }) => {
                 placement="bottomRight"
                 open={selectedIcon === "profile"}
                 onOpenChange={(visible) => handleIconClick(visible ? "profile" : null)}
+                getPopupContainer={(triggerNode) => triggerNode.parentNode} 
               >
                 <div className={styles["avatar-wrapper"]}>
                   <Avatar

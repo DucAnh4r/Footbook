@@ -2,8 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Input, Avatar, Button, Flex, Typography, Tooltip } from 'antd';
 import { ArrowRightOutlined, CloseOutlined, MinusOutlined, PhoneOutlined, SmileOutlined, StopOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import './ChatWindow.scss';
-import { FaMicrophone } from "react-icons/fa";
-import { FaRegFileImage } from "react-icons/fa6";
+import { FaChevronDown, FaMicrophone } from "react-icons/fa";
 import { RiEmojiStickerLine } from "react-icons/ri";
 import { PiGifFill } from "react-icons/pi";
 import { io } from "socket.io-client";
@@ -11,6 +10,10 @@ import { AiFillLike } from "react-icons/ai";
 
 // Import các hàm từ audioRecorder.js
 import { startRecording, stopRecording, playAudio, downloadAudio } from '../../utils/audioRecorder';
+import GifModal from '../../Modal/GifModal';
+import StickerModal from '../../Modal/StickerModal';
+import FileUploadButton from '../../Components/FileUploadButton';
+import ChatSettingsPopup from '../../Components/ChatSettingsPopup';
 
 const { TextArea } = Input;
 
@@ -23,6 +26,8 @@ const ChatWindow = ({ message, onClose, onHide, position }) => {
     const [audioBlob, setAudioBlob] = useState(null); // Blob âm thanh để tải xuống
     const chatBodyRef = useRef(null); // Thêm ref để theo dõi khung chat
     const [isRecordingMode, setIsRecordingMode] = useState(false); // Chế độ ghi âm
+    const [gifModalVisible, setGifModalVisible] = useState(false); // Quản lý trạng thái hiển thị modal GIF
+    const [stickerModalVisible, setStickerModalVisible] = useState(false);
 
     useEffect(() => {
         // Kết nối với Socket.IO server
@@ -41,9 +46,21 @@ const ChatWindow = ({ message, onClose, onHide, position }) => {
 
     useEffect(() => {
         if (chatBodyRef.current) {
-          chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
+            chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
         }
-      }, [chatMessages]);
+    }, [chatMessages]);
+
+    useEffect(() => {
+        return () => {
+            chatMessages.forEach((msg) => {
+                if (msg.content.startsWith('<img') || msg.content.startsWith('<a')) {
+                    const matches = msg.content.match(/src="([^"]+)"/);
+                    if (matches) URL.revokeObjectURL(matches[1]);
+                }
+            });
+        };
+    }, [chatMessages]);
+
 
     // Xử lý gửi tin nhắn
     const handleSendMessage = () => {
@@ -84,6 +101,49 @@ const ChatWindow = ({ message, onClose, onHide, position }) => {
         setIsRecordingMode(false);
     };
 
+    const handleSendGif = (gifUrl) => {
+        const gifMessage = {
+            content: `<img src="${gifUrl}" alt="GIF" style="max-width: 200px; max-height: 200px;" />`,
+            sender: "You",
+            type: "gif",
+        };
+        setChatMessages((prevMessages) => [gifMessage, ...prevMessages]);
+        socket.emit("sendMessage", { content: gifMessage.content, recipient: message.name, type: "gif" });
+        setGifModalVisible(false);
+    };
+
+    const handleSendSticker = (stickerUrl) => {
+        const stickerMessage = {
+            content: `<img src="${stickerUrl}" alt="Sticker" style="max-width: 200px; max-height: 200px;" />`,
+            sender: "You",
+            type: "sticker",
+        };
+        setChatMessages((prevMessages) => [stickerMessage, ...prevMessages]);
+        socket.emit("sendMessage", { content: stickerMessage.content, recipient: message.name, type: "sticker" });
+        setStickerModalVisible(false);
+    };
+
+    const handleSendLike = () => {
+        const likeMessage = {
+            content: `<img src="https://upload.wikimedia.org/wikipedia/commons/1/13/Facebook_like_thumb.png" alt="Like" style="max-width: 50px; max-height: 50px;" />`,
+            sender: "You",
+            type: "like",
+        };
+        setChatMessages((prevMessages) => [likeMessage, ...prevMessages]);
+        socket.emit("sendMessage", {
+            content: likeMessage.content,
+            recipient: message.name,
+            type: "like",
+        });
+    };
+
+    const truncateText = (text, maxLength) => {
+        if (text.length > maxLength) {
+            return text.slice(0, maxLength) + '...';
+        }
+        return text;
+    };
+
     return (
         <div
             className="chat-window"
@@ -104,13 +164,27 @@ const ChatWindow = ({ message, onClose, onHide, position }) => {
         >
             {/* Header */}
             <div className="chat-header">
-                <Flex gap={4} align='center'>
-                    <Avatar size={34} src="https://i.pravatar.cc/300" />
-                    <Flex vertical>
-                        <Typography.Text>{message.name || 'Người dùng'}</Typography.Text>
-                        <Typography.Text>active</Typography.Text>
+                <ChatSettingsPopup>
+                <Tooltip title="Cài đặt chat">
+                    <div className="chat-setting-container" style={{ cursor: 'pointer' }}>
+                    <Flex gap={4} align='center'>
+                        <Avatar size={34} src="https://i.pravatar.cc/300" />
+                        <Flex vertical>
+                            <Typography.Text style={{
+                                whiteSpace: 'nowrap',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                maxWidth: '120px', // Đặt chiều rộng tối đa
+                            }}>
+                                {truncateText(message.name || 'Người dùng', 20)}
+                            </Typography.Text>
+                            <Typography.Text>active</Typography.Text>
+                        </Flex>
+                        <FaChevronDown size={10} color="#000" />
                     </Flex>
-                </Flex>
+                    </div>
+                </Tooltip>
+                </ChatSettingsPopup>
                 <Flex gap={4}>
                     <Tooltip title="Gọi điện">
                         <Button
@@ -146,11 +220,19 @@ const ChatWindow = ({ message, onClose, onHide, position }) => {
             </div>
 
             {/* Body */}
-            <div className="chat-body">
+            <div className="chat-body" ref={chatBodyRef}>
                 {chatMessages.map((msg, index) => (
                     <div
                         key={index}
-                        className={`chat-message ${msg.sender === "You" ? "sender" : "receiver"
+                        className={`chat-message ${msg.sender === "You" ? "sender" : "receiver"} ${msg.type === "gif"
+                                ? "gif-message"
+                                : msg.type === "sticker"
+                                    ? "sticker-message"
+                                    : msg.type === "file"
+                                        ? "file-message"
+                                        : msg.type === "like"
+                                            ? "like-message"
+                                            : "text-message"
                             }`}
                     >
                         {/* Hiển thị avatar nếu là người nhận */}
@@ -159,10 +241,11 @@ const ChatWindow = ({ message, onClose, onHide, position }) => {
                                 <img src="https://i.pravatar.cc/300" alt="Avatar" />
                             </div>
                         )}
-                        {msg.content}
+
+                        {/* Render nội dung */}
+                        <div dangerouslySetInnerHTML={{ __html: msg.content }} />
                     </div>
                 ))}
-
                 {/* Phát lại âm thanh */}
                 {audioUrl && (
                     <div className="audio-player">
@@ -175,7 +258,7 @@ const ChatWindow = ({ message, onClose, onHide, position }) => {
 
             {/* Footer */}
             <div className="chat-footer">
-            {isRecordingMode ? (
+                {isRecordingMode ? (
                     // Giao diện ghi âm
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px', backgroundColor: '#d8b6ff', borderRadius: '10px' }}>
                         <Button
@@ -201,68 +284,95 @@ const ChatWindow = ({ message, onClose, onHide, position }) => {
                         />
                     </div>
                 ) : (
-                <Flex gap={4} align='center' style={{ height: '60px' }}>
-                    {/* Nút ghi âm */}
-                    <Tooltip title={isRecording ? "Dừng ghi âm" : "Ghi âm"}>
-                        <Button
-                            type="text"
-                            icon={<FaMicrophone />}
-                            onClick={isRecording ? handleStopRecording : handleStartRecording}
-                            style={{
-                                color: isRecording ? 'red' : '#000',
-                                fontSize: '20px',
-                                width: '36px',
-                                paddingLeft: '4px',
-                            }}
-                        />
-                    </Tooltip>
-
-                    <Tooltip title="Hình ảnh">
-                        <Button
-                            type="text"
-                            icon={<FaRegFileImage />}
-                            style={{ color: '#000', fontSize: '20px', width: '36px' }}
-                        />
-                    </Tooltip>
-                    <Tooltip title="Sticker">
-                        <Button
-                            type="text"
-                            icon={<RiEmojiStickerLine />}
-                            style={{ color: '#000', fontSize: '20px', width: '36px' }}
-                        />
-                    </Tooltip>
-                    <Tooltip title="GIF">
-                        <Button
-                            type="text"
-                            icon={<PiGifFill />}
-                            style={{ color: '#000', fontSize: '20px', width: '36px' }}
-                        />
-                    </Tooltip>
-                    <Tooltip title="Chọn emoji">
-                        <div className="textarea-container">
-                            <TextArea
-                                placeholder="Aa"
-                                autoSize={{ minRows: 1, maxRows: 4 }}
-                                className="custom-textarea"
-                                value={inputValue}
-                                onChange={(e) => setInputValue(e.target.value)}
-                                onPressEnter={(e) => {
-                                    e.preventDefault(); // Ngăn xuống dòng
-                                    handleSendMessage(); // Gửi tin nhắn
+                    <Flex gap={4} align='center' style={{ height: '60px' }}>
+                        {/* Nút ghi âm */}
+                        <Tooltip title={isRecording ? "Dừng ghi âm" : "Ghi âm"}>
+                            <Button
+                                type="text"
+                                icon={<FaMicrophone />}
+                                onClick={isRecording ? handleStopRecording : handleStartRecording}
+                                style={{
+                                    color: isRecording ? 'red' : '#000',
+                                    fontSize: '20px',
+                                    width: '36px',
+                                    paddingLeft: '4px',
                                 }}
                             />
-                        </div>
-                    </Tooltip>
-                    <Tooltip title="Gửi like">
-                        <Button
-                            type="text"
-                            icon={<AiFillLike />}
-                            style={{ color: '#000', fontSize: '20px', width: '36px', paddingRight: '4px' }}
+                        </Tooltip>
+
+                        <FileUploadButton
+                            onFileChange={(fileMessage) => {
+                                const formattedMessage = {
+                                    ...fileMessage,
+                                    type: "file", // Thêm type để xác định đây là file
+                                };
+
+                                setChatMessages((prevMessages) => [formattedMessage, ...prevMessages]);
+                                socket.emit("sendFile", {
+                                    content: formattedMessage.content,
+                                    recipient: message.name,
+                                    type: "file", // Gửi type kèm theo
+                                });
+                            }}
                         />
-                    </Tooltip>
-                </Flex>
+
+                        <Tooltip title="Sticker">
+                            <Button
+                                type="text"
+                                icon={<RiEmojiStickerLine />}
+                                style={{ color: '#000', fontSize: '20px', width: '36px' }}
+                                onClick={() => setStickerModalVisible(true)}
+                            />
+                        </Tooltip>
+
+                        <Tooltip title="GIF">
+                            <Button
+                                type="text"
+                                icon={<PiGifFill />}
+                                style={{ color: '#000', fontSize: '20px', width: '36px' }}
+                                onClick={() => setGifModalVisible(true)}
+                            />
+                        </Tooltip>
+
+                        <Tooltip title="Chọn emoji">
+                            <div className="textarea-container">
+                                <TextArea
+                                    placeholder="Aa"
+                                    autoSize={{ minRows: 1, maxRows: 4 }}
+                                    className="custom-textarea"
+                                    value={inputValue}
+                                    onChange={(e) => setInputValue(e.target.value)}
+                                    onPressEnter={(e) => {
+                                        e.preventDefault(); // Ngăn xuống dòng
+                                        handleSendMessage(); // Gửi tin nhắn
+                                    }}
+                                />
+                            </div>
+                        </Tooltip>
+
+                        <Tooltip title="Gửi like">
+                            <Button
+                                type="text"
+                                icon={<AiFillLike />}
+                                style={{ color: '#000', fontSize: '20px', width: '36px', paddingRight: '4px' }}
+                                onClick={handleSendLike} // Gọi hàm gửi like
+                            />
+                        </Tooltip>
+                    </Flex>
                 )}
             </div>
+            {/* Modal GIF */}
+            <GifModal
+                visible={gifModalVisible}
+                onClose={() => setGifModalVisible(false)}
+                onSendGif={handleSendGif}
+            />
+
+            <StickerModal
+                visible={stickerModalVisible}
+                onClose={() => setStickerModalVisible(false)}
+                onSendSticker={handleSendSticker}
+            />
         </div>
     );
 };

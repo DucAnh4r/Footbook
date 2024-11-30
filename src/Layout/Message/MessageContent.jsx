@@ -7,10 +7,17 @@ import SettingsMenu from './SettingsMenu';
 const { Text, Title } = Typography;
 
 const messages = [
-  { id: 1, name: 'Người dùng 1', message: 'Nội dung tin nhắn mẫu...', time: '1 giờ', avatar: 'https://via.placeholder.com/40', unread: true, active: true },
+  { id: 1, name: 'Người dùng Người dùng Người dùng Người dùng Người dùng ', message: 'Nội dung tin nhắn mẫu...', time: '1 giờ', avatar: 'https://via.placeholder.com/40', unread: true, active: true },
   { id: 2, name: 'Người dùng 2', message: 'Nội dung tin nhắn mẫu...', time: '2 giờ', avatar: 'https://via.placeholder.com/40', unread: true, active: false },
   { id: 3, name: 'Người dùng 3', message: 'Nội dung tin nhắn mẫu...', time: '3 giờ', avatar: 'https://via.placeholder.com/40', unread: false, active: true },
 ];
+
+const truncateText = (text, maxLength) => {
+  if (text.length > maxLength) {
+    return text.slice(0, maxLength) + '...';
+  }
+  return text;
+};
 
 const MessageContent = ({ onMessageClick, onClose }) => {
   const navigate = useNavigate();
@@ -36,8 +43,12 @@ const MessageContent = ({ onMessageClick, onClose }) => {
     >
       <List.Item.Meta
         avatar={<Avatar src={avatar} size="small" />}
-        title={<Text strong>{name}</Text>}
-        description={<Text type="secondary" style={styles.messageDescription}>{message} · {time}</Text>}
+        title={<Text strong>{truncateText(name, 30)}</Text>} // Hiển thị tối đa 20 ký tự
+        description={
+          <Text type="secondary" style={styles.messageDescription}>
+            {message} · {time}
+          </Text>
+        }
       />
       {unread && <Badge dot color="#1890ff" />}
     </List.Item>
