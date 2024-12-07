@@ -9,6 +9,7 @@ const GroupsPage = lazy(() => import('../Pages/GroupsPage/GroupsHomePage'));
 const GroupsProfile = lazy(() => import('../Pages/GroupProfile/GroupProfile'));
 const ProfilePage = lazy(() => import('../Pages/ProfilePage/UserProfilePage/ProfilePage'));
 const FriendProfilePage = lazy(() => import('../Pages/ProfilePage/FriendProfilePage/FriendProfilePage'));
+const SearchPage = lazy(() => import('../Pages/SearchPage/HomePageSearch'));
 
 const homeRoutes = [
     { path: "/", component: <Homepage /> },
@@ -20,6 +21,8 @@ const homeRoutes = [
     { path: "/groups", component: <GroupsPage /> },
     { path: "/group/a", component: <GroupsProfile /> },
     { path: "/photo", component: <PhotoPage /> },
+    { path: "/search", component: <SearchPage /> },
+    { path: "/search/:type", component: <SearchPage /> },
 ];
 
 const messageRoutes = [

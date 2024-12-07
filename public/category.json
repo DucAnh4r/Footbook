@@ -1,0 +1,522 @@
+[
+    {
+      "id": "123457",
+      "name": "Fashion T-Shirt",
+      "brand": {
+        "name": "Brand ABC",
+        "logo": "https://example.com/images/brand-abc-logo.jpg"
+      },
+      "variants": [
+        {
+          "color": "navy",
+          "sizes": {
+            "s": {"price": 108, "rental": 54},
+            "m": {"price": 118, "rental": 59},
+            "l": {"price": 128, "rental": 64}
+          }
+        },
+        {
+          "color": "red",
+          "sizes": {
+            "s": {"price": 103, "rental": 51},
+            "m": {"price": 113, "rental": 56},
+            "l": {"price": 123, "rental": 61}
+          }
+        }
+      ],
+      "stock": 8,
+      "category": "cat123",
+      "images": [
+        "https://247store.vn/uploads/products/20220607/z3439735412566183bbe512d9122cda0072c3c0e755f4d.jpg",
+        "https://images.pexels.com/photos/4456815/pexels-photo-4456815.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        "https://247store.vn/uploads/products/20220607/z3439735412566183bbe512d9122cda0072c3c0e755f4d.jpg",
+        "https://images.pexels.com/photos/4456815/pexels-photo-4456815.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+      ],
+      "styles": "Casual"
+    },
+    {
+      "id": "123458",
+      "name": "Fashion T-Shirt",
+      "brand": {
+        "name": "Brand ABC",
+        "logo": "https://example.com/images/brand-abc-logo.jpg"
+      },
+      "variants": [
+        {
+          "color": "grey",
+          "sizes": {
+            "s": {"price": 109, "rental": 55},
+            "m": {"price": 119, "rental": 60},
+            "l": {"price": 129, "rental": 65}
+          }
+        },
+        {
+          "color": "green",
+          "sizes": {
+            "s": {"price": 107, "rental": 53},
+            "m": {"price": 117, "rental": 58},  
+            "l": {"price": 127, "rental": 63}
+          }
+        }
+      ],
+      "stock": 7,
+      "category": "cat123",
+      "images": [
+        "https://247store.vn/uploads/products/20220607/z3439735412566183bbe512d9122cda0072c3c0e755f4d.jpg",
+        "https://images.pexels.com/photos/4456815/pexels-photo-4456815.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        "https://247store.vn/uploads/products/20220607/z3439735412566183bbe512d9122cda0072c3c0e755f4d.jpg",
+        "https://images.pexels.com/photos/4456815/pexels-photo-4456815.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+      ],
+      "styles": "Casual"
+    },
+    {
+      "id": "123459",
+      "name": "Urban Sweatshirt",
+      "brand": {
+        "name": "Brand XYZ",
+        "logo": "https://example.com/images/brand-xyz-logo.jpg"
+      },
+      "variants": [
+        {
+          "color": "black",
+          "sizes": {
+            "s": {"price": 150, "rental": 75},
+            "m": {"price": 160, "rental": 80},
+            "l": {"price": 170, "rental": 85}
+          }
+        }
+      ],
+      "stock": 5,
+      "category": "cat124",
+      "images": [
+        "https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lzecb3guw8tdc1",
+        "https://247store.vn/uploads/products/20220607/z3439735412566183bbe512d9122cda0072c3c0e755f4d.jpg"
+      ],
+      "styles": "Urban"
+    },
+    {
+      "id": "123460",
+      "name": "Slim Fit Jeans",
+      "brand": {
+        "name": "Brand Denim",
+        "logo": "https://example.com/images/brand-denim-logo.jpg"
+      },
+      "variants": [
+        {
+          "color": "blue",
+          "sizes": {
+            "s": {"price": 140, "rental": 70},
+            "m": {"price": 150, "rental": 75},
+            "l": {"price": 160, "rental": 80}
+          }
+        }
+      ],
+      "stock": 12,
+      "category": "cat125",
+      "images": [
+        "https://lp2.hm.com/hmgoepprod?set=quality%5B79%5D%2Csource%5B%2F3a%2F0b%2F3a0b2f176a9cc61337bd52657ab184ff98892c13.jpg%5D%2Corigin%5Bdam%5D%2Ccategory%5B%5D%2Ctype%5BDESCRIPTIVESTILLLIFE%5D%2Cres%5Bm%5D%2Chmver%5B2%5D&call=url[file:/product/main]",
+        "https://247store.vn/uploads/products/20220607/z3439735412566183bbe512d9122cda0072c3c0e755f4d.jpg"
+      ],
+      "styles": "Denim"
+    },
+    {
+      "id": "123461",
+      "name": "Classic Polo Shirt",
+      "brand": {
+        "name": "Brand Polo",
+        "logo": "https://example.com/images/brand-polo-logo.jpg"
+      },
+      "variants": [
+        {
+          "color": "white",
+          "sizes": {
+            "s": {"price": 120, "rental": 60},
+            "m": {"price": 130, "rental": 65},
+            "l": {"price": 140, "rental": 70}
+          }
+        }
+      ],
+      "stock": 10,
+      "category": "cat126",
+      "images": [
+        "https://bizweb.dktcdn.net/thumb/grande/100/415/697/products/ap001.png?v=1701403328933",
+        "https://247store.vn/uploads/products/20220607/z3439735412566183bbe512d9122cda0072c3c0e755f4d.jpg"
+      ],
+      "styles": "Casual"
+    },
+    {
+      "id": "123461",
+      "name": "Classic Polo Shirt",
+      "brand": {
+        "name": "Brand Polo",
+        "logo": "https://example.com/images/brand-polo-logo.jpg"
+      },
+      "variants": [
+        {
+          "color": "white",
+          "sizes": {
+            "s": {"price": 120, "rental": 60},
+            "m": {"price": 130, "rental": 65},
+            "l": {"price": 140, "rental": 70}
+          }
+        }
+      ],
+      "stock": 10,
+      "category": "cat126",
+      "images": [
+        "https://bizweb.dktcdn.net/thumb/grande/100/415/697/products/ap001.png?v=1701403328933",
+        "https://example.com/images/polo-side.jpg"
+      ],
+      "styles": "Casual"
+    },
+    {
+      "id": "123461",
+      "name": "Classic Polo Shirt",
+      "brand": {
+        "name": "Brand Polo",
+        "logo": "https://example.com/images/brand-polo-logo.jpg"
+      },
+      "variants": [
+        {
+          "color": "white",
+          "sizes": {
+            "s": {"price": 120, "rental": 60},
+            "m": {"price": 130, "rental": 65},
+            "l": {"price": 140, "rental": 70}
+          }
+        }
+      ],
+      "stock": 10,
+      "category": "cat126",
+      "images": [
+        "https://bizweb.dktcdn.net/thumb/grande/100/415/697/products/ap001.png?v=1701403328933",
+        "https://example.com/images/polo-side.jpg"
+      ],
+      "styles": "Casual"
+    },
+    {
+      "id": "123461",
+      "name": "Classic Polo Shirt",
+      "brand": {
+        "name": "Brand Polo",
+        "logo": "https://example.com/images/brand-polo-logo.jpg"
+      },
+      "variants": [
+        {
+          "color": "white",
+          "sizes": {
+            "s": {"price": 120, "rental": 60},
+            "m": {"price": 130, "rental": 65},
+            "l": {"price": 140, "rental": 70}
+          }
+        }
+      ],
+      "stock": 10,
+      "category": "cat126",
+      "images": [
+        "https://bizweb.dktcdn.net/thumb/grande/100/415/697/products/ap001.png?v=1701403328933",
+        "https://example.com/images/polo-side.jpg"
+      ],
+      "styles": "Casual"
+    },
+    {
+      "id": "123461",
+      "name": "Classic Polo Shirt",
+      "brand": {
+        "name": "Brand Polo",
+        "logo": "https://example.com/images/brand-polo-logo.jpg"
+      },
+      "variants": [
+        {
+          "color": "white",
+          "sizes": {
+            "s": {"price": 120, "rental": 60},
+            "m": {"price": 130, "rental": 65},
+            "l": {"price": 140, "rental": 70}
+          }
+        }
+      ],
+      "stock": 10,
+      "category": "cat126",
+      "images": [
+        "https://bizweb.dktcdn.net/thumb/grande/100/415/697/products/ap001.png?v=1701403328933",
+        "https://example.com/images/polo-side.jpg"
+      ],
+      "styles": "Casual"
+    },
+    {
+      "id": "123461",
+      "name": "Classic Polo Shirt",
+      "brand": {
+        "name": "Brand Polo",
+        "logo": "https://example.com/images/brand-polo-logo.jpg"
+      },
+      "variants": [
+        {
+          "color": "white",
+          "sizes": {
+            "s": {"price": 120, "rental": 60},
+            "m": {"price": 130, "rental": 65},
+            "l": {"price": 140, "rental": 70}
+          }
+        }
+      ],
+      "stock": 10,
+      "category": "cat126",
+      "images": [
+        "https://bizweb.dktcdn.net/thumb/grande/100/415/697/products/ap001.png?v=1701403328933",
+        "https://example.com/images/polo-side.jpg"
+      ],
+      "styles": "Casual"
+    },
+    {
+      "id": "123461",
+      "name": "Classic Polo Shirt",
+      "brand": {
+        "name": "Brand Polo",
+        "logo": "https://example.com/images/brand-polo-logo.jpg"
+      },
+      "variants": [
+        {
+          "color": "white",
+          "sizes": {
+            "s": {"price": 120, "rental": 60},
+            "m": {"price": 130, "rental": 65},
+            "l": {"price": 140, "rental": 70}
+          }
+        }
+      ],
+      "stock": 10,
+      "category": "cat126",
+      "images": [
+        "https://bizweb.dktcdn.net/thumb/grande/100/415/697/products/ap001.png?v=1701403328933",
+        "https://example.com/images/polo-side.jpg"
+      ],
+      "styles": "Casual"
+    },
+    {
+      "id": "123461",
+      "name": "Classic Polo Shirt",
+      "brand": {
+        "name": "Brand Polo",
+        "logo": "https://example.com/images/brand-polo-logo.jpg"
+      },
+      "variants": [
+        {
+          "color": "white",
+          "sizes": {
+            "s": {"price": 120, "rental": 60},
+            "m": {"price": 130, "rental": 65},
+            "l": {"price": 140, "rental": 70}
+          }
+        }
+      ],
+      "stock": 10,
+      "category": "cat126",
+      "images": [
+        "https://bizweb.dktcdn.net/thumb/grande/100/415/697/products/ap001.png?v=1701403328933",
+        "https://example.com/images/polo-side.jpg"
+      ],
+      "styles": "Casual"
+    },
+    {
+      "id": "123461",
+      "name": "Classic Polo Shirt",
+      "brand": {
+        "name": "Brand Polo",
+        "logo": "https://example.com/images/brand-polo-logo.jpg"
+      },
+      "variants": [
+        {
+          "color": "white",
+          "sizes": {
+            "s": {"price": 120, "rental": 60},
+            "m": {"price": 130, "rental": 65},
+            "l": {"price": 140, "rental": 70}
+          }
+        }
+      ],
+      "stock": 10,
+      "category": "cat126",
+      "images": [
+        "https://bizweb.dktcdn.net/thumb/grande/100/415/697/products/ap001.png?v=1701403328933",
+        "https://example.com/images/polo-side.jpg"
+      ],
+      "styles": "Casual"
+    },
+    {
+      "id": "123461",
+      "name": "Classic Polo Shirt",
+      "brand": {
+        "name": "Brand Polo",
+        "logo": "https://example.com/images/brand-polo-logo.jpg"
+      },
+      "variants": [
+        {
+          "color": "white",
+          "sizes": {
+            "s": {"price": 120, "rental": 60},
+            "m": {"price": 130, "rental": 65},
+            "l": {"price": 140, "rental": 70}
+          }
+        }
+      ],
+      "stock": 10,
+      "category": "cat126",
+      "images": [
+        "https://bizweb.dktcdn.net/thumb/grande/100/415/697/products/ap001.png?v=1701403328933",
+        "https://example.com/images/polo-side.jpg"
+      ],
+      "styles": "Casual"
+    },
+    {
+      "id": "123462",
+      "name": "Casual Shorts",
+      "brand": {
+        "name": "Brand Shorts",
+        "logo": "https://example.com/images/brand-shorts-logo.jpg"
+      },
+      "variants": [
+        {
+          "color": "khaki",
+          "sizes": {
+            "s": {"price": 100, "rental": 50},
+            "m": {"price": 110, "rental": 55},
+            "l": {"price": 120, "rental": 60}
+          }
+        }
+      ],
+      "stock": 20,
+      "category": "cat127",
+      "images": [
+        "https://bizweb.dktcdn.net/100/287/440/products/ao-polo-nam-dep-local-brand-davies-3.jpg?v=1627739809240",
+        "https://247store.vn/uploads/products/20220607/z3439735412566183bbe512d9122cda0072c3c0e755f4d.jpg"
+      ],
+      "styles": "Casual"
+    },
+    {
+      "id": "123463",
+      "name": "Flannel Shirt",
+      "brand": {
+        "name": "Brand Woods",
+        "logo": "https://example.com/images/brand-woods-logo.jpg"
+      },
+      "variants": [
+        {
+          "color": "red",
+          "sizes": {
+            "s": {"price": 135, "rental": 68},
+            "m": {"price": 145, "rental": 72},
+            "l": {"price": 155, "rental": 78}
+          }
+        }
+      ],
+      "stock": 8,
+      "category": "cat128",
+      "images": [
+        "https://bizweb.dktcdn.net/thumb/large/100/415/697/products/img-7825-1.jpg?v=1721183882410",
+        "https://247store.vn/uploads/products/20220607/z3439735412566183bbe512d9122cda0072c3c0e755f4d.jpg"
+      ],
+      "styles": "Outdoor"
+    },
+    {
+      "id": "123464",
+      "name": "Leather Jacket",
+      "brand": {
+        "name": "Brand Leather",
+        "logo": "https://example.com/images/brand-leather-logo.jpg"
+      },
+      "variants": [
+        {
+          "color": "brown",
+          "sizes": {
+            "s": {"price": 300, "rental": 150},
+            "m": {"price": 320, "rental": 160},
+            "l": {"price": 340, "rental": 170}
+          }
+        }
+      ],
+      "stock": 4,
+      "category": "cat129",
+      "images": [
+        "https://bizweb.dktcdn.net/thumb/1024x1024/100/369/522/products/ao-polo-local-brand-form-rong-mau-trang-hinh-gau-dkmv-19.jpg",
+        "https://247store.vn/uploads/products/20220607/z3439735412566183bbe512d9122cda0072c3c0e755f4d.jpg"
+      ],
+      "styles": "Classic"
+    },
+    {
+      "id": "123465",
+      "name": "Hoodie",
+      "brand": {
+        "name": "Brand Cozy",
+        "logo": "https://example.com/images/brand-cozy-logo.jpg"
+      },
+      "variants": [
+        {
+          "color": "grey",
+          "sizes": {
+            "s": {"price": 90, "rental": 45},
+            "m": {"price": 100, "rental": 50},
+            "l": {"price": 110, "rental": 55}
+          }
+        }
+      ],
+      "stock": 15,
+      "category": "cat130",
+      "images": [
+        "https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lt0htpkh0ypwd7",
+        "https://example.com/images/hoodie-side.jpg"
+      ],
+      "styles": "Casual"
+    },
+    {
+      "id": "123466",
+      "name": "Bomber Jacket",
+      "brand": {
+        "name": "Brand Aero",
+        "logo": "https://example.com/images/brand-aero-logo.jpg"
+      },
+      "variants": [
+        {
+          "color": "olive",
+          "sizes": {
+            "s": {"price": 180, "rental": 90},
+            "m": {"price": 190, "rental": 95},
+            "l": {"price": 200, "rental": 100}
+          }
+        }
+      ],
+      "stock": 6,
+      "category": "cat131",
+      "images": [
+        "https://bizweb.dktcdn.net/100/369/010/products/122.jpg?v=1720495243753",
+        "https://247store.vn/uploads/products/20220607/z3439735412566183bbe512d9122cda0072c3c0e755f4d.jpg"
+      ],
+      "styles": "Aviation"
+    },
+    {
+      "id": "123467",
+      "name": "Graphic T-Shirt",
+      "brand": {
+        "name": "Brand Art",
+        "logo": "https://example.com/images/brand-art-logo.jpg"
+      },
+      "variants": [
+        {
+          "color": "black",
+          "sizes": {
+            "s": {"price": 95, "rental": 48},
+            "m": {"price": 105, "rental": 53},
+            "l": {"price": 115, "rental": 58}
+          }
+        }
+      ],
+      "stock": 9,
+      "category": "cat132",
+      "images": [
+        "https://product.hstatic.net/1000344185/product/1_73fef22739f04f0490a20e1782a4b801_master.jpg",
+        "https://247store.vn/uploads/products/20220607/z3439735412566183bbe512d9122cda0072c3c0e755f4d.jpg"
+      ],
+      "styles": "Streetwear"
+    }
+]

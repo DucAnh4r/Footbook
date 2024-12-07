@@ -1,12 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Layout, Input, Avatar, Row, Col, Tooltip, Popover } from "antd";
 import { GoSearch } from "react-icons/go";
+import SearchBar from "../Components/SearchBar.jsx"
 import NavItem from "./NavItem";
 import ProfileContent from "./ProfileContent";
 import NotificationContent from "./NotificationContent";
 import AppStoreContent from "./AppStoreContent.jsx";
 import { navItems, iconData } from "../assets/icons.jsx";
-import { FaUser } from "react-icons/fa";
+import { FaUser } from "react-icons/fa"; import { FaSearch } from "react-icons/fa";
 import MessageContent from "./Message/MessageContent.jsx";
 import { useLocation, useNavigate } from "react-router-dom";
 import LogoImg from "../assets/image/Header/logo.png";
@@ -27,7 +28,7 @@ const Header = ({ onMessageClick }) => {
   };
 
   const handleSelect = (key, path) => {
-    setSelected(key);
+    setSelected(key); // Cập nhật trạng thái selected trước khi navigate
     if (path) {
       navigate(path); // Navigate to the specified path
     }
@@ -38,10 +39,24 @@ const Header = ({ onMessageClick }) => {
   }, [location.pathname]);
 
   useEffect(() => {
-    const allowedPaths = ['/', '/friends', '/pages', '/groups'];
+    const allowedPaths = ["/", "/friends", "/pages", "/groups"];
     if (!allowedPaths.includes(location.pathname)) {
       setSelected(""); // Reset selected item when on non-allowed path
     }
+  }, [location.pathname]);
+
+  // Cập nhật trạng thái selected dựa trên location.pathname
+  useEffect(() => {
+    const pathMapping = {
+      "/": "home",
+      "/friends": "friends",
+      "/pages": "pages",
+      "/groups": "groups",
+    };
+
+    // Cập nhật trạng thái selected khi pathname thay đổi
+    const currentPage = pathMapping[location.pathname] || "home";
+    setSelected(currentPage);
   }, [location.pathname]);
 
   const handleIconClick = (iconName) => {
@@ -71,17 +86,27 @@ const Header = ({ onMessageClick }) => {
 
   return (
     <AntHeader className={styles.header}>
-      <Row align="middle" justify="space-between" className={styles["header-row"]}>
+      <Row
+        align="middle"
+        justify="space-between"
+        className={styles["header-row"]}
+      >
         <Col className={styles["header-logo"]}>
-          <img src={LogoImg} className={styles["logo-img"]} onClick={handleLogoClick} alt="Footbook" />
-          <Input
-            placeholder="Tìm kiếm trên Facebook"
-            prefix={<GoSearch style={{ fontSize: "20px" }} />}
-            className={styles["search-input"]}
+          <img
+            src={LogoImg}
+            className={styles["logo-img"]}
+            onClick={handleLogoClick}
+            alt="Footbook"
           />
+          {/* <Input
+            placeholder="Tìm kiếm trên Footbook"
+            prefix={<FaSearch style={{ fontSize: "18px", color: "#65686c", marginRight: "4px" }} />}
+            className={styles["search-input"]}
+          /> */}
+          <SearchBar />
         </Col>
 
-        <div className={styles["nav-items-container"]}>
+        <Col className={styles["nav-items-container"]}>
           {navItems.map((item) => (
             <NavItem
               key={item.key}
@@ -90,7 +115,7 @@ const Header = ({ onMessageClick }) => {
               handleSelect={() => handleSelect(item.key, item.path)} // Pass path to handleSelect
             />
           ))}
-        </div>
+        </Col>
 
         <Col>
           <Row gutter={16} align="middle">
@@ -103,18 +128,26 @@ const Header = ({ onMessageClick }) => {
                       trigger="click"
                       placement="bottomRight"
                       open={selectedIcon === name}
-                      onOpenChange={(visible) => handleIconClick(visible ? name : null)}
-                      getPopupContainer={(triggerNode) => triggerNode.parentNode} 
+                      onOpenChange={(visible) =>
+                        handleIconClick(visible ? name : null)
+                      }
+                      getPopupContainer={(triggerNode) =>
+                        triggerNode.parentNode
+                      }
                     >
                       <div
-                        className={`${styles["icon-wrapper"]} ${selectedIcon === name ? styles["icon-selected"] : ""}`}
+                        className={`${styles["icon-wrapper"]} ${
+                          selectedIcon === name ? styles["icon-selected"] : ""
+                        }`}
                       >
                         {icon}
                       </div>
                     </Popover>
                   ) : (
                     <div
-                      className={`${styles["icon-wrapper"]} ${selectedIcon === name ? styles["icon-selected"] : ""}`}
+                      className={`${styles["icon-wrapper"]} ${
+                        selectedIcon === name ? styles["icon-selected"] : ""
+                      }`}
                       onClick={() => handleIconClick(name)}
                     >
                       {icon}
@@ -130,13 +163,18 @@ const Header = ({ onMessageClick }) => {
                 trigger="click"
                 placement="bottomRight"
                 open={selectedIcon === "profile"}
-                onOpenChange={(visible) => handleIconClick(visible ? "profile" : null)}
-                getPopupContainer={(triggerNode) => triggerNode.parentNode} 
+                onOpenChange={(visible) =>
+                  handleIconClick(visible ? "profile" : null)
+                }
+                getPopupContainer={(triggerNode) => triggerNode.parentNode}
               >
                 <div className={styles["avatar-wrapper"]}>
                   <Avatar
                     icon={<FaUser />}
-                    style={{ backgroundColor: selectedIcon === "profile" ? "#E8F0FE" : "#87d068" }}
+                    style={{
+                      backgroundColor:
+                        selectedIcon === "profile" ? "#E8F0FE" : "#87d068",
+                    }}
                   />
                 </div>
               </Popover>
