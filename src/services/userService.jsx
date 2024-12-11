@@ -18,3 +18,15 @@ export const userLoginService = (Data) => {
     password: Data.password
   });
 };
+
+
+export const userSearchService = (Data) => {
+  const { keyword, page, size } = Data; 
+  return axiosCreate.get(`http://localhost:8080/api/v1/users/search`, {
+    params: { 
+      keyword,
+      page,
+      size,
+    },
+  });
+};
