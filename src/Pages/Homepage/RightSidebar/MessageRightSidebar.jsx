@@ -376,7 +376,7 @@ const styles = {
     backgroundColor: '#fff',
     borderRadius: '8px',
     boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
-    maxHeight: '100vh',
+    maxHeight: '93vh',
     overflowY: 'auto',
     height: 'inherit',
   },

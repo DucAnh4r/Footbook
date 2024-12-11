@@ -3,8 +3,10 @@
   flex-direction: column;
   background-color: #fff;
   border-radius: 10px;
-  overflow: visible !important; /* Đảm bảo container chính không cắt Tooltip */
-  position: relative; /* Giữ vị trí tương đối cho các phần tử con */
+  overflow: visible !important;
+  /* Đảm bảo container chính không cắt Tooltip */
+  position: relative;
+  /* Giữ vị trí tương đối cho các phần tử con */
 
   .chat-header {
     display: flex;
@@ -58,6 +60,7 @@
     }
   }
 }
+
 .chat-body {
   flex: 1;
   overflow-y: auto;
@@ -77,13 +80,16 @@
   white-space: pre-wrap;
   display: inline-block;
 }
+
 .ant-tooltip {
   position: absolute;
-  z-index: 1050 !important; /* Đảm bảo Tooltip luôn hiển thị phía trên */
+  z-index: 1050 !important;
+  /* Đảm bảo Tooltip luôn hiển thị phía trên */
 }
 
 .ant-popover-inner {
-  z-index: 1050 !important; /* Đảm bảo Tooltip luôn hiển thị phía trên */
+  z-index: 1050 !important;
+  /* Đảm bảo Tooltip luôn hiển thị phía trên */
 }
 
 
@@ -91,32 +97,43 @@
   color: white;
   align-self: flex-end; // Canh phải
   text-align: left;
+
   &.text-message {
     background: #0051ff;
     color: #ffffff;
-}
+  }
 
-&.gif-message {
+  &.gif-message {
     background: transparent;
     display: flex;
     justify-content: center;
-    img {
-        border-radius: 8px;
-    }
-}
+    padding: 0px;
 
-&.sticker-message {
+    img {
+      border-radius: 8px;
+    }
+  }
+
+  &.sticker-message {
     background: transparent;
     display: flex;
     justify-content: center;
-    img {
-        border-radius: 8px;
-    }
-}
+    padding: 0px;
 
-&.file-messagee {
+    img {
+      border-radius: 8px;
+    }
+  }
+
+  &.file-messagee {
+    padding: 0px;
     display: flex;
-}
+  }
+
+  &.audio-message {
+    padding: 0px;
+    display: flex;
+  }
 }
 
 .chat-message.receiver {
@@ -140,6 +157,7 @@
 
 .chat-setting-container {
   padding: 4px;
+
   &:hover {
     background: #f2f2f2; // Màu nền khi hover
     border-radius: 10px;

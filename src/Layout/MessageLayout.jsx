@@ -19,7 +19,7 @@ const MessageLayout = (props) => {
     <Layout className="main-layout">
             <HeaderProvider>
       <Header>header</Header>
-      <Layout className="inner-layout">
+      <Layout className="inner-layout" style={{ marginTop: '63px' }}>
         {/* Left Sidebar */}
         <Sider width={360} className="scroll-on-hover sidebar">
           <MessageLeftSidebar onSelectChat={setSelectedChat} /> {/* Pass handler */}

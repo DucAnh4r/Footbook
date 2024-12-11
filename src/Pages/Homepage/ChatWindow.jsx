@@ -72,34 +72,34 @@ const ChatWindow = ({ message, onClose, onHide, position }) => {
         }
     };
 
-    // Bắt đầu ghi âm
     const handleStartRecording = async () => {
         try {
-            await startRecording(); // Gọi hàm bắt đầu ghi âm
-            setIsRecording(true);
-            setIsRecordingMode(true);
-        } catch (err) {
-            console.error("Error starting recording:", err);
+          await startRecording();
+          setIsRecording(true);
+        } catch (error) {
+          console.error("Error starting recording:", error);
         }
-    };
-
-    // Dừng ghi âm
-    const handleStopRecording = async () => {
+      };
+    
+      const handleStopRecording = async () => {
         try {
-            const { audioUrl, audioBlob } = await stopRecording(); // Gọi hàm kết thúc ghi âm
-            setAudioUrl(audioUrl); // Lưu URL file âm thanh
-            setAudioBlob(audioBlob); // Lưu blob âm thanh
-            setIsRecording(false);
-            setIsRecordingMode(false);
-        } catch (err) {
-            console.error("Error stopping recording:", err);
+          const { audioUrl, audioBlob } = await stopRecording();
+          setAudioUrl(audioUrl);
+          setAudioBlob(audioBlob);
+    
+          const audioMessage = {
+            user: 'You',
+            text: `<audio controls src="${audioUrl}"></audio>`,
+            type: 'audio',
+            time: new Date().toLocaleTimeString(),
+          };
+          socket.emit('send_message', audioMessage);
+          setMessages((prev) => [...prev, audioMessage]);
+          setIsRecording(false);
+        } catch (error) {
+          console.error("Error stopping recording:", error);
         }
-    };
-
-    const handleCancelRecording = () => {
-        setIsRecording(false);
-        setIsRecordingMode(false);
-    };
+      };
 
     const handleSendGif = (gifUrl) => {
         const gifMessage = {

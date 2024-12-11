@@ -137,7 +137,7 @@ const styles = {
     borderRadius: '8px',
     boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
     padding: '16px',
-    maxHeight: '100vh',
+    maxHeight: '93vh',
     overflowY: 'auto',
     height: 'inherit',
   },
