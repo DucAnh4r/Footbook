@@ -6,20 +6,12 @@ import { PiShareFat } from "react-icons/pi";
 import { FaEarthAmericas } from "react-icons/fa6";
 import styles from "./Post.module.scss";
 import CommentModal from "../Modal/CommentModal";
+import ShareModal from "../Modal/ShareModal";
 
 const Post = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [comments, setComments] = useState([
-    { id: 1, user: "Quân A.P", content: "Vẫn đẹp trai ạ 😄" },
-    { id: 2, user: "JSOL", content: "Mèo cute quá!" },
-    { id: 1, user: "Quân A.P", content: "Vẫn đẹp trai ạ 😄" },
-    { id: 2, user: "JSOL", content: "Mèo cute quá!" },
-    { id: 1, user: "Quân A.P", content: "Vẫn đẹp trai ạ 😄" },
-    { id: 2, user: "JSOL", content: "Mèo cute quá!" },
-    { id: 1, user: "Quân A.P", content: "Vẫn đẹp trai ạ 😄" },
-    { id: 2, user: "JSOL", content: "Mèo cute quá!" },
-    { id: 1, user: "Quân A.P", content: "Vẫn đẹp trai ạ 😄" },
-    { id: 2, user: "JSOL", content: "Mèo cute quá!" },
     { id: 1, user: "Quân A.P", content: "Vẫn đẹp trai ạ 😄" },
     { id: 2, user: "JSOL", content: "Mèo cute quá!" },
   ]);
@@ -60,24 +52,38 @@ const Post = () => {
           <Button icon={<AiOutlineLike />} type="text">
             Thích
           </Button>
-          <Button icon={<FaRegComment />} type="text" onClick={() => setIsModalOpen(true)}>
+          <Button
+            icon={<FaRegComment />}
+            type="text"
+            onClick={() => setIsCommentModalOpen(true)}
+          >
             Bình luận
           </Button>
-          <Button icon={<PiShareFat />} type="text">
+          <Button
+            icon={<PiShareFat />}
+            type="text"
+            onClick={() => setIsShareModalOpen(true)}
+          >
             Chia sẻ
           </Button>
         </div>
       </div>
 
-      {/* Hiển thị modal */}
+      {/* Modal bình luận */}
       <CommentModal
-        isModalOpen={isModalOpen}
-        onCancel={() => setIsModalOpen(false)}
+        isModalOpen={isCommentModalOpen}
+        onCancel={() => setIsCommentModalOpen(false)}
         userName="Anh Đức Nguyễn"
         postContent="Mèo cute nè"
         postImage="https://shopgarena.net/wp-content/uploads/2023/07/Meo-khoc-thet-len.jpg"
         comments={comments}
         addComment={addComment}
+      />
+
+      {/* Modal chia sẻ */}
+      <ShareModal
+        isModalOpen={isShareModalOpen}
+        onCancel={() => setIsShareModalOpen(false)}
       />
     </>
   );

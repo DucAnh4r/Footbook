@@ -21,12 +21,42 @@ export const userLoginService = (Data) => {
 
 
 export const userSearchService = (Data) => {
-  const { keyword, page, size } = Data; 
+  const { keyword, page, size } = Data;
   return axiosCreate.get(`http://localhost:8080/api/v1/users/search`, {
-    params: { 
+    params: {
       keyword,
       page,
       size,
     },
   });
+};
+
+export const updateBioService = (Data, user_id) => {
+  return axiosCreate.patch(`http://localhost:8080/api/v1/users/${user_id}/update-bio`, {
+    bio: Data.bio,
+  });
+};
+
+export const updateProfileService = (Data, user_id) => {
+  const formData = new FormData();
+  formData.append("profileImages", Data.profileImages);
+  return axiosCreate.patch(`http://localhost:8080/api/v1/users/${user_id}/update-profile-picture`,
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+};
+
+export const updateCoverService = (Data, user_id) => {
+  const formData = new FormData();
+  formData.append("coverImage", Data.coverImage);
+  return axiosCreate.patch(`http://localhost:8080/api/v1/users/${user_id}/update-cover-picture`,
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
 };
