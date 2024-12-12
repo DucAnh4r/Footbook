@@ -1,81 +1,37 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Layout, Card, Row, Col, Avatar, Typography, List, Input, Divider, Tooltip, Popover } from "antd";
-import Slider from "react-slick";
-import { LikeOutlined, MessageOutlined, SendOutlined } from "@ant-design/icons";
+import React, { useState } from 'react';
+import { Layout } from "antd";
+import {Row, Col} from "antd";
+import { Avatar, Button } from "antd";
+import { FaEarthAmericas } from "react-icons/fa6";
 import "slick-carousel/slick/slick.css";
-import { AiOutlineLike, AiOutlineZoomIn, AiOutlineZoomOut, AiOutlineFullscreen, AiOutlineFullscreenExit } from "react-icons/ai";
-import { TbMessageCircle } from "react-icons/tb";
-import { PiShareFat, PiShareFatFill } from "react-icons/pi";
-import { GoPaperAirplane } from "react-icons/go";
-import { FaComment, FaUser } from "react-icons/fa";
-import { MdOutlineMoreHoriz } from "react-icons/md";
-import { GrNext } from "react-icons/gr";
-import { GrPrevious } from "react-icons/gr";
-import { HeaderContext } from "../../Context/HeaderContext";
-import { iconData } from "../../assets/icons";
-import styles from "../../Layout/Header.module.scss";
-import NotificationContent from "../../Layout/NotificationContent";
-import MessageContent from "../../Layout/Message/MessageContent";
-import AppStoreContent from "../../Layout/AppStoreContent";
-import ProfileContent from "../../Layout/ProfileContent";
-import './Photo.css'
+import styles from './PhotoPage.module.scss';
+import LogoImg from "../../assets/image/Header/logo.png";
+import { useLocation, useNavigate } from "react-router-dom";
+import HahaIcon from "../../assets/image/Reacts/haha.png";
+import LikeIcon from "../../assets/image/Reacts/like.png";
+import { AiOutlineLike } from "react-icons/ai";
+import { FaRegComment } from "react-icons/fa";
+import { PiShareFat } from "react-icons/pi";
+import Comment from "./Components/Comment";
+import { IoIosSend } from "react-icons/io";
+import { MdZoomIn } from "react-icons/md";
+import { AiOutlineFullscreen } from "react-icons/ai";
+import { FaAngleLeft } from "react-icons/fa6";
+import { FaAngleRight } from "react-icons/fa6";
 
-const { Title } = Typography;
+
 
 const PhotoPage = () => {
-  const { setShowHeader } = useContext(HeaderContext);
-  const [selectedIcon, setSelectedIcon] = useState(null);
-  const [zoomLevel, setZoomLevel] = useState(1);
-  const [isFullScreen, setIsFullScreen] = useState(false);
-
-  const handleZoomIn = () => {
-    setZoomLevel((prev) => Math.min(prev + 0.1, 2)); // Phóng to tối đa 200%
+  const navigate = useNavigate(); // Initialize navigate
+  const handleLogoClick = () => {
+    navigate("/"); // Điều hướng đến URL với tham số type
   };
 
-  const handleZoomOut = () => {
-    setZoomLevel((prev) => Math.max(prev - 0.1, 0.5)); // Thu nhỏ tối đa 50%
+  const [comment, setComment] = useState(""); // State để theo dõi nội dung comment
+
+  const handleChange = (e) => {
+    setComment(e.target.value); // Cập nhật giá trị comment khi người dùng gõ
   };
-
-  const handleFullScreen = () => {
-    setIsFullScreen((prev) => !prev); // Chuyển đổi giữa true và false
-  };
-
-  // useEffect(() => {
-  //   setShowHeader(false); // Ẩn Header khi vào trang này
-  //   return () => setShowHeader(true); // Hiển thị lại Header khi rời khỏi trang
-  // }, [setShowHeader]);
-
-  useEffect(() => {
-    // Thêm lớp để khóa cuộn khi vào trang
-    document.body.classList.add("no-scroll");
-    return () => {
-      // Gỡ lớp để cho phép cuộn khi rời khỏi trang
-      document.body.classList.remove("no-scroll");
-    };
-  }, []);
-
-  useEffect(() => {
-    setSelectedIcon(null); // Close any open popover on navigation
-  }, [location.pathname]);
-
-  const handleIconClick = (iconName) => {
-    setSelectedIcon((prev) => (prev === iconName ? null : iconName));
-  };
-
-  const buttonStyle = {
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    color: "#fff",
-    border: "none",
-    borderRadius: "50%",
-    width: "40px",
-    height: "40px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    cursor: "pointer",
-    fontSize: "18px",
-  };
-
 
   const comments = [
     {
@@ -135,263 +91,144 @@ const PhotoPage = () => {
     "https://via.placeholder.com/800x400?text=Image+3",
   ];
 
-  const sliderSettings = {
-    dots: false,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    nextArrow: <NextArrow />,
-    prevArrow: <PrevArrow />,
-  };
 
   return (
     <Layout>
-      <Row >
-        {/* Slider Ảnh */}
-        <Col xs={24}
-          lg={isFullScreen ? 24 : 19} // Chiếm toàn bộ màn hình nếu isFullScreen
-          style={{ paddingLeft: '0px', paddingRight: '0px' }}>
-          <div style={{
-            position: "absolute",
-            top: "10px",
-            right: "10px",
-            display: "flex",
-            gap: "10px",
-            zIndex: 10,
-          }}>
-            <button
-              style={buttonStyle}
-              onClick={() => handleZoomIn()}
-            >
-              <AiOutlineZoomIn />
-            </button>
-            <button
-              style={buttonStyle}
-              onClick={() => handleZoomOut()}
-            >
-              <AiOutlineZoomOut />
-            </button>
-            <button
-              style={buttonStyle}
-              onClick={() => handleFullScreen()}
-            >
-              {isFullScreen ? <AiOutlineFullscreenExit /> : <AiOutlineFullscreen />}
-            </button>
+      <Row className={styles['container']}>
+        <Col className={styles['image-row']}>
+          <div className={`${styles['round-button-container']} ${styles['cancel-button-container']}`}>
+            x
           </div>
-          <Slider {...sliderSettings}>
-            {images.map((image, index) => (
-              <div key={index}>
+          <div className={`${styles['round-button-container']} ${styles['zoomin-button-container']}`}>
+            <MdZoomIn />
+          </div>
+          <div className={`${styles['round-button-container']} ${styles['zoomout-button-container']}`}>
+            <MdZoomIn />
+          </div>
+          <div className={`${styles['round-button-container']} ${styles['full-button-container']}`}>
+            <AiOutlineFullscreen />
+          </div>
+          <div className={`${styles['round-button-container']} ${styles['left-button-container']}`}>
+            <FaAngleLeft />
+          </div>
+          <div className={`${styles['round-button-container']} ${styles['right-button-container']}`}>
+            <FaAngleRight />
+          </div>
+          <div className={styles['image-container']}>
+            <img className={styles['image']} src="https://c.ndtvimg.com/2024-04/64v6v0mo_ronaldo_625x300_09_April_24.jpg?im=FitAndFill,algorithm=dnn,width=806,height=605" alt="" />
+
+          </div>
+        </Col>
+        <Col className={styles['right-row']}>
+          <div style={{padding: "16px"}}>
+            <div className={styles.header}>
+              <Avatar
+                src="https://shopgarena.net/wp-content/uploads/2023/07/Meo-khoc-thet-len.jpg"
+                className={styles.avatar}
+              />
+              <div className={styles.userInfo}>
+                <span className={styles.userName}>Anh Đức Nguyễn</span>
+                <span className={styles.time}>
+                  5 phút · <FaEarthAmericas style={{ marginLeft: "4px" }} />
+                </span>
+              </div>
+            </div>
+
+            <div className={styles.content}>
+              <p>Mèo cute nè</p>
+            </div>
+
+            <div className={styles.reactionsContainer}>
+              <div className={styles["reactions"]}>
                 <img
-                  src={image}
-                  alt={`Slide ${index}`}
-                  style={{
-                    width: "100%",
-                    height: "100vh",
-                    objectFit: "cover",
-                    borderRadius: "8px",
-                    transform: `scale(${zoomLevel})`, // Áp dụng zoom
-                    transition: "transform 0.3s ease", // Tạo hiệu ứng mượt khi zoom
-                  }}
+                  src={HahaIcon}
+                  alt="Image 1"
+                  className={`${styles["icon"]} ${styles["icon-left"]}`}
+                />
+                <img
+                  src={LikeIcon}
+                  alt="Image 2"
+                  className={`${styles["icon"]} ${styles["icon-right"]}`}
                 />
               </div>
-            ))}
-          </Slider>
-        </Col>
-
-        {/* Bình luận */}
-        <Col xs={24} lg={5} style={{ paddingLeft: '0px', paddingRight: '0px' }}>
-          <div style={{ padding: '24px', paddingRight: '0px' }}>
-            {/* Cần cuộn */}
-            <div className="scrollable-area">
-              <div style={{ marginBottom: "16px" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "10px", justifyContent: 'space-between' }}>
-                  <div style={{ display: "flex", justifyContent: 'center', gap: "8px" }}>
-                    <Avatar
-                      shape="circle"
-                      size="large"
-                      src="https://via.placeholder.com/40"
-                      style={{ backgroundColor: "#f56a00" }}
-                    />
-                    <div>
-                      <Title level={5} style={{ margin: 0 }}>
-                        DAO News
-                      </Title>
-                      <span style={{ color: "#888", fontSize: "12px" }}>
-                        14 November at 01:15
-                      </span>
-                    </div>
-                  </div>
-                  <div>
-                    <MdOutlineMoreHoriz size={25} />
-                  </div>
-                </div>
-                <div style={{ marginTop: "10px" }}>
-                  <p>
-                    <strong>HURRYKNG không nói ❌:</strong> Nhóm này đỉnh, mong chờ
-                    mấy anh comeback
-                  </p>
-                </div>
-                <div style={{ display: "flex", justifyContent: "space-between", marginTop: "10px" }}>
-                  <div>
-                    <span role="img" aria-label="like" style={{ marginRight: "8px" }}>
-                      😂 23K
-                    </span>
-                    <span role="img" aria-label="comment">
-                      154
-                    </span>
-                    <span role="img" aria-label="share" style={{ marginLeft: "8px" }}>
-                      63
-                    </span>
-                  </div>
-                  <div>
-                    <span role="img" aria-label="like" style={{ marginRight: "8px" }}>
-                      23 <FaComment />
-                    </span>
-                    <span role="img" aria-label="comment">
-                      154 <PiShareFatFill />
-                    </span>
-                  </div>
-                </div>
+              <span className={styles.reactionCount}>885</span>
+              <div className={styles.rightFooter}>
+                <span className={styles.cmtCount} style={{ marginRight: "10px" }}>
+                  20 bình luận
+                </span>
+                <span className={styles.shareCount}>
+                  1 lượt chia sẻ
+                </span>
               </div>
-              <Divider />
-              <div style={{ display: "flex", justifyContent: "space-between", paddingLeft: '20px', paddingRight: '20px' }}>
-                <AiOutlineLike size={25} />
-                <TbMessageCircle size={25} />
-                <PiShareFat size={25} />
-                <GoPaperAirplane size={25} />
-              </div>
-              <Divider />
-              {/* Comments Section */}
-              <div style={{ fontSize: "12px", color: "#888" }}>Most relevant</div>
-              <List
-                itemLayout="horizontal"
-                dataSource={comments}
-                renderItem={(item) => (
-                  <div style={{ borderBottom: "1px solid #f0f0f0", paddingBottom: "12px", marginBottom: "12px" }}>
-                    <List.Item.Meta
-                      avatar={
-                        <div style={{
-                          display: "flex",
-                          gap: '8px'
-                        }}>
-                          <Avatar
-                            shape="circle"
-                            size="large"
-                            style={{
-                              backgroundColor: "#87d068",
-                              size: ''
-                            }}
-                          >
-                            {item.author.charAt(0)}
-                          </Avatar>
-                          <div style={{
-                            display: "flex",
-                            alignItems: "start",
-                            flexDirection: 'column',
-                            backgroundColor: '#f0f2f5',
-                            borderRadius: '10px',
-                            padding: '8px'
-                          }}>
-                            <strong>{item.author}</strong>
-                            <span
-                              style={{
-                                fontSize: "12px",
-                              }}
-                            >
-                              {item.content}
-                            </span>
-                          </div>
-                        </div>
-                      }
-                    />
-                    <div style={{ display: "flex", gap: "16px", fontSize: "12px", color: "#888" }}>
-                      <span>
-                        <LikeOutlined /> Like
-                      </span>
-                      <span>
-                        <MessageOutlined /> Reply
-                      </span>
-                      {item.replies > 0 && <span>View all {item.replies} replies</span>}
-                    </div>
-                  </div>
-                )}
-              />
             </div>
-            <div style={{ display: "flex", alignItems: "center", marginTop: "12px", gap: "8px" }}>
-              <Avatar style={{ backgroundColor: "#f56a00" }} />
-              <Input
-                placeholder="Write a comment..."
-                style={{
-                  borderRadius: "20px",
-                  height: "36px",
-                }}
-                suffix={<SendOutlined />}
-              />
+
+            <div className={styles.footer}>
+              <Button icon={<AiOutlineLike />} type="text"
+                className={styles.likeButtonWrapper}
+                onMouseEnter={() => setIsReactionBoxVisible(true)}
+                onMouseLeave={() => setIsReactionBoxVisible(false)}
+              >
+                Thích
+              </Button>
+              <Button
+                icon={<FaRegComment />}
+                type="text"
+                onClick={() => setIsModalOpen(true)}
+              >
+                Bình luận
+              </Button>
+              <Button icon={<PiShareFat />} type="text">
+                Chia sẻ
+              </Button>
+            </div>
+
+            <div className={styles.commentSection}>
+              <Comment />
+              <Comment />
+              <Comment />
+              <Comment />
+              <Comment />
+              <Comment />
+            </div>
+
+            <div className={styles.seeMoreSection}>
+              <p className={styles.seeMoreBtn}>Xem thêm bình luận</p>
+              <p style={{color: "#65686c"}}>6/84</p>
             </div>
           </div>
+
+          <div className={styles.writeCommentSection}>
+            <Row>
+              <Col span={4}>
+                <Avatar
+                  src="https://shopgarena.net/wp-content/uploads/2023/07/Meo-khoc-thet-len.jpg"
+                  className={styles.avatar}
+                  style={{margin: "6px 0 0 6px"}}
+                />
+              </Col>
+              <Col span={20}>
+                <div className={styles.writeCommentContainer}>
+                  <textarea
+                    placeholder="Viết bình luận..."
+                    value={comment} // Liên kết với state
+                    onChange={handleChange} // Cập nhật state khi thay đổi nội dung
+                  ></textarea>
+                  <div className={styles.actionCommentContainer}>
+                    <IoIosSend className={styles["sendCommentButton"]} style={{color: comment ? "blue" : "gray"}}></IoIosSend>
+                  </div>
+                </div>
+              </Col>
+            </Row>
+          </div>
+        </Col>
+        <Col className={styles['messenger-bubble-row']}>
+          
         </Col>
       </Row>
     </Layout>
   );
 };
 
-// Custom Nút "Next"
-const NextArrow = (props) => {
-  const { className, style, onClick } = props;
-  return (
-    <div
-      className={className}
-      style={{
-        ...style,
-        display: "block",
-        position: "absolute",
-        top: "50%",
-        right: "10px",
-        transform: "translateY(-50%)",
-        zIndex: 2,
-        background: "rgba(0, 0, 0, 0.5)",
-        color: "#fff",
-        borderRadius: "50%",
-        width: "40px",
-        height: "40px",
-        lineHeight: "40px",
-        textAlign: "center",
-      }}
-      onClick={onClick}
-    >
-      <GrNext />
-    </div>
-  );
-};
 
-// Custom Nút "Prev"
-const PrevArrow = (props) => {
-  const { className, style, onClick } = props;
-  return (
-    <div
-      className={className}
-      style={{
-        ...style,
-        display: "block",
-        position: "absolute",
-        top: "50%",
-        left: "10px",
-        transform: "translateY(-50%)",
-        zIndex: 2,
-        background: "rgba(0, 0, 0, 0.5)",
-        color: "#fff",
-        borderRadius: "50%",
-        width: "40px",
-        height: "40px",
-        lineHeight: "40px",
-        textAlign: "center",
-      }}
-      onClick={onClick}
-    >
-      <GrPrevious />
-    </div>
-  );
-};
 
 export default PhotoPage;

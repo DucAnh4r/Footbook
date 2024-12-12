@@ -1,9 +1,0 @@
-body.no-scroll {
-  overflow: hidden;
-}
-
-.scrollable-area {
-  height: 80vh; /* Hoặc chiều cao cố định phù hợp */
-  overflow-y: auto;
-  position: relative; /* Đảm bảo không bị ảnh hưởng bởi các phần tử cha */
-}

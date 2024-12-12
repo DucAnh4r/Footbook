@@ -6,11 +6,15 @@ import { PiShareFat } from "react-icons/pi";
 import { FaEarthAmericas } from "react-icons/fa6";
 import styles from "./Post.module.scss";
 import CommentModal from "../Modal/CommentModal";
+import HahaIcon from "../assets/image/Reacts/haha.png";
+import LikeIcon from "../assets/image/Reacts/like.png";
+import ReactionIconsBox from "./ReactionIconsBox";
 import ShareModal from "../Modal/ShareModal";
 
 const Post = () => {
   const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [isReactionBoxVisible, setIsReactionBoxVisible] = useState(false);
   const [comments, setComments] = useState([
     { id: 1, user: "Quân A.P", content: "Vẫn đẹp trai ạ 😄" },
     { id: 2, user: "JSOL", content: "Mèo cute quá!" },
@@ -48,10 +52,48 @@ const Post = () => {
           />
         </div>
 
-        <div className={styles.footer}>
-          <Button icon={<AiOutlineLike />} type="text">
+        <div className={styles.reactionsContainer}>
+          <div className={styles["reactions"]}>
+            <img
+              src={HahaIcon}
+              alt="Image 1"
+              className={`${styles["icon"]} ${styles["icon-left"]}`}
+            />
+            <img
+              src={LikeIcon}
+              alt="Image 2"
+              className={`${styles["icon"]} ${styles["icon-right"]}`}
+            />
+          </div>
+          <span className={styles.reactionCount}>885</span>
+          <div className={styles.rightFooter}>
+            <span className={styles.cmtCount} style={{ marginRight: "10px" }}>
+              20 bình luận
+            </span>
+            <span className={styles.shareCount}>1 lượt chia sẻ</span>
+          </div>
+        </div>
+
+        <div
+          className={styles.footer}
+        >
+          <Button icon={<AiOutlineLike />} type="text"
+            className={styles.likeButtonWrapper}
+            onMouseEnter={() => setIsReactionBoxVisible(true)}
+            onMouseLeave={() => setIsReactionBoxVisible(false)}
+          >
             Thích
           </Button>
+          {isReactionBoxVisible && (
+            <div
+              style={{padding: "50px", position: "absolute", left: "0px", bottom: "0px"}}
+              className={styles.reactionBoxWrapper}
+              onMouseEnter={() => setIsReactionBoxVisible(true)}
+              onMouseLeave={() => setIsReactionBoxVisible(false)}
+            >
+              <ReactionIconsBox />
+            </div>
+          )}
           <Button
             icon={<FaRegComment />}
             type="text"
