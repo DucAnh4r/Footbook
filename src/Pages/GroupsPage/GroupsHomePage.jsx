@@ -3,7 +3,7 @@ import { Card, Button, Row, Col } from 'antd';
 import styles from './GroupsHomePage.module.scss';
 import LeftSidebar from './Components/LeftSidebar';
 import { Layout } from 'antd';
-import GroupsPost from './GroupsPost';
+import GroupsPost from '../../Components/GroupPost';
 import { useAuthCheck } from '../../utils/checkAuth';
 
 const { Sider, Content } = Layout;
@@ -30,7 +30,7 @@ const GroupsPage = () => {
       </Sider>
 
       <Content style={{ padding: '70px 370px', minHeight: '100vh', overflow: 'unset', marginLeft: '100px', }}>
-        <div className="page-content">
+        <div className="page-content" style={{ width: 'max-content' }}>
           <h3>Hoạt động gần đây</h3>
           <GroupsPost />
           <GroupsPost />
