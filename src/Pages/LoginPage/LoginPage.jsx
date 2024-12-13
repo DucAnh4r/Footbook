@@ -11,8 +11,8 @@ const LoginPage = () => {
     const [animate, setAnimate] = useState(false);
     const [formData, setFormData] = useState({
         fullName: '',
-        gender: 'OTHER',
-        date_of_birth: '',
+        gender: 'MALE',
+        date_of_birth: '01-01-2001',
         email: '',
         username: '',
         password: '',
@@ -70,7 +70,7 @@ const LoginPage = () => {
                 toast.success('Đăng nhập thành công!');
                 setTimeout(() => {
                     navigate('/'); // Chuyển hướng về trang chủ
-                }, 2000);
+                }, 1000);
             }
         } catch (error) {
             console.error(error);
@@ -127,15 +127,7 @@ const LoginPage = () => {
                                         placeholder="Nhập tên người dùng"
                                     />
                                 </div>
-                                <div className={styles.inputGroup}>
-                                    <label htmlFor="date_of_birth">Ngày sinh:</label>
-                                    <input
-                                        type="date"
-                                        id="date_of_birth"
-                                        value={formData.date_of_birth}
-                                        onChange={handleChange}
-                                    />
-                                </div>
+                                
                             </>
                         )}
                         {isSignUp && (

@@ -40,11 +40,17 @@ const Homepage = () => {
       <Content style={{ padding: '70px 370px', minHeight: '100vh', overflow: 'unset' }}>
         <div className="page-content" style={{padding: '16px 30px'}}>
           <StatusInput />
-          <StoryList />
+          <Post />
+          <GroupPost />
+          <Post />
+          <Post />
+          <GroupPost />
+          <GroupPost />
+          <Post />
+          <Post />
           <Post />
           <GroupPost />
           <SuggestedFriends />
-          <Reels />
         </div>
       </Content>
       

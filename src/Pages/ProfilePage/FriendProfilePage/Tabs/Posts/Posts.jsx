@@ -1,7 +1,7 @@
 import React from 'react';
 import AboutSection from './AboutSection';
 import { Col, Row, Space } from 'antd';
-import Post from '../../../../Homepage/Post';
+import Post from '../../../../../Components/Post';
 import PostFilter from './PostFilter';
 import PhotoGallery from './PhotoGallery';
 import FriendsList from './FriendsList';

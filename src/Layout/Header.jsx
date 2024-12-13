@@ -39,7 +39,7 @@ const Header = ({ onMessageClick }) => {
   }, [location.pathname]);
 
   useEffect(() => {
-    const allowedPaths = ["/", "/friends", "/pages", "/groups"];
+    const allowedPaths = ["/", "/friends", "/groups"];
     if (!allowedPaths.includes(location.pathname)) {
       setSelected(""); // Reset selected item when on non-allowed path
     }
@@ -50,7 +50,6 @@ const Header = ({ onMessageClick }) => {
     const pathMapping = {
       "/": "home",
       "/friends": "friends",
-      "/pages": "pages",
       "/groups": "groups",
     };
 
@@ -118,9 +117,9 @@ const Header = ({ onMessageClick }) => {
         </Col>
 
         <Col>
-          <Row gutter={16} align="middle">
+          <Row gutter={16} style={{marginRight: '8px'}}>
             {iconData.map(({ name, icon, tooltip }) => (
-              <Col key={name} className={styles["icon-container"]}>
+              <Col key={name} style={{padding: '0 4px'}} className={styles["icon-container"]}>
                 <Tooltip title={tooltip}>
                   {["notifications", "messages", "appStore"].includes(name) ? (
                     <Popover
@@ -157,7 +156,7 @@ const Header = ({ onMessageClick }) => {
               </Col>
             ))}
 
-            <Col className={styles["icon-container"]}>
+            <Col style={{padding: '0 4px'}} className={styles["icon-container"]}>
               <Popover
                 content={<ProfileContent />}
                 trigger="click"
@@ -169,13 +168,7 @@ const Header = ({ onMessageClick }) => {
                 getPopupContainer={(triggerNode) => triggerNode.parentNode}
               >
                 <div className={styles["avatar-wrapper"]}>
-                  <Avatar
-                    icon={<FaUser />}
-                    style={{
-                      backgroundColor:
-                        selectedIcon === "profile" ? "#E8F0FE" : "#87d068",
-                    }}
-                  />
+                  <img className={styles["avatar"]} src="https://ict-imgs.vgcloud.vn/2020/09/01/19/huong-dan-tao-facebook-avatar.jpg?width=0&s=Da0ZhtrqP8OmUxL88LuyTQ" alt="" />
                 </div>
               </Popover>
             </Col>

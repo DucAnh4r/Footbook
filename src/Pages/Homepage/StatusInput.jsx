@@ -29,7 +29,6 @@ const StatusInput = () => {
         boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
         marginBottom: '16px',
         width: '100%',
-        margin: '0 auto',
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px', width: '100%' }}>
