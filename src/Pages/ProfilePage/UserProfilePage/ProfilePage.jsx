@@ -10,8 +10,10 @@ import Friends from './Tabs/Friends/Friends.jsx';
 import Photos from './Tabs/Photos/Photos.jsx';
 import Videos from './Tabs/Videos/Videos.jsx';
 import FriendSuggestion from './SuggestedFriends.jsx';
+import { useAuthCheck } from '../../../utils/checkAuth.jsx';
 
 const ProfilePage = () => {
+  useAuthCheck();
   const [activeTab, setActiveTab] = useState("1");
   const [isFriendSuggestionVisible, setFriendSuggestionVisible] = useState(false);
   const [headerWidth, setHeaderWidth] = useState('70%');

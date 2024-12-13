@@ -6,11 +6,13 @@ import FriendInvitations from './Sidebars/FriendInvitations';
 import SuggestedFriends from './Sidebars/SuggestedFriends'; 
 import FriendPicture from '../../../assets/image/FriendPage/friends.png';
 import ProfilePage from '../../ProfilePage/UserProfilePage/ProfilePage';
+import { useAuthCheck } from '../../../utils/checkAuth';
 
 
 const { Sider, Content } = Layout;
 
 const ShowFriendsPage = () => {
+  useAuthCheck();
   // Dữ liệu mẫu người dùng
   const users = [
     { id: 1, name: 'Lionel Messi', bio: 'This is a bio about Messi.' },

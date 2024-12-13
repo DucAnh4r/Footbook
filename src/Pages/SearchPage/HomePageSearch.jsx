@@ -5,10 +5,12 @@ import styles from './HomePageSearch.module.scss';
 import LeftSidebar from './Components/LeftSidebar';
 import Post from '../../Components/Post';
 import {Row} from 'antd'
+import { useAuthCheck } from '../../utils/checkAuth';
 
 const { Sider, Content } = Layout;
 
 const HomePageSearch = () => {
+  useAuthCheck();
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
 

@@ -11,12 +11,14 @@ import StickerModal from '../../Modal/StickerModal';
 import { startRecording, stopRecording, playAudio, downloadAudio } from '../../utils/audioRecorder';
 import './Messagepage.scss';
 import AudioMessage from "../../Components/AudioMessage";
+import { useAuthCheck } from '../../utils/checkAuth';
 
 const { Text } = Typography;
 
 const socket = io.connect('http://localhost:4000');
 
 const Messagepage = ({ selectedChat, toggleRightSidebar }) => {
+  useAuthCheck();
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const [gifModalVisible, setGifModalVisible] = useState(false);

@@ -1,26 +1,90 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import LogoImg from "../../assets/image/Header/logo.png";
 import styles from './LoginPage.module.scss';
+import { userLoginService, userRegisterService } from '../../services/userService';
+
 const LoginPage = () => {
     const [isSignUp, setIsSignUp] = useState(false);
     const [animate, setAnimate] = useState(false);
+    const [formData, setFormData] = useState({
+        fullName: '',
+        gender: 'OTHER',
+        date_of_birth: '',
+        email: '',
+        username: '',
+        password: '',
+        confirmPassword: ''
+    });
+
+    const navigate = useNavigate();
 
     const toggleSignUp = () => {
         setAnimate(true);
         setTimeout(() => {
             setIsSignUp(!isSignUp);
             setAnimate(false);
-        }, 300); // Thời gian animation (phải khớp với CSS)
+        }, 300);
+    };
+
+    const handleChange = (e) => {
+        const { id, value } = e.target;
+        setFormData({ ...formData, [id]: value });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            if (isSignUp) {
+                // Đăng ký
+                if (formData.password !== formData.confirmPassword) {
+                    toast.error('Mật khẩu xác nhận không khớp!');
+                    return;
+                }
+
+                const response = await userRegisterService({
+                    fullName: formData.fullName,
+                    gender: formData.gender,
+                    date_of_birth: formData.date_of_birth,
+                    password: formData.password,
+                    email: formData.email,
+                    username: formData.username
+                });
+
+                toast.success('Đăng ký thành công! Vui lòng đăng nhập.');
+                setTimeout(() => {
+                    toggleSignUp();
+                }, 2000);
+            } else {
+                // Đăng nhập
+                const response = await userLoginService({
+                    phone_number: formData.username,
+                    password: formData.password
+                });
+
+                // Lưu thông tin người dùng vào localStorage
+                localStorage.setItem('user', JSON.stringify(response.data));
+
+                toast.success('Đăng nhập thành công!');
+                setTimeout(() => {
+                    navigate('/'); // Chuyển hướng về trang chủ
+                }, 2000);
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error('Đã xảy ra lỗi, vui lòng thử lại.');
+        }
     };
 
     return (
         <div className={styles.container}>
-
+            <ToastContainer />
             <div className={styles.leftContent}>
                 <img
                     src={LogoImg}
                     className={styles["logo-img"]}
-
                 />
                 <h1 className={styles.leftTitle}>
                     {isSignUp
@@ -40,37 +104,71 @@ const LoginPage = () => {
                     <h2 className={styles.title}>
                         {isSignUp ? 'Đăng ký 🚀' : 'Đăng nhập 👋'}
                     </h2>
-                    <p className={styles.subtitle}>
-                        {isSignUp
-                            ? ''
-                            : ''}
-                    </p>
-                    <form className={styles.form}>
+                    <form className={styles.form} onSubmit={handleSubmit}>
                         {isSignUp && (
                             <>
                                 <div className={styles.inputGroup}>
-                                    <label htmlFor="name">Họ và tên:</label>
-                                    <input type="text" id="name" placeholder="Nhập tên của bạn" />
+                                    <label htmlFor="fullName">Họ và tên:</label>
+                                    <input
+                                        type="text"
+                                        id="fullName"
+                                        value={formData.fullName}
+                                        onChange={handleChange}
+                                        placeholder="Nhập tên của bạn"
+                                    />
                                 </div>
                                 <div className={styles.inputGroup}>
-                                    <label htmlFor="sdt">Số điện thoại: </label>
-                                    <input type="text" id="sdt" placeholder="Nhập số điện thoại" />
+                                    <label htmlFor="username">Tên người dùng:</label>
+                                    <input
+                                        type="text"
+                                        id="username"
+                                        value={formData.username}
+                                        onChange={handleChange}
+                                        placeholder="Nhập tên người dùng"
+                                    />
+                                </div>
+                                <div className={styles.inputGroup}>
+                                    <label htmlFor="date_of_birth">Ngày sinh:</label>
+                                    <input
+                                        type="date"
+                                        id="date_of_birth"
+                                        value={formData.date_of_birth}
+                                        onChange={handleChange}
+                                    />
                                 </div>
                             </>
                         )}
-                        <div className={styles.inputGroup}>
-                            <label htmlFor="email">Email:</label>
-                            <input
-                                type="email"
-                                id="email"
-                                placeholder={isSignUp ? 'Nhập email' : 'Nhập email hoặc số điện thoại'}
-                            />
-                        </div>
+                        {isSignUp && (
+                            <div className={styles.inputGroup}>
+                                <label htmlFor="email">Email:</label>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    placeholder="Nhập email"
+                                />
+                            </div>
+                        )}
+                        {!isSignUp && (
+                            <div className={styles.inputGroup}>
+                                <label htmlFor="username">Tên đăng nhập:</label>
+                                <input
+                                    type="text"
+                                    id="username"
+                                    value={formData.username}
+                                    onChange={handleChange}
+                                    placeholder="Nhập tên đăng nhập"
+                                />
+                            </div>
+                        )}
                         <div className={styles.inputGroup}>
                             <label htmlFor="password">Mật khẩu:</label>
                             <input
                                 type="password"
                                 id="password"
+                                value={formData.password}
+                                onChange={handleChange}
                                 placeholder="Nhập mật khẩu"
                             />
                         </div>
@@ -80,14 +178,10 @@ const LoginPage = () => {
                                 <input
                                     type="password"
                                     id="confirmPassword"
+                                    value={formData.confirmPassword}
+                                    onChange={handleChange}
                                     placeholder="Nhập lại mật khẩu"
                                 />
-                            </div>
-                        )}
-                        {!isSignUp && (
-                            <div className={styles.rememberMe}>
-                                <input type="checkbox" id="rememberMe" />
-                                <label htmlFor="rememberMe">Lưu thông tin</label>
                             </div>
                         )}
                         <button type="submit" className={styles.signInButton}>

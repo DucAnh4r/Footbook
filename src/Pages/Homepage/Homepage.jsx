@@ -10,11 +10,14 @@ import RightSidebar from './RightSidebar/RightSidebar';
 import './Homepage.scss'
 import SuggestedFriends from '../ProfilePage/UserProfilePage/SuggestedFriends';
 import GroupPost from '../../Components/GroupPost';
+import { useAuthCheck } from '../../utils/checkAuth';
 
 
 const { Sider, Content } = Layout;
 
 const Homepage = () => {
+  useAuthCheck();
+
   document.title = "Trang chủ";
   return (
     <>

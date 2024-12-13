@@ -4,10 +4,12 @@ import styles from './GroupsHomePage.module.scss';
 import LeftSidebar from './Components/LeftSidebar';
 import { Layout } from 'antd';
 import GroupsPost from './GroupsPost';
+import { useAuthCheck } from '../../utils/checkAuth';
 
 const { Sider, Content } = Layout;
 
 const GroupsPage = () => {
+  useAuthCheck();
 
   return (
     <Layout>

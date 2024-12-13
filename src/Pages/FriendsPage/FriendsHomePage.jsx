@@ -4,10 +4,12 @@ import styles from './FriendsHomePage.module.scss';
 import LeftSidebar from './Components/LeftSidebar';
 import { Layout } from 'antd';
 import FriendRequestsList from './Components/FriendRequestsList';
+import { useAuthCheck } from '../../utils/checkAuth';
 
 const { Sider, Content } = Layout;
 
 const FriendsPage = () => {
+  useAuthCheck();
   // Dữ liệu ví dụ cho "Lời mời kết bạn"
   const friendRequests = [
     { name: 'John Doe', image: 'https://cdn.britannica.com/37/231937-050-9228ECA1/Drake-rapper-2019.jpg?w=400&h=300&c=crop', mutualFriends: 5 }

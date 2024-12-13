@@ -11,8 +11,10 @@ import Videos from './Tabs/Videos/Videos.jsx';
 import { AiFillMessage } from 'react-icons/ai';
 import { EllipsisOutlined } from '@ant-design/icons';
 import SuggestedFriends from '../UserProfilePage/SuggestedFriends.jsx';
+import { useAuthCheck } from '../../../utils/checkAuth.jsx';
 
 const FriendProfilePage = () => {
+  useAuthCheck();
   const [activeTab, setActiveTab] = useState("1");
   const [isFriendSuggestionVisible, setFriendSuggestionVisible] = useState(false);
 

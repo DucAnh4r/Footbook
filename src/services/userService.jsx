@@ -1,4 +1,4 @@
-import axiosCreate from "react/utils/axiosRelease";
+import axiosCreate from "../utils/axiosRelease";
 
 export const userRegisterService = (userData) => {
   return axiosCreate.post("http://localhost:8080/api/v1/users/register", {
