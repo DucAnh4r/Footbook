@@ -1,110 +1,54 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { Input, Button, Spin, notification } from "antd";
+import { Input, Button, Spin } from "antd";
 import { useNavigate } from "react-router-dom";
-import searchImage from "../assets/image/searchImage.svg";
+import { FaSearch, FaTimes } from 'react-icons/fa';
 import styles from "./SearchBar.module.scss";
 import debounce from "lodash/debounce";
-import { FaSearch, FaTimes } from 'react-icons/fa';
+import { userSearchService } from "../services/userService";
 
-const SearchBar = (props) => {
-  const { isText } = props;
-
-  const [products, setProducts] = useState([]);
+const SearchBar = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [showNoneNoti, setShowNoneNoti] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const resultsRef = useRef(null);
   const SearchBarRef = useRef(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await fetch("/category.json");
-        if (!response.ok) {
-          throw new Error("Network response was not ok " + response.statusText);
-        }
-        const data = await response.json();
-        if (!data || data.length === 0) {
-          throw new Error("JSON is empty or not valid");
-        }
-        setProducts(data);
-        setFilteredProducts([]);
-      } catch (error) {
-        console.error("Error fetching the products:", error);
-      }
-    };
-
-    fetchProducts();
-  }, []);
-
-  const debouncedFilterProducts = useMemo(
+  const debouncedFetchSuggestions = useMemo(
     () =>
-      debounce(async (query) => {
-        if (query.trim().length === 0) {
-          setFilteredProducts([]);
+      debounce(async (keyword) => {
+        if (!keyword.trim()) {
+          setSuggestions([]);
           setIsLoading(false);
           return;
         }
 
-        const filtered = products.filter((product) =>
-          product.name.toLowerCase().includes(query)
-        );
-
-        setFilteredProducts(filtered);
-        setShowSuggestions(query.length > 0 && filtered.length > 0);
-        setShowNoneNoti(query.length > 0 && filtered.length === 0);
-        setIsLoading(false);
+        try {
+          setIsLoading(true);
+          const response = await userSearchService({ keyword });
+          setSuggestions(response.data || []);
+          setShowSuggestions(response.data?.length > 0);
+        } catch (error) {
+          console.error("Error fetching suggestions:", error);
+          setSuggestions([]);
+        } finally {
+          setIsLoading(false);
+        }
       }, 500),
-    [products]
+    []
   );
 
-  const debouncedNavigate = useMemo(
-    () =>
-      debounce((query) => {
-        navigate(`/search/top?query=${encodeURIComponent(query)}`);
-        window.location.reload(); // Reload the page after navigation
-      }, 0),
-    [navigate]
-  );
-
-  const debouncedNavigateProduct = useMemo(
-    () =>
-      debounce((id) => {
-        navigate(`/product/${id}`);
-        window.location.reload(); // Reload the page after navigation
-      }, 500),
-    [navigate]
-  );
-
-  useEffect(() => {
-    return () => {
-      debouncedFilterProducts.cancel();
-      debouncedNavigate.cancel();
-    };
-  }, [debouncedFilterProducts, debouncedNavigate]);
-
-  const handleSearch = (event) => {
-    const query = event.target.value.toLowerCase();
+  const handleSearchChange = (event) => {
+    const query = event.target.value.trim();
     setSearchQuery(query);
-
-    if (query.trim() === "") {
-      setFilteredProducts([]);
-      setShowSuggestions(false);
-      setIsLoading(false);
-    } else {
-      setIsLoading(true);
-      debouncedFilterProducts(query);
-    }
+    debouncedFetchSuggestions(query);
   };
 
   const clearSearch = () => {
     setSearchQuery("");
-    setFilteredProducts([]);
+    setSuggestions([]);
     setShowSuggestions(false);
-    setShowNoneNoti(false);
   };
 
   const handleClickOutside = (event) => {
@@ -115,7 +59,6 @@ const SearchBar = (props) => {
       !SearchBarRef.current.contains(event.target)
     ) {
       setShowSuggestions(false);
-      setShowNoneNoti(false);
     }
   };
 
@@ -126,18 +69,8 @@ const SearchBar = (props) => {
     };
   }, []);
 
-  const productsToShow = filteredProducts.slice(0, 5);
-
-  const handleSeeMore = () => {
-    debouncedNavigate(searchQuery);
-  };
-
-  const handleProductClick = (productId) => {
-    debouncedNavigateProduct(productId);
-  };
-
-  const handleSearchButtonClick = () => {
-    debouncedNavigate(searchQuery);
+  const handleSuggestionClick = (userId) => {
+    navigate(`/friendprofile/${userId}`); // Chuyển hướng đến trang người dùng
   };
 
   return (
@@ -147,74 +80,56 @@ const SearchBar = (props) => {
           <Input
             prefix={<FaSearch style={{ fontSize: "18px", color: "#65686c", marginRight: "4px" }} />}
             value={searchQuery}
-            onChange={handleSearch}
-            placeholder="Tìm kiếm trên Footbook"
+            onChange={handleSearchChange}
+            placeholder="Tìm kiếm người dùng"
             className={styles.formControl}
             onFocus={() => {
-              setShowSuggestions(searchQuery.length > 0 && filteredProducts.length > 0);
-              setShowNoneNoti(searchQuery.length > 0 && filteredProducts.length === 0);
+              if (suggestions.length > 0) setShowSuggestions(true);
             }}
             onKeyPress={(event) => {
               if (event.key === "Enter") {
-                handleSeeMore(); // Gọi chức năng "Xem tất cả"
+                // Chuyển đến trang kết quả tìm kiếm nếu nhấn Enter
+                navigate(`/search/users?query=${encodeURIComponent(searchQuery)}`);
               }
             }}
           />
-           {/* {searchQuery && (
-              <>
-                <div className={styles.clearButton} onClick={clearSearch}>
-                  <FaTimes color="#777" size={20} />  
-                </div>
-                <Button
-                  icon={<FaSearch color="#ffffff" />} 
-                  onClick={handleSearchButtonClick}
-                  className={styles.searchButton}
-                />
-              </>
-            )} */}
+          {searchQuery && (
+            <div className={styles.clearButton} onClick={clearSearch}>
+              <FaTimes color="#777" size={20} />
+            </div>
+          )}
         </div>
 
         {/* Suggestion box */}
         <div
           className={styles.resultsContainer}
           style={{
-            display: searchQuery.length > 0 && (showSuggestions || showNoneNoti || isLoading) ? "block" : "none",
+            display: searchQuery.length > 0 && (showSuggestions || isLoading) ? "block" : "none",
           }}
           ref={resultsRef}
         >
           {isLoading ? (
             <div className={styles.loadingContainer}>
               <Spin size="small" />
-              <span>Loading...</span>
+              <span>Đang tải...</span>
             </div>
-          ) : filteredProducts.length === 0 && searchQuery ? (
-            <p className={styles.noResultsMessage}>Không có kết quả trùng khớp.</p>
+          ) : suggestions.length > 0 ? (
+            suggestions.slice(0, 5).map((user) => (
+              <div
+                key={user.userId}
+                className={styles.suggestionItem}
+                onClick={() => handleSuggestionClick(user.id)}
+              >
+                <img
+                  src={user.profilePictureUrl || "https://via.placeholder.com/50"}
+                  alt={user.username}
+                  className={styles.avatar}
+                />
+                <span>{user.username}</span>
+              </div>
+            ))
           ) : (
-            <>
-              {productsToShow.map((product) => (
-                <div
-                  key={product.id}
-                  className={styles.productItem}
-                  onClick={() => handleProductClick(product.id)}
-                >
-                  <img
-                    src={product.images[0]}
-                    alt={product.name}
-                    className={styles.productImage}
-                  />
-                  <span>{product.name}</span>
-                </div>
-              ))}
-              {filteredProducts.length > 0 && (
-                <Button
-                  type="link"
-                  onClick={handleSeeMore}
-                  className={styles.moreButton}
-                >
-                  Xem tất cả
-                </Button>
-              )}
-            </>
+            <p className={styles.noResultsMessage}>Không tìm thấy kết quả phù hợp.</p>
           )}
         </div>
       </div>

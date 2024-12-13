@@ -8,9 +8,9 @@ import SuggestedFriends from '../UserProfilePage/SuggestedFriends.jsx';
 import { useAuthCheck } from '../../../utils/checkAuth.jsx';
 import { countFriendService, createFriendshipService, getFriendshipStatusService, deleteFriendshipService } from '../../../services/friendService.jsx';
 
-const FriendProfilePage = ({ userId2 }) => {
+const FriendProfilePage = () => {
   useAuthCheck();
-
+  const { userId2 } = useParams();
   const [activeTab, setActiveTab] = useState("1");
   const [isFriendSuggestionVisible, setFriendSuggestionVisible] = useState(false);
   const [friendshipStatus, setFriendshipStatus] = useState(null); // Lưu trạng thái kết bạn

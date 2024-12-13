@@ -15,14 +15,14 @@ const LoginPage = lazy(() => import('../Pages/LoginPage/LoginPage'));
 const homeRoutes = [
     { path: "/", component: <Homepage /> },
     { path: "/profile", component: <ProfilePage /> },
-    { path: "/friendprofile", component: <FriendProfilePage /> },
+    { path: "/friendprofile/:userId", component: <FriendProfilePage /> },
     { path: "/friends", component: <FriendsPage /> },
     { path: "/friends/:type", component: <ShowFriendsPage /> },
     { path: "/pages", component: <FlagPage /> },
     { path: "/groups", component: <GroupsPage /> },
     { path: "/group/a", component: <GroupsProfile /> },
     { path: "/photo", component: <PhotoPage /> },
-    { path: "/search", component: <SearchPage /> },
+    { path: "/search/users", component: <SearchPage /> },
     { path: "/search/:type", component: <SearchPage /> },
     { path: "/login", component: <LoginPage /> },
 ];

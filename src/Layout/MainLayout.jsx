@@ -10,15 +10,35 @@ const MainLayout = ({ children }) => {
     const [selectedMessages, setSelectedMessages] = useState([]);
     const [hiddenMessages, setHiddenMessages] = useState([]);
 
+    const MAX_CHAT_WINDOWS = 3; // Giới hạn số lượng cửa sổ chat
+
     const handleMessageClick = (message) => {
         const isHidden = hiddenMessages.some((m) => m.id === message.id);
         if (isHidden) {
             setHiddenMessages((prev) => prev.filter((m) => m.id !== message.id));
-            setSelectedMessages((prev) => [...prev, message]);
+            setSelectedMessages((prev) => {
+                const newMessages = [...prev, message];
+                if (newMessages.length > MAX_CHAT_WINDOWS) {
+                    // Nếu vượt quá giới hạn, ẩn cái cũ nhất
+                    const [oldest, ...rest] = newMessages;
+                    setHiddenMessages((hidden) => [...hidden, oldest]);
+                    return rest;
+                }
+                return newMessages;
+            });
         } else {
             const isAlreadyOpen = selectedMessages.some((m) => m.id === message.id);
             if (!isAlreadyOpen) {
-                setSelectedMessages((prev) => [...prev, message]);
+                setSelectedMessages((prev) => {
+                    const newMessages = [...prev, message];
+                    if (newMessages.length > MAX_CHAT_WINDOWS) {
+                        // Nếu vượt quá giới hạn, ẩn cái cũ nhất
+                        const [oldest, ...rest] = newMessages;
+                        setHiddenMessages((hidden) => [...hidden, oldest]);
+                        return rest;
+                    }
+                    return newMessages;
+                });
             }
         }
     };
@@ -38,22 +58,36 @@ const MainLayout = ({ children }) => {
     const handleShowChat = (id) => {
         const messageToShow = hiddenMessages.find((m) => m.id === id);
         if (messageToShow) {
-            const isAlreadyOpen = selectedMessages.some((m) => m.id === id);
-            if (!isAlreadyOpen) {
-                setSelectedMessages((prev) => [...prev, messageToShow]);
-            }
             setHiddenMessages((prev) => prev.filter((m) => m.id !== id));
+            setSelectedMessages((prev) => {
+                const newMessages = [...prev, messageToShow];
+                if (newMessages.length > MAX_CHAT_WINDOWS) {
+                    // Nếu vượt quá giới hạn, ẩn cái cũ nhất
+                    const [oldest, ...rest] = newMessages;
+                    setHiddenMessages((hidden) => [...hidden, oldest]);
+                    return rest;
+                }
+                return newMessages;
+            });
         }
     };
 
-    // Xử lý hiển thị cửa sổ chat khi nhấn nút FloatButton
     const handleNewMessage = () => {
         const newMessage = {
             id: `new-${Date.now()}`, // Tạo ID duy nhất
             name: "Tin nhắn mới",
             message: "Nội dung tin nhắn mới",
         };
-        setSelectedMessages((prev) => [...prev, newMessage]);
+        setSelectedMessages((prev) => {
+            const newMessages = [...prev, newMessage];
+            if (newMessages.length > MAX_CHAT_WINDOWS) {
+                // Nếu vượt quá giới hạn, ẩn cái cũ nhất
+                const [oldest, ...rest] = newMessages;
+                setHiddenMessages((hidden) => [...hidden, oldest]);
+                return rest;
+            }
+            return newMessages;
+        });
     };
 
     const calculatePosition = (index) => {
@@ -66,21 +100,20 @@ const MainLayout = ({ children }) => {
     return (
         <Layout style={{ height: '100vh' }}>
             <HeaderProvider>
-                <Header onMessageClick={handleMessageClick} /> {/* Truyền xuống Header */}
+                <Header onMessageClick={handleMessageClick} />
                 <Layout style={{ minHeight: 'auto' }}>{children}</Layout>
             </HeaderProvider>
-            {/* Bong bóng chat (hiển thị tin nhắn ẩn) */}
             <FloatButton.Group shape="circle" style={{ bottom: '14px', right: '24px' }}>
                 {hiddenMessages.map((message) => (
                     <Tooltip
                         key={message.id}
                         title={
-                            <Flex vertical>
+                            <div>
                                 <Typography.Text strong>{message.name || 'Không có tên'}</Typography.Text>
                                 <Typography.Text type="secondary">
                                     {message.message || 'Không có nội dung'}
                                 </Typography.Text>
-                            </Flex>
+                            </div>
                         }
                         color="white"
                         placement="left"
@@ -113,7 +146,6 @@ const MainLayout = ({ children }) => {
                 </Tooltip>
             </FloatButton.Group>
 
-            {/* Các cửa sổ chat */}
             {selectedMessages.map((message, index) => {
                 const position = calculatePosition(index);
                 return (
@@ -121,7 +153,7 @@ const MainLayout = ({ children }) => {
                         key={message.id}
                         message={message}
                         onClose={() => handleCloseChat(message.id)}
-                        onHide={() => handleHideChat(message.id)} // Thêm hàm ẩn chat
+                        onHide={() => handleHideChat(message.id)}
                         position={position}
                     />
                 );
