@@ -15,10 +15,16 @@ const Post = () => {
   const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isReactionBoxVisible, setIsReactionBoxVisible] = useState(false);
+  const [reactions, setReactions] = useState([]);
   const [comments, setComments] = useState([
     { id: 1, user: "Quân A.P", content: "Vẫn đẹp trai ạ 😄" },
     { id: 2, user: "JSOL", content: "Mèo cute quá!" },
   ]);
+
+  const handleReactionAdded = (reactionType) => {
+    setReactions((prevReactions) => [...prevReactions, reactionType]);
+    console.log("Cảm xúc mới:", reactionType);
+  };
 
   const addComment = (newComment) => {
     setComments((prevComments) => [
@@ -91,7 +97,10 @@ const Post = () => {
               onMouseEnter={() => setIsReactionBoxVisible(true)}
               onMouseLeave={() => setIsReactionBoxVisible(false)}
             >
-              <ReactionIconsBox />
+              <ReactionIconsBox 
+                postId="123" // ID bài viết
+                onReactionAdded={handleReactionAdded} // Callback khi thêm cảm xúc
+                />
             </div>
           )}
           <Button

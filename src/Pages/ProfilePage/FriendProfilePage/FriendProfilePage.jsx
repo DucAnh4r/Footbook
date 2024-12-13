@@ -1,23 +1,61 @@
-import React, { useState } from 'react';
-import { Row, Col, Tabs, Dropdown, Menu, Flex } from 'antd';
-
+import React, { useState, useEffect } from 'react';
+import { Row, Col, Tabs, Dropdown, Menu } from 'antd';
 import styles from './FriendProfilePage.module.scss';
 import { IoIosArrowDown, IoMdAdd } from "react-icons/io";
-import Posts from './Tabs/Posts/Posts.jsx';
-import Introduction from './Tabs/Introduction/Introduction.jsx';
-import Friends from './Tabs/Friends/Friends.jsx';
-import Photos from './Tabs/Photos/Photos.jsx';
-import Videos from './Tabs/Videos/Videos.jsx';
 import { AiFillMessage } from 'react-icons/ai';
 import { EllipsisOutlined } from '@ant-design/icons';
 import SuggestedFriends from '../UserProfilePage/SuggestedFriends.jsx';
 import { useAuthCheck } from '../../../utils/checkAuth.jsx';
+import { countFriendService, createFriendshipService, getFriendshipStatusService, deleteFriendshipService } from '../../../services/friendService.jsx';
 
-const FriendProfilePage = () => {
+const FriendProfilePage = ({ userId2 }) => {
   useAuthCheck();
+
   const [activeTab, setActiveTab] = useState("1");
   const [isFriendSuggestionVisible, setFriendSuggestionVisible] = useState(false);
+  const [friendshipStatus, setFriendshipStatus] = useState(null); // Lưu trạng thái kết bạn
+  const [sender, setSender] = useState(null);
+  const [friends, setFriends] = useState(null);
 
+  const userId1 = JSON.parse(localStorage.getItem('user'))?.data?.id; // Lấy userId1 từ localStorage
+
+  const fetchFriendshipStatus = async () => {
+    try {
+      const response = await getFriendshipStatusService({ userId1, userId2 });
+      setFriendshipStatus(response?.data || null);
+      setSender(response?.u_send);
+    } catch (error) {
+      console.error("Lỗi khi lấy trạng thái bạn bè:", error);
+    }
+  };
+
+  const countFriend = async () => {
+    try {
+      const response = await countFriendService({ userId1 });
+      setFriends(response?.data || 0);
+    } catch (error) {
+      console.error("Lỗi khi lấy số lượng bạn bè:", error);
+    }
+  };
+
+  const handleAddFriend = async () => {
+    try {
+      await createFriendshipService({ userId1, userId2 });
+      fetchFriendshipStatus(); // Cập nhật trạng thái
+    } catch (error) {
+      console.error("Lỗi khi gửi lời mời kết bạn:", error);
+    }
+  };
+
+  const handleDeleteFriend = async () => {
+    try {
+      await deleteFriendshipService({ userId1, userId2 });
+      setFriendshipStatus(null); // Cập nhật trạng thái thành không phải bạn bè
+      countFriend(); // Cập nhật số lượng bạn bè
+    } catch (error) {
+      console.error("Lỗi khi xóa bạn bè:", error);
+    }
+  };
 
   const handleTabChange = (key) => {
     setActiveTab(key);
@@ -27,36 +65,69 @@ const FriendProfilePage = () => {
     setFriendSuggestionVisible(!isFriendSuggestionVisible);
   };
 
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case "1":
-        return <Posts />;
-      case "2":
-        return <Introduction />;
-      case "3":
-        return <Friends />;
-      case "4":
-        return <Photos />;
-      case "5":
-        return <Videos />;
-      case "6":
-        return <div>Nội dung của tab Reels</div>;
-      case "7":
-        return <div>Nội dung của tab Xem thêm</div>;
-      default:
-        return null;
+  const renderButton = () => {
+    if (friendshipStatus === "Pending") {
+      if (userId1 !== sender) {
+        return (
+          <>
+          <div style={{display:'flex', justifyContent:'space-between'}}>
+            <div>
+            Duc sent you a friend request
+            </div>
+          <div>
+            <button
+              className={styles["blue-button"]}
+              onClick={() => console.log("Chấp nhận lời mời")}
+            >
+              Chấp nhận
+            </button>
+            <button
+              className={styles["white-button"]}
+              onClick={() => console.log("Từ chối lời mời")}
+            >
+              Từ chối
+            </button>
+            </div>
+            </div>
+          </>
+        );
+      } else {
+        return (
+          <button className={styles["blue-button"]}>
+            Đã gửi lời mời kết bạn
+          </button>
+        );
+      }
+    } else if (friendshipStatus === "Accepted") {
+      return (
+        <Dropdown
+          overlay={
+            <Menu>
+              <Menu.Item key="1" onClick={handleDeleteFriend}>
+                Xóa bạn bè
+              </Menu.Item>
+            </Menu>
+          }
+          trigger={['click']}
+        >
+          <button className={styles["blue-button"]}>
+            Bạn bè
+          </button>
+        </Dropdown>
+      );
+    } else {
+      return (
+        <button className={styles["blue-button"]} onClick={handleAddFriend}>
+          <IoMdAdd /> Thêm bạn bè
+        </button>
+      );
     }
   };
 
-  const menu = (
-    <Menu className={styles['custom-menu']}>
-      <Menu.Item key="1" className={styles['menu-item']}>Tìm kiếm</Menu.Item>
-      <Menu.Item key="2" className={styles['menu-item']}>Báo cáo trang cá nhân</Menu.Item>
-      <Menu.Item key="3" className={styles['menu-item']}>Chặn</Menu.Item>
-
-    </Menu>
-
-  );
+  useEffect(() => {
+    fetchFriendshipStatus();
+    countFriend();
+  }, []);
 
   return (
     <>
@@ -71,68 +142,46 @@ const FriendProfilePage = () => {
                 <img className={styles['avatar-img']} src="https://cdn.tuoitre.vn/thumb_w/480/471584752817336320/2024/7/6/2024-07-05t210215z828248098up1ek751mfqfvrtrmadp3soccer-euro-por-fra-report-1-1720260083640639014392.jpg" alt="" />
               </div>
             </Col>
-            <Col span={9} style={{display: 'flex', flexDirection: 'column'}}>
-              <span style={{fontSize: '30px', fontWeight: 700, marginTop: '24px'}}>Nguyễn Đức Anh</span>
-              <Flex gap={3}>
-              <a
+            <Col span={9} style={{ display: 'flex', flexDirection: 'column' }}>
+              <span style={{ fontSize: '30px', fontWeight: 700, marginTop: '24px' }}>Nguyễn Đức Anh</span>
+              <span
                 style={{
                   fontSize: '16px',
                   fontWeight: 500,
                   color: '#65686c',
-                  textDecoration: 'none'
+                  textDecoration: 'none',
                 }}
-                onMouseEnter={(e) => e.target.style.textDecoration = 'underline'}
-                onMouseLeave={(e) => e.target.style.textDecoration = 'none'}
               >
-                392 người bạn
-              </a>
-              <div>.</div>
-              <a
-                style={{
-                  fontSize: '16px',
-                  fontWeight: 500,
-                  color: '#65686c',
-                  textDecoration: 'none'
-                }}
-                onMouseEnter={(e) => e.target.style.textDecoration = 'underline'}
-                onMouseLeave={(e) => e.target.style.textDecoration = 'none'}
-              >
-                392 bạn chung
-              </a>
-              </Flex>
+                {friends} người bạn
+              </span>
             </Col>
-            <Col style={{paddingRight: '0px'}} span={9}>
-              <div style={{marginTop: '40px', textAlign: 'right'}}>
-                <button className={styles['blue-button']}>
-                  <IoMdAdd />
-                  Thêm bạn bè
-                </button>
+            <Col style={{ paddingRight: '0px' }} span={9}>
+              <div style={{ marginTop: '40px', textAlign: 'right' }}>
+                {renderButton()}
                 <button className={styles['white-button']}>
                   <AiFillMessage />
                   Nhắn tin
                 </button>
-                <button 
-                  style={{ alignItems: 'center', padding: '0 16px'}} 
+                <button
+                  style={{ alignItems: 'center', padding: '0 16px' }}
                   className={styles['small-button']}
                   onClick={toggleFriendSuggestion}
                 >
                   <IoIosArrowDown
-                    className={`${styles.arrowIcon} ${isFriendSuggestionVisible ? styles.arrowIconRotated : ''}`} // Thêm lớp xoay mũi tên
+                    className={`${styles.arrowIcon} ${isFriendSuggestionVisible ? styles.arrowIconRotated : ''}`}
                   />
                 </button>
               </div>
-              {/* <div style={{marginTop: '10px', display: 'flex', justifyContent: 'end'}}>
-              </div> */}
             </Col>
           </Row>
 
           {isFriendSuggestionVisible && (
-            <Row style={{width: '100%'}}>
+            <Row style={{ width: '100%' }}>
               <SuggestedFriends />
             </Row>
           )}
 
-          <Row className={styles['tabs-select']} style={{ overflow:'hidden', height: '49px', width:'100%', display:'flex', justifyContent:'space-between',alignItems: 'baseline'}}>
+          <Row className={styles['tabs-select']} style={{ overflow: 'hidden', height: '49px', width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
             <Tabs defaultActiveKey="1" centered onChange={handleTabChange}>
               <Tabs.TabPane tab={<span className={styles.tab}>Bài viết</span>} key="1" />
               <Tabs.TabPane tab={<span className={styles.tab}>Giới thiệu</span>} key="2" />
@@ -143,17 +192,16 @@ const FriendProfilePage = () => {
               <Tabs.TabPane tab={<span className={styles.tab}>Xem thêm</span>} key="7" />
             </Tabs>
             <Dropdown overlay={menu} trigger={['click']}>
-              <button style={{ alignItems: 'center', padding: '0 16px'}} className={styles['small-button']}>
+              <button style={{ alignItems: 'center', padding: '0 16px' }} className={styles['small-button']}>
                 <EllipsisOutlined />
               </button>
             </Dropdown>
           </Row>
-
         </div>
       </div>
       <div className={styles['container-2']}>
         <div className={styles['content']}>
-          {renderTabContent()}
+          {/* Nội dung tab */}
         </div>
       </div>
     </>
