@@ -11,22 +11,31 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { getUserIdFromLocalStorage } from "../utils/authUtils";
 
-const ReactionIconsBox = ({ postId, onReactionAdded }) => {
-  const userId = getUserIdFromLocalStorage(); // Lấy user_id từ localStorage
+const ReactionIconsBox = ({ postId, onReactionAdded, currentReaction }) => {
+  const userId = getUserIdFromLocalStorage();
+
   const handleReactionClick = async (reactionType) => {
+    // Nếu click lại vào cùng một cảm xúc, đặt trạng thái về NONE
+    const newReaction = currentReaction === reactionType ? "NONE" : reactionType;
+
     try {
-      const response = await addPostReactionService({
-        post_id: postId,
-        user_id: userId,
-        reaction_type: reactionType,
-      });
+      // Cập nhật API nếu cần
+      // await addPostReactionService({
+      //   post_id: postId,
+      //   user_id: userId,
+      //   reaction_type: newReaction,
+      // });
 
       // Thông báo thành công
-      toast.success(`Bạn đã thêm cảm xúc ${reactionType} thành công!`);
+      toast.success(
+        newReaction === "NONE"
+          ? "Bạn đã gỡ cảm xúc!"
+          : `Bạn đã thêm cảm xúc ${newReaction} thành công!`
+      );
 
       // Gọi callback để thông báo với parent component
       if (onReactionAdded) {
-        onReactionAdded(reactionType);
+        onReactionAdded(newReaction);
       }
     } catch (error) {
       console.error("Error adding reaction:", error);
@@ -82,3 +91,4 @@ const ReactionIconsBox = ({ postId, onReactionAdded }) => {
 };
 
 export default ReactionIconsBox;
+

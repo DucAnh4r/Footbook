@@ -8,6 +8,10 @@ import styles from "./Post.module.scss";
 import CommentModal from "../Modal/CommentModal";
 import HahaIcon from "../assets/image/Reacts/haha.png";
 import LikeIcon from "../assets/image/Reacts/like.png";
+import LoveIcon from "../assets/image/Reacts/heart.png";
+import WowIcon from "../assets/image/Reacts/wow.png";
+import SadIcon from "../assets/image/Reacts/sad.png";
+import AngryIcon from "../assets/image/Reacts/angry.png";
 import ReactionIconsBox from "./ReactionIconsBox";
 import ShareModal from "../Modal/ShareModal";
 
@@ -15,16 +19,27 @@ const Post = () => {
   const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isReactionBoxVisible, setIsReactionBoxVisible] = useState(false);
-  const [reactions, setReactions] = useState([]);
+  const [selectedReaction, setSelectedReaction] = useState("NONE");
   const [comments, setComments] = useState([
     { id: 1, user: "Quân A.P", content: "Vẫn đẹp trai ạ 😄" },
     { id: 2, user: "JSOL", content: "Mèo cute quá!" },
   ]);
+  const reactionConfig = {
+    NONE: { text: "Thích", icon: <AiOutlineLike />, color: "#65686c" },
+    LIKE: { text: "Thích", icon: <img style={{width: '20px', height: '20px'}} src={LikeIcon} alt="Haha" />, color: "blue" },
+    HAHA: { text: "Haha", icon: <img style={{width: '20px', height: '20px'}} src={HahaIcon} alt="Haha" />, color: "orange" },
+    LOVE: { text: "Yêu thích", icon: <img style={{width: '20px', height: '20px'}}  src={LoveIcon} alt="Love" />, color: "red" },
+    WOW: { text: "Wow", icon: <img style={{width: '20px', height: '20px'}}  src={WowIcon} alt="Wow" />, color: "orange" },
+    SAD: { text: "Buồn", icon: <img style={{width: '20px', height: '20px'}}  src={SadIcon} alt="Sad" />, color: "orange" },
+    ANGRY: { text: "Phẫn nộ", icon: <img style={{width: '18px', height: '18px'}}  src={AngryIcon} alt="Sad" />, color: "#e9710f" },
+  };
 
   const handleReactionAdded = (reactionType) => {
-    setReactions((prevReactions) => [...prevReactions, reactionType]);
+    setSelectedReaction((prev) => (prev === reactionType ? "NONE" : reactionType));
+    setIsReactionBoxVisible(false);
     console.log("Cảm xúc mới:", reactionType);
   };
+  
 
   const addComment = (newComment) => {
     setComments((prevComments) => [
@@ -80,27 +95,39 @@ const Post = () => {
           </div>
         </div>
 
-        <div
-          className={styles.footer}
+        <div className={styles.footer}>
+        <Button
+          icon={reactionConfig[selectedReaction].icon}
+          type="text"
+          className={styles.likeButtonWrapper}
+          onMouseEnter={() => setIsReactionBoxVisible(true)}
+          onMouseLeave={() => setIsReactionBoxVisible(false)}
+          onClick={() =>
+            handleReactionAdded(selectedReaction === "LIKE" ? "NONE" : "LIKE")
+          }
+          style={{
+            color: reactionConfig[selectedReaction].color, // Màu chữ theo cấu hình
+          }}
         >
-          <Button icon={<AiOutlineLike />} type="text"
-            className={styles.likeButtonWrapper}
-            onMouseEnter={() => setIsReactionBoxVisible(true)}
-            onMouseLeave={() => setIsReactionBoxVisible(false)}
-          >
-            Thích
-          </Button>
+          {reactionConfig[selectedReaction].text}
+        </Button>
+
           {isReactionBoxVisible && (
             <div
-              style={{padding: "50px", position: "absolute", left: "0px", bottom: "0px"}}
+              style={{
+                position: "absolute",
+                left: "0px",
+                bottom: "0px",
+              }}
               className={styles.reactionBoxWrapper}
               onMouseEnter={() => setIsReactionBoxVisible(true)}
               onMouseLeave={() => setIsReactionBoxVisible(false)}
             >
-              <ReactionIconsBox 
-                postId="123" // ID bài viết
-                onReactionAdded={handleReactionAdded} // Callback khi thêm cảm xúc
-                />
+              <ReactionIconsBox
+                postId="123"
+                onReactionAdded={handleReactionAdded}
+                currentReaction={selectedReaction}
+              />
             </div>
           )}
           <Button
