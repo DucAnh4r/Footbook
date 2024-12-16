@@ -60,3 +60,13 @@ export const updateCoverService = (Data, user_id) => {
       },
     });
 };
+
+export const userFindByIdService = (user_id) => {
+  return axiosCreate.get(`http://localhost:8080/api/v1/users/${user_id}`, {
+  });
+};
+
+export const userListFriendService = (user_id) => {
+  return axiosCreate.get(`http://localhost:8080/api/v1/users/${user_id}/friends`, {
+  });
+};
