@@ -1,15 +1,30 @@
-import React from 'react';
-import { Card, Button, Row, Col } from 'antd';
-import styles from './GroupsHomePage.module.scss';
-import LeftSidebar from './Components/LeftSidebar';
+import React, { useState } from 'react'; // Import useState từ React
 import { Layout } from 'antd';
+import LeftSidebar from './Components/LeftSidebar';
 import GroupsPost from '../../Components/GroupPost';
 import { useAuthCheck } from '../../utils/checkAuth';
+import GroupListPage from './Pages/GroupListPage';
+import { useLocation } from 'react-router-dom';
 
 const { Sider, Content } = Layout;
 
 const GroupsPage = () => {
   useAuthCheck();
+
+  const [activePage, setActivePage] = useState('page1');  // Khai báo useState cho activePage
+
+  const renderPage = () => {
+    switch (activePage) {
+      case 'page1':
+        return <GroupsPost />;
+      case 'page2':
+        return <GroupListPage />;
+      case 'page3':
+        return <GroupListPage />;
+      default:
+        return <GroupsPost />;
+    }
+  };
 
   return (
     <Layout>
@@ -26,14 +41,12 @@ const GroupsPage = () => {
         }}
         className="scroll-on-hover"
       >
-        <LeftSidebar />
+        <LeftSidebar setActivePage={setActivePage} /> {/* Truyền setActivePage vào LeftSidebar */}
       </Sider>
 
-      <Content style={{ padding: '70px 370px', minHeight: '100vh', overflow: 'unset', marginLeft: '100px', }}>
+      <Content style={{ padding: '70px 0px 0px 370px', minHeight: '100vh', overflow: 'unset', display: 'flex', justifyContent: 'center' }}>
         <div className="page-content" style={{ width: 'max-content' }}>
-          <h3>Hoạt động gần đây</h3>
-          <GroupsPost />
-          <GroupsPost />
+          {renderPage()} {/* Render trang con dựa trên activePage */}
         </div>
       </Content>
     </Layout>

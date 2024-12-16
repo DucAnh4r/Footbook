@@ -1,17 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './LeftSidebar.module.scss';
 import FeedImg from '../../../assets/image/Homepage/LeftSidebar/feed.png';
 import ExploreImg from '../../../assets/image/Homepage/LeftSidebar/explore.png';
 import GroupsImg from '../../../assets/image/Homepage/LeftSidebar/groups.png';
-import { useNavigate } from 'react-router-dom';
-import { FaCircleXmark } from 'react-icons/fa6';
+import CreateGroupModal from '../../../Modal/CreateGroupModal'; // Import modal
 
-const LeftSidebar = () => {
-  const navigate = useNavigate();
+const LeftSidebar = ({ setActivePage }) => {
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
-  // Hàm điều hướng khi click vào từng mục
-  const handleNavigate = (type) => {
-    navigate(`/Groups/${type}`); // Điều hướng đến URL với tham số type
+  // Hàm mở modal
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  // Hàm đóng modal
+  const handleCloseModal = () => {
+    setIsModalVisible(false);
+  };
+
+  // Hàm xử lý khi tạo nhóm mới
+  const handleCreateGroup = (groupName, groupDescription) => {
+    console.log('Tạo nhóm mới:', groupName, groupDescription);
+    // Bạn có thể xử lý việc tạo nhóm tại đây (ví dụ: gửi yêu cầu API để tạo nhóm)
   };
 
   // Danh sách nhóm người dùng đã tham gia
@@ -34,7 +44,7 @@ const LeftSidebar = () => {
       <ul className={styles['list-container']}>
         <li
           className={styles['list-item']}
-          onClick={() => handleNavigate('')} // Điều hướng đến trang feed
+          onClick={() => setActivePage('page1')} // Điều hướng đến trang feed
         >
           <div className={styles['element-container']}>
             <div className={styles['image-container']}>
@@ -45,7 +55,7 @@ const LeftSidebar = () => {
         </li>
         <li
           className={styles['list-item']}
-          onClick={() => handleNavigate('requests')} // Điều hướng đến trang khám phá
+          onClick={() => setActivePage('page2')} // Điều hướng đến trang khám phá
         >
           <div className={styles['element-container']}>
             <div className={styles['image-container']}>
@@ -56,7 +66,7 @@ const LeftSidebar = () => {
         </li>
         <li
           className={styles['list-item']}
-          onClick={() => handleNavigate('suggested')} // Điều hướng đến danh sách nhóm
+          onClick={() => setActivePage('page3')} // Điều hướng đến danh sách nhóm
         >
           <div className={styles['element-container']}>
             <div className={styles['image-container']}>
@@ -72,8 +82,8 @@ const LeftSidebar = () => {
         </li>
       </ul>
 
-      {/* Nút tạo nhóm mới */}
-      <button className={styles.editHighlightButton}>+ Tạo nhóm mới</button>
+      {/* Nút tạo nhóm mới, khi nhấn sẽ mở modal */}
+      <button className={styles.editHighlightButton} onClick={showModal}>+ Tạo nhóm mới</button>
       <div><hr className={styles['divider']} /></div>
 
       {/* Danh sách nhóm đã tham gia */}
@@ -102,6 +112,12 @@ const LeftSidebar = () => {
         </ul>
       </div>
 
+      {/* Modal tạo nhóm mới */}
+      <CreateGroupModal
+        isVisible={isModalVisible}
+        onClose={handleCloseModal}
+        onCreateGroup={handleCreateGroup} // Gửi hàm xử lý việc tạo nhóm
+      />
     </div>
   );
 };

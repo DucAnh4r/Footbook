@@ -12,6 +12,7 @@ const FriendProfilePage = lazy(() => import('../Pages/ProfilePage/FriendProfileP
 const SearchPage = lazy(() => import('../Pages/SearchPage/HomePageSearch'));
 const LoginPage = lazy(() => import('../Pages/LoginPage/LoginPage'));
 
+
 const homeRoutes = [
     { path: "/", component: <Homepage /> },
     { path: "/profile", component: <ProfilePage /> },
