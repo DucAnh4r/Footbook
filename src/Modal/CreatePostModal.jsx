@@ -36,7 +36,7 @@ const CreatePostModal = ({ isModalOpen, onClose }) => {
 
         try {
             const postData = {
-                userId: userId, 
+                userId: userId,
                 content: postContent,
                 privacy: selectedAudience,
                 theme: selectedTheme.id,
@@ -97,11 +97,16 @@ const CreatePostModal = ({ isModalOpen, onClose }) => {
                 <div
                     className="custom-textarea-container"
                     style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        height: '290px',
                         background: selectedTheme.background,
-                        color: selectedTheme.id === 0 ? "#000" : "#fff",
+                        color: selectedTheme.id === 0 ? "#000" : "#111",
+
                     }}
                 >
                     <Input.TextArea
+                        style={{ backgroundColor: 'unset', }}
                         autoSize={{ minRows: 1, maxRows: 100 }}
                         placeholder="What's on your mind, Duc?"
                         value={postContent}

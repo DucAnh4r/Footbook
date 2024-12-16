@@ -24,19 +24,19 @@ const Homepage = () => {
 
   const fetchPosts = async () => {
     try {
-        setLoading(true);
-        const response = await getPostListFriendService(user_id);
-        setPosts(response?.data?.postResponses || []); // Lưu dữ liệu trả về
+      setLoading(true);
+      const response = await getPostListFriendService(user_id);
+      setPosts(response?.data?.postResponses || []); // Lưu dữ liệu trả về
     } catch (error) {
-        console.error("Error fetching posts:", error);
+      console.error("Error fetching posts:", error);
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
-};
+  };
 
-useEffect(() => {
+  useEffect(() => {
     fetchPosts();
-}, []); // Chạy một lần khi component được render
+  }, []); // Chạy một lần khi component được render
 
   document.title = "Trang chủ";
   return (
@@ -56,13 +56,13 @@ useEffect(() => {
       >
         <LeftSidebar />
       </Sider>
-      
+
       <Content style={{ padding: '70px 370px', minHeight: '100vh', overflow: 'unset' }}>
-    <div className="page-content" style={{ padding: '16px 30px' }}>
-        <StatusInput />
-        {loading ? (
+        <div className="page-content" style={{ padding: '16px 30px' }}>
+          <StatusInput />
+          {loading ? (
             <p>Đang tải bài viết...</p>
-        ) : posts.length > 0 ? (
+          ) : posts.length > 0 ? (
             posts.map((post) => (
                 <Post
                     key={post.post_id}
@@ -73,12 +73,12 @@ useEffect(() => {
                     images={post.images}
                 />
             ))
-        ) : (
+          ) : (
             <p>Không có bài viết nào để hiển thị.</p>
-        )}
-    </div>
-</Content>
-      
+          )}
+        </div>
+      </Content>
+
       <Sider
         width={360}
         style={{
