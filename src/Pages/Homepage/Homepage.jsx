@@ -12,6 +12,7 @@ import SuggestedFriends from '../ProfilePage/UserProfilePage/SuggestedFriends';
 import GroupPost from '../../Components/GroupPost';
 import { useAuthCheck } from '../../utils/checkAuth';
 import { getUserIdFromLocalStorage } from '../../utils/authUtils';
+import { getPostListFriendService } from '../../services/postService';
 
 
 const { Sider, Content } = Layout;
@@ -26,7 +27,8 @@ const Homepage = () => {
     try {
         setLoading(true);
         const response = await getPostListFriendService(user_id);
-        setPosts(response?.data?.postResponses || []); // Lưu dữ liệu trả về
+        setPosts(response?.data?.data?.postResponses || []); // Lưu dữ liệu trả về
+        
     } catch (error) {
         console.error("Error fetching posts:", error);
     } finally {

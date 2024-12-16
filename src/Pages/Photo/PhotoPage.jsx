@@ -1,111 +1,114 @@
-import React, { useState } from 'react';
-import { Layout } from "antd";
-import {Row, Col} from "antd";
-import { Avatar, Button } from "antd";
-import { FaEarthAmericas } from "react-icons/fa6";
-import "slick-carousel/slick/slick.css";
-import styles from './PhotoPage.module.scss';
-import LogoImg from "../../assets/image/Header/logo.png";
-import { useLocation, useNavigate } from "react-router-dom";
-import HahaIcon from "../../assets/image/Reacts/haha.png";
-import LikeIcon from "../../assets/image/Reacts/like.png";
-import { AiOutlineLike } from "react-icons/ai";
+import React, { useState, useRef } from 'react';
+import { Layout, Row, Col, Avatar, Button } from "antd";
+import { FaEarthAmericas, FaAngleLeft, FaAngleRight } from "react-icons/fa6";
+import { MdZoomIn, MdZoomOut } from "react-icons/md";
+import { AiOutlineFullscreen, AiOutlineLike } from "react-icons/ai";
 import { FaRegComment } from "react-icons/fa";
 import { PiShareFat } from "react-icons/pi";
-import Comment from "./Components/Comment";
 import { IoIosSend } from "react-icons/io";
-import { MdZoomIn } from "react-icons/md";
-import { AiOutlineFullscreen } from "react-icons/ai";
-import { FaAngleLeft } from "react-icons/fa6";
-import { FaAngleRight } from "react-icons/fa6";
-
-
+import CancelIcon from "../../assets/image/PhotoPage/CancelButton.png";
+import HahaIcon from "../../assets/image/Reacts/haha.png";
+import LikeIcon from "../../assets/image/Reacts/like.png";
+import Comment from "./Components/Comment";
+import styles from './PhotoPage.module.scss';
+import { useNavigate } from "react-router-dom";
 
 const PhotoPage = () => {
-  const navigate = useNavigate(); // Initialize navigate
-  const handleLogoClick = () => {
-    navigate("/"); // Điều hướng đến URL với tham số type
+  const navigate = useNavigate();
+  const [isDragging, setIsDragging] = useState(false); // Track dragging state
+  const [offset, setOffset] = useState({ x: 0, y: 0 }); // Position of the image
+  const [scale, setScale] = useState(1); // Zoom scale
+  const imageRef = useRef(null);
+  const [isFullScreen, setIsFullScreen] = useState(false); // State for fullscreen mode
+
+  const handleFullScreenToggle = () => {
+    setIsFullScreen((prev) => {
+      console.log(prev);  // Xem giá trị cũ trong khi cập nhật
+      return !prev;
+    });
+  };
+  
+
+  const handleZoomIn = () => {
+    setScale((prev) => Math.min(prev + 0.5, 3)); // Zoom in, max scale 3
   };
 
-  const [comment, setComment] = useState(""); // State để theo dõi nội dung comment
+  const handleZoomOut = () => {
+    setScale((prev) => {
+      const newScale = Math.max(prev - 0.5, 1); // Zoom out, min scale 1
+      if (newScale === 1) {
+        setOffset({ x: 0, y: 0 }); // Reset position when zooming out to 1
+      }
+      return newScale;
+    });
+  };
+
+  const handleMouseDown = (e) => {
+    if (scale > 1) { // Chỉ cho phép kéo khi ảnh đã được phóng to
+      const initialX = e.clientX - offset.x;
+      const initialY = e.clientY - offset.y;
+  
+      setIsDragging(true); // Ngay lập tức bắt đầu kéo
+  
+      // Hàm xử lý di chuyển chuột
+      const handleMouseMove = (moveEvent) => {
+        if (isDragging) {
+          setOffset({
+            x: moveEvent.clientX - initialX,
+            y: moveEvent.clientY - initialY,
+          });
+        }
+      };
+  
+      // Hàm xử lý khi nhả chuột
+      const handleMouseUp = () => {
+        setIsDragging(false); // Dừng kéo ngay khi thả chuột
+        window.removeEventListener("mousemove", handleMouseMove); // Hủy sự kiện di chuyển chuột
+        window.removeEventListener("mouseup", handleMouseUp); // Hủy sự kiện nhả chuột
+      };
+  
+      window.addEventListener("mousemove", handleMouseMove); // Bắt đầu di chuyển chuột ngay khi nhấn
+      window.addEventListener("mouseup", handleMouseUp); // Dừng di chuyển khi thả chuột
+    }
+  };
+  
+  
+
+  const [comment, setComment] = useState(""); // State for tracking comment input
 
   const handleChange = (e) => {
-    setComment(e.target.value); // Cập nhật giá trị comment khi người dùng gõ
+    setComment(e.target.value);
   };
 
-  const comments = [
-    {
-      author: "Hà Yến Sao",
-      content: "Mấy cái caption với cmt của 2khang nó cứ sao á 😂",
-      likes: 174,
-      time: "2d",
-      replies: 5,
-    },
-    {
-      author: "Ngọc Gia Tuệ Hân",
-      content: "Anh ơi, ủa anh ơi 😂",
-      likes: 46,
-      time: "2d",
-      replies: 1,
-    },
-    {
-      author: "Nguyễn Gia Huy",
-      content: "4 anh lần này không comeback, 4 anh come out.",
-      likes: 109,
-      time: "1d",
-      replies: 0,
-    },
-    {
-      author: "Madeline Truong",
-      content: "Khang nói hit không khí bình thường, mà nó thở ra khí cười...",
-      likes: 52,
-      time: "1d",
-      replies: 0,
-    },
-    {
-      author: "Madeline Truong",
-      content: "Khang nói hit không khí bình thường, mà nó thở ra khí cười...",
-      likes: 52,
-      time: "1d",
-      replies: 0,
-    },
-    {
-      author: "Madeline Truong",
-      content: "Khang nói hit không khí bình thường, mà nó thở ra khí cười...",
-      likes: 52,
-      time: "1d",
-      replies: 0,
-    },
-    {
-      author: "Madeline Truong",
-      content: "Khang nói hit không khí bình thường, mà nó thở ra khí cười...",
-      likes: 52,
-      time: "1d",
-      replies: 0,
-    },
-  ];
-
-  const images = [
-    "https://via.placeholder.com/800x400?text=Image+1",
-    "https://via.placeholder.com/800x400?text=Image+2",
-    "https://via.placeholder.com/800x400?text=Image+3",
-  ];
-
+  const handleLogoClick = () => {
+    navigate("/"); // Navigate to homepage when logo is clicked
+  };
 
   return (
     <Layout>
       <Row className={styles['container']}>
-        <Col className={styles['image-row']}>
-          <div className={`${styles['round-button-container']} ${styles['cancel-button-container']}`}>
-            x
+        <Col
+          className={`${styles['image-row']} ${isFullScreen ? styles['fullscreenContainer'] : ''}`}
+        >
+          <div
+            className={`${styles['round-button-container']} ${styles['cancel-button-container']}`}
+            onClick={() => {
+              if (window.history.length > 2) {
+                navigate(-1); // Navigate to previous page if available
+              } else {
+                navigate("/"); // Navigate to homepage if no previous page
+              }
+            }}
+          >
+            <img style={{ width: '80%', height: '80%' }} src={CancelIcon} alt="" />
           </div>
-          <div className={`${styles['round-button-container']} ${styles['zoomin-button-container']}`}>
+          <div className={`${styles['round-button-container']} ${styles['zoomin-button-container']}`} onClick={handleZoomIn}>
             <MdZoomIn />
           </div>
-          <div className={`${styles['round-button-container']} ${styles['zoomout-button-container']}`}>
-            <MdZoomIn />
+          <div className={`${styles['round-button-container']} ${styles['zoomout-button-container']}`} onClick={handleZoomOut}>
+            <MdZoomOut />
           </div>
-          <div className={`${styles['round-button-container']} ${styles['full-button-container']}`}>
+          <div className={`${styles['round-button-container']} ${styles['full-button-container']}`} onClick={handleFullScreenToggle}>
             <AiOutlineFullscreen />
           </div>
           <div className={`${styles['round-button-container']} ${styles['left-button-container']}`}>
@@ -115,12 +118,22 @@ const PhotoPage = () => {
             <FaAngleRight />
           </div>
           <div className={styles['image-container']}>
-            <img className={styles['image']} src="https://c.ndtvimg.com/2024-04/64v6v0mo_ronaldo_625x300_09_April_24.jpg?im=FitAndFill,algorithm=dnn,width=806,height=605" alt="" />
-
+            <img
+              ref={imageRef}
+              className={`${styles.image} disable-select`}
+              src="https://c.ndtvimg.com/2024-04/64v6v0mo_ronaldo_625x300_09_April_24.jpg?im=FitAndFill,algorithm=dnn,width=806,height=605"
+              alt="Example"
+              style={{
+                transform: `scale(${scale}) translate(${offset.x}px, ${offset.y}px)`,
+                transition: "transform 0.3s ease",
+                cursor: isDragging ? "grabbing" : "grab",
+              }}
+              onMouseDown={handleMouseDown} // Start dragging
+            />
           </div>
         </Col>
         <Col className={styles['right-row']}>
-          <div style={{padding: "16px"}}>
+          <div style={{ padding: "16px" }}>
             <div className={styles.header}>
               <Avatar
                 src="https://shopgarena.net/wp-content/uploads/2023/07/Meo-khoc-thet-len.jpg"
@@ -142,12 +155,12 @@ const PhotoPage = () => {
               <div className={styles["reactions"]}>
                 <img
                   src={HahaIcon}
-                  alt="Image 1"
+                  alt="Haha"
                   className={`${styles["icon"]} ${styles["icon-left"]}`}
                 />
                 <img
                   src={LikeIcon}
-                  alt="Image 2"
+                  alt="Like"
                   className={`${styles["icon"]} ${styles["icon-right"]}`}
                 />
               </div>
@@ -163,18 +176,10 @@ const PhotoPage = () => {
             </div>
 
             <div className={styles.footer}>
-              <Button icon={<AiOutlineLike />} type="text"
-                className={styles.likeButtonWrapper}
-                onMouseEnter={() => setIsReactionBoxVisible(true)}
-                onMouseLeave={() => setIsReactionBoxVisible(false)}
-              >
+              <Button icon={<AiOutlineLike />} type="text" className={styles.likeButtonWrapper}>
                 Thích
               </Button>
-              <Button
-                icon={<FaRegComment />}
-                type="text"
-                onClick={() => setIsModalOpen(true)}
-              >
+              <Button icon={<FaRegComment />} type="text">
                 Bình luận
               </Button>
               <Button icon={<PiShareFat />} type="text">
@@ -193,7 +198,7 @@ const PhotoPage = () => {
 
             <div className={styles.seeMoreSection}>
               <p className={styles.seeMoreBtn}>Xem thêm bình luận</p>
-              <p style={{color: "#65686c"}}>6/84</p>
+              <p style={{ color: "#65686c" }}>6/84</p>
             </div>
           </div>
 
@@ -203,32 +208,28 @@ const PhotoPage = () => {
                 <Avatar
                   src="https://shopgarena.net/wp-content/uploads/2023/07/Meo-khoc-thet-len.jpg"
                   className={styles.avatar}
-                  style={{margin: "6px 0 0 6px"}}
+                  style={{ margin: "6px 0 0 6px" }}
                 />
               </Col>
               <Col span={20}>
                 <div className={styles.writeCommentContainer}>
                   <textarea
                     placeholder="Viết bình luận..."
-                    value={comment} // Liên kết với state
-                    onChange={handleChange} // Cập nhật state khi thay đổi nội dung
+                    value={comment}
+                    onChange={handleChange}
                   ></textarea>
                   <div className={styles.actionCommentContainer}>
-                    <IoIosSend className={styles["sendCommentButton"]} style={{color: comment ? "blue" : "gray"}}></IoIosSend>
+                    <IoIosSend className={styles["sendCommentButton"]} style={{ color: comment ? "blue" : "gray" }} />
                   </div>
                 </div>
               </Col>
             </Row>
           </div>
         </Col>
-        <Col className={styles['messenger-bubble-row']}>
-          
-        </Col>
       </Row>
     </Layout>
   );
 };
-
 
 
 export default PhotoPage;

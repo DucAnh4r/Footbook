@@ -40,3 +40,23 @@
 .read-the-docs {
   color: #888;
 } */
+
+*{
+  user-select: none; /* Hỗ trợ cho các trình duyệt hiện đại */
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE 10+ */
+}
+
+.ant-popover-inner {
+  padding: 0 !important;
+  border-radius: 10px !important;
+}
+
+/* Global CSS */
+.disable-select {
+  user-select: none; /* Hỗ trợ cho các trình duyệt hiện đại */
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE 10+ */
+}

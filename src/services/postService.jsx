@@ -11,7 +11,7 @@ export const getPostByUserIdService = (user_id) => {
 };
 
 export const getPostListFriendService = (user_id) => {
-    return axiosCreate.get(`http://localhost:8080/api/v1/post/user/${user_id}/posts`, {
+    return axiosCreate.get(`http://localhost:8080/api/v1/post/user/${user_id}`, {
     });
 };
 
@@ -35,7 +35,7 @@ export const createPostService = (Data) => {
         formData.append("images", Data.images);
     }
 
-    return axiosCreate.post("http://localhost:8080/api/v1/highlightStory/create", formData, {
+    return axiosCreate.post("http://localhost:8080/api/v1/post/create", formData, {
         headers: {
             "Content-Type": "multipart/form-data",
         },

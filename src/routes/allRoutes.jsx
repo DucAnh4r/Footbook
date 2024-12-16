@@ -15,7 +15,7 @@ const LoginPage = lazy(() => import('../Pages/LoginPage/LoginPage'));
 const homeRoutes = [
     { path: "/", component: <Homepage /> },
     { path: "/profile", component: <ProfilePage /> },
-    { path: "/friendprofile/:userId", component: <FriendProfilePage /> },
+    { path: "/friendprofile/:userId2", component: <FriendProfilePage /> },
     { path: "/friends", component: <FriendsPage /> },
     { path: "/friends/:type", component: <ShowFriendsPage /> },
     { path: "/pages", component: <FlagPage /> },

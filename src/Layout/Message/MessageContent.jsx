@@ -42,7 +42,7 @@ const MessageContent = ({ onMessageClick, onClose }) => {
       }}
     >
       <List.Item.Meta
-        avatar={<Avatar src={avatar} size="small" />}
+        avatar={<Avatar src={avatar} size="large" />}
         title={<Text strong>{truncateText(name, 30)}</Text>} // Hiển thị tối đa 20 ký tự
         description={
           <Text type="secondary" style={styles.messageDescription}>
@@ -57,7 +57,7 @@ const MessageContent = ({ onMessageClick, onClose }) => {
   return (
     <div style={styles.container}>
       <div style={styles.header}>
-        <Title level={5} style={styles.title}>Đoạn chat</Title>
+        <Title level={4} style={styles.title}>Đoạn chat</Title>
         <Space>
           <Tooltip title="Tùy chọn">
             <Popover
@@ -65,23 +65,25 @@ const MessageContent = ({ onMessageClick, onClose }) => {
               trigger="click"
               placement="bottomRight"
             >
-              <EllipsisOutlined style={{ fontSize: '20px', cursor: 'pointer' }} />
+              <EllipsisOutlined className={styles.icon} style={{fontSize: '22px', color: 'gray'}} />
             </Popover>
           </Tooltip>
           <Tooltip title="Mở rộng">
             <ExpandOutlined style={styles.icon} onClick={handleExpandClick} />
           </Tooltip>
-          <Tooltip title="Chỉnh sửa">
+          <Tooltip title="Tạo bài viết">
             <EditOutlined style={styles.icon} />
           </Tooltip>
         </Space>
       </div>
       <Input placeholder="Tìm kiếm trên Messenger" style={styles.searchInput} />
-      <List
-        itemLayout="horizontal"
-        dataSource={messages}
-        renderItem={(item) => <MessageItem key={item.id} {...item} />}
-      />
+      <div className={styles.content}>
+        <List
+          itemLayout="horizontal"
+          dataSource={messages}
+          renderItem={(item) => <MessageItem key={item.id} {...item} />}
+        />
+      </div>
       <Divider />
       <Button type="text" onClick={handleExpandClick} style={styles.viewAllButton}>
         Xem tất cả trong Messenger
@@ -92,12 +94,13 @@ const MessageContent = ({ onMessageClick, onClose }) => {
 
 
 const styles = {
-  container: { width: 300 },
+  container: { minWidth: '400px', padding: '0 8px' },
   header: { display: 'flex', justifyContent: 'space-between', padding: '10px' },
+  content: { minHeight: '400px', padding: '8px'},
   title: { margin: 0, fontWeight: 'bold' },
-  icon: { fontSize: '16px', color: 'gray', cursor: 'pointer' },
-  searchInput: { borderRadius: '20px' },
-  messageItem: { padding: '8px 0', borderBottom: '1px solid #f0f0f0', cursor: 'pointer' },
+  icon: { fontSize: '18px', color: 'gray', cursor: 'pointer' },
+  searchInput: { borderRadius: '20px', marginBottom: '8px' },
+  messageItem: { padding: '8px', borderBottom: '1px solid #f0f0f0', cursor: 'pointer' },
   messageDescription: { fontSize: '12px' },
   viewAllButton: { width: '100%', textAlign: 'center', color: '#1877f2' },
 };

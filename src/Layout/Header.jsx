@@ -1,13 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Layout, Input, Avatar, Row, Col, Tooltip, Popover } from "antd";
 import { GoSearch } from "react-icons/go";
-import SearchBar from "../Components/SearchBar.jsx"
+import SearchBar from "../Components/SearchBar.jsx";
 import NavItem from "./NavItem";
 import ProfileContent from "./ProfileContent";
 import NotificationContent from "./NotificationContent";
 import AppStoreContent from "./AppStoreContent.jsx";
 import { navItems, iconData } from "../assets/icons.jsx";
-import { FaUser } from "react-icons/fa"; import { FaSearch } from "react-icons/fa";
+import { FaUser } from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
 import MessageContent from "./Message/MessageContent.jsx";
 import { useLocation, useNavigate } from "react-router-dom";
 import LogoImg from "../assets/image/Header/logo.png";
@@ -117,12 +118,17 @@ const Header = ({ onMessageClick }) => {
         </Col>
 
         <Col>
-          <Row gutter={16} style={{marginRight: '8px'}}>
+          <Row gutter={16} style={{ marginRight: "8px" }}>
             {iconData.map(({ name, icon, tooltip }) => (
-              <Col key={name} style={{padding: '0 4px'}} className={styles["icon-container"]}>
+              <Col
+                key={name}
+                style={{ padding: "0 4px" }}
+                className={styles["icon-container"]}
+              >
                 <Tooltip title={tooltip}>
                   {["notifications", "messages", "appStore"].includes(name) ? (
                     <Popover
+                      style={{ padding: 0 }}
                       content={getPopoverContent(name)}
                       trigger="click"
                       placement="bottomRight"
@@ -156,7 +162,10 @@ const Header = ({ onMessageClick }) => {
               </Col>
             ))}
 
-            <Col style={{padding: '0 4px'}} className={styles["icon-container"]}>
+            <Col
+              style={{ padding: "0 4px" }}
+              className={styles["icon-container"]}
+            >
               <Popover
                 content={<ProfileContent />}
                 trigger="click"
@@ -168,7 +177,11 @@ const Header = ({ onMessageClick }) => {
                 getPopupContainer={(triggerNode) => triggerNode.parentNode}
               >
                 <div className={styles["avatar-wrapper"]}>
-                  <img className={styles["avatar"]} src="https://ict-imgs.vgcloud.vn/2020/09/01/19/huong-dan-tao-facebook-avatar.jpg?width=0&s=Da0ZhtrqP8OmUxL88LuyTQ" alt="" />
+                  <img
+                    className={styles["avatar"]}
+                    src="https://ict-imgs.vgcloud.vn/2020/09/01/19/huong-dan-tao-facebook-avatar.jpg?width=0&s=Da0ZhtrqP8OmUxL88LuyTQ"
+                    alt=""
+                  />
                 </div>
               </Popover>
             </Col>

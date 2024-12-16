@@ -23,7 +23,7 @@ const Post = ({ content, createdAt, userId, images, postId }) => {
   const [isReactionBoxVisible, setIsReactionBoxVisible] = useState(false);
   const [selectedReaction, setSelectedReaction] = useState("NONE");
   const [userInfo, setUserInfo] = useState([]);
-  const [postReactionCount, setPostReactionCount] = useState();
+  const [postReactionCount, setPostReactionCount] = useState([]);
   const [loading, setLoading] = useState(true); // Trạng thái tải dữ liệu
 
   const [comments, setComments] = useState([
@@ -44,7 +44,7 @@ const Post = ({ content, createdAt, userId, images, postId }) => {
     try {
       setLoading(true);
       const response = await userFindByIdService(userId);
-      setUserInfo(response?.data || []); // Lưu dữ liệu trả về
+      setUserInfo(response?.data?.data || []); // Lưu dữ liệu trả về
     } catch (error) {
       console.error("Error fetching posts:", error);
     } finally {
@@ -56,7 +56,7 @@ const Post = ({ content, createdAt, userId, images, postId }) => {
     try {
       setLoading(true);
       const response = await countPostReactionService(postId);
-      setPostReactionCount(response?.data || []);
+      setPostReactionCount(response?.data?.data || []);
     } catch (error) {
       console.error("Error count reaction:", error);
     } finally {

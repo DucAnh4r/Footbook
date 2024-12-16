@@ -11,6 +11,22 @@
   position: relative;
 }
 
+.fullscreenContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  transition: all 0.3s ease;
+  width: 100vw;
+  height: 100vh;
+}
+
 .right-row {
   width: 25vw;
   // padding: 16px;
@@ -55,17 +71,20 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-
+  z-index: 2;
   &:hover {
     filter: brightness(0.8);
   }
 }
 
 .cancel-button-container{
+  width: 44px;
+  height: 44px;
   left: 20px;
   font-size: 26px;
-  font-weight: 700;
-  align-items: baseline;
+  font-weight: 400;
+  align-items: center;
+  justify-content: center;
   font-style: unset;
   color: white;
 }
@@ -117,6 +136,7 @@
   max-width: 100%;
   max-height: 100%;
   object-fit: contain; 
+  z-index: 0;
 }
 
 .header {

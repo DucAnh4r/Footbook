@@ -18,12 +18,7 @@ export const countPostReactionService = (post_id) => {
     });
 };
 
-export const deleteCommentService = (Data) => {
-    const { post_id, user_id } = Data;
-    return axiosCreate.delete(`http://localhost:8080/api/v1/comments/delete`, {
-        params: {
-            post_id,
-            user_id,
-        },
+export const deletePostReactionService = (post_id, user_id) => {
+    return axiosCreate.delete(`http://localhost:8080/api/v1/postReaction/delete/${post_id}/${user_id}`, {
     });
 };

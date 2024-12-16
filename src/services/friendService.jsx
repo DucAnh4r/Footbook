@@ -1,18 +1,23 @@
-import axiosCreate from "react/utils/axiosRelease";
+import axiosCreate from "../utils/axiosRelease";
 
-export const createFriendshipService = (Data) => {//gui loi moi
+export const createFriendshipService = (Data) => { // Gửi lời mời
     const { userId1, userId2 } = Data;
-    return axiosCreate.post(`http://localhost:8080/api/v1/friendship/create`, {
-        params: {
-            userId1,//minh
-            userId2,//no
-        },
-    });
+    return axiosCreate.post(
+        `http://localhost:8080/api/v1/friendship/create`,
+        {}, // Body để trống vì bạn không cần gửi dữ liệu body
+        {
+            params: {
+                userId1, // minh
+                userId2, // no
+            },
+        }
+    );
 };
+
 
 export const acceptFriendshipService = (Data) => {//chap nhan ban
     const { userId1, userId2 } = Data;
-    return axiosCreate.put(`http://localhost:8080/api/v1/friendship/accept`, {
+    return axiosCreate.put(`http://localhost:8080/api/v1/friendship/accept`, {}, {
         params: {
             userId1,//no
             userId2,//minh
@@ -22,7 +27,7 @@ export const acceptFriendshipService = (Data) => {//chap nhan ban
 
 export const deleteFriendshipService = (Data) => {//xoa ban
     const { userId1, userId2 } = Data;
-    return axiosCreate.delete(`http://localhost:8080/api/v1/friendship/delete`, {
+    return axiosCreate.delete(`http://localhost:8080/api/v1/friendship/delete`,{}, {
         params: {
             userId1,//minh
             userId2,//no

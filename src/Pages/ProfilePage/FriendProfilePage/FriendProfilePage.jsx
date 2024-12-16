@@ -6,24 +6,27 @@ import { AiFillMessage } from 'react-icons/ai';
 import { EllipsisOutlined } from '@ant-design/icons';
 import SuggestedFriends from '../UserProfilePage/SuggestedFriends.jsx';
 import { useAuthCheck } from '../../../utils/checkAuth.jsx';
-import { countFriendService, createFriendshipService, getFriendshipStatusService, deleteFriendshipService } from '../../../services/friendService.jsx';
+import { countFriendService, createFriendshipService, getFriendshipStatusService, deleteFriendshipService, acceptFriendshipService } from '../../../services/friendService.jsx';
+import { useParams } from 'react-router-dom';
+import { getUserIdFromLocalStorage } from '../../../utils/authUtils.jsx';
 
 const FriendProfilePage = () => {
   useAuthCheck();
   const { userId2 } = useParams();
+  console.log(userId2); // Kiểm tra console để đảm bảo userId2 có giá trị
   const [activeTab, setActiveTab] = useState("1");
   const [isFriendSuggestionVisible, setFriendSuggestionVisible] = useState(false);
   const [friendshipStatus, setFriendshipStatus] = useState(null); // Lưu trạng thái kết bạn
   const [sender, setSender] = useState(null);
   const [friends, setFriends] = useState(null);
 
-  const userId1 = JSON.parse(localStorage.getItem('user'))?.data?.id; // Lấy userId1 từ localStorage
+  const userId1 = getUserIdFromLocalStorage(); // Lấy userId1 từ localStorage
 
   const fetchFriendshipStatus = async () => {
     try {
       const response = await getFriendshipStatusService({ userId1, userId2 });
-      setFriendshipStatus(response?.data || null);
-      setSender(response?.u_send);
+      setFriendshipStatus(response?.data?.data?.status || null);
+      setSender(response?.data?.data?.usent);
     } catch (error) {
       console.error("Lỗi khi lấy trạng thái bạn bè:", error);
     }
@@ -47,9 +50,18 @@ const FriendProfilePage = () => {
     }
   };
 
+  const handleAcceptFriend = async () => {
+    try {
+      await acceptFriendshipService({ userId2, userId1 });
+      fetchFriendshipStatus(); // Cập nhật trạng thái
+    } catch (error) {
+      console.error("Lỗi khi gửi lời mời kết bạn:", error);
+    }
+  };
+
   const handleDeleteFriend = async () => {
     try {
-      await deleteFriendshipService({ userId1, userId2 });
+      await deleteFriendshipService({ userId2, userId1 });
       setFriendshipStatus(null); // Cập nhật trạng thái thành không phải bạn bè
       countFriend(); // Cập nhật số lượng bạn bè
     } catch (error) {
@@ -66,24 +78,24 @@ const FriendProfilePage = () => {
   };
 
   const renderButton = () => {
-    if (friendshipStatus === "Pending") {
+    if (friendshipStatus === "PENDING") {
       if (userId1 !== sender) {
         return (
           <>
-          <div style={{display:'flex', justifyContent:'space-between'}}>
-            <div>
-            Duc sent you a friend request
+          <div style={{display:'flex', alignItems: 'center', justifyContent:'space-between', flexDirection: 'column', marginBottom: '10px'}}>
+            <div style={{fontSize: '20px', fontWeight: '600'}}>
+              Duc sent you a friend request
             </div>
           <div>
             <button
               className={styles["blue-button"]}
-              onClick={() => console.log("Chấp nhận lời mời")}
+              onClick={handleAcceptFriend}
             >
               Chấp nhận
             </button>
             <button
               className={styles["white-button"]}
-              onClick={() => console.log("Từ chối lời mời")}
+              onClick={handleDeleteFriend}
             >
               Từ chối
             </button>
@@ -98,7 +110,7 @@ const FriendProfilePage = () => {
           </button>
         );
       }
-    } else if (friendshipStatus === "Accepted") {
+    } else if (friendshipStatus === "ACCEPTED") {
       return (
         <Dropdown
           overlay={
@@ -191,7 +203,7 @@ const FriendProfilePage = () => {
               <Tabs.TabPane tab={<span className={styles.tab}>Reels</span>} key="6" />
               <Tabs.TabPane tab={<span className={styles.tab}>Xem thêm</span>} key="7" />
             </Tabs>
-            <Dropdown overlay={menu} trigger={['click']}>
+            <Dropdown trigger={['click']}>
               <button style={{ alignItems: 'center', padding: '0 16px' }} className={styles['small-button']}>
                 <EllipsisOutlined />
               </button>
