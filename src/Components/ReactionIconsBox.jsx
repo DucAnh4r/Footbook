@@ -20,11 +20,11 @@ const ReactionIconsBox = ({ postId, onReactionAdded, currentReaction }) => {
 
     try {
       // Cập nhật API nếu cần
-      // await addPostReactionService({
-      //   post_id: postId,
-      //   user_id: userId,
-      //   reaction_type: newReaction,
-      // });
+      await addPostReactionService({
+        post_id: postId,
+        user_id: userId,
+        reaction_type: newReaction,
+      });
 
       // Thông báo thành công
       toast.success(

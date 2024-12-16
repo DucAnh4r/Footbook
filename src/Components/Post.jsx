@@ -15,13 +15,15 @@ import AngryIcon from "../assets/image/Reacts/angry.png";
 import ReactionIconsBox from "./ReactionIconsBox";
 import ShareModal from "../Modal/ShareModal";
 import { userFindByIdService } from "../services/userService";
+import { countPostReactionService } from "../services/postReactionService";
 
-const Post = ({ content, createdAt, userId, images }) => {
+const Post = ({ content, createdAt, userId, images, postId }) => {
   const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isReactionBoxVisible, setIsReactionBoxVisible] = useState(false);
   const [selectedReaction, setSelectedReaction] = useState("NONE");
   const [userInfo, setUserInfo] = useState([]);
+  const [postReactionCount, setPostReactionCount] = useState();
   const [loading, setLoading] = useState(true); // Trạng thái tải dữ liệu
 
   const [comments, setComments] = useState([
@@ -50,8 +52,21 @@ const Post = ({ content, createdAt, userId, images }) => {
     }
   };
 
+  const countReaction = async () => {
+    try {
+      setLoading(true);
+      const response = await countPostReactionService(postId);
+      setPostReactionCount(response?.data || []);
+    } catch (error) {
+      console.error("Error count reaction:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchUser();
+    countReaction();
   }, []); // Chạy một lần khi component được render
 
 
@@ -112,7 +127,7 @@ const Post = ({ content, createdAt, userId, images }) => {
               className={`${styles["icon"]} ${styles["icon-right"]}`}
             />
           </div>
-          <span className={styles.reactionCount}>885</span>
+          <span className={styles.reactionCount}>{postReactionCount}</span>
           <div className={styles.rightFooter}>
             <span className={styles.cmtCount} style={{ marginRight: "10px" }}>
               20 bình luận
@@ -150,7 +165,7 @@ const Post = ({ content, createdAt, userId, images }) => {
               onMouseLeave={() => setIsReactionBoxVisible(false)}
             >
               <ReactionIconsBox
-                postId="123"
+                postId={postId}
                 onReactionAdded={handleReactionAdded}
                 currentReaction={selectedReaction}
               />

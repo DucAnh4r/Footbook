@@ -66,6 +66,7 @@ useEffect(() => {
             posts.map((post) => (
                 <Post
                     key={post.post_id}
+                    postId={post.post_id}
                     content={post.content}
                     createdAt={post.create_at}
                     userId={post.user_id}
