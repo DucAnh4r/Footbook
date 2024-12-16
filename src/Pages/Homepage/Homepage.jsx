@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Layout } from 'antd';
 import StatusInput from './StatusInput';
 import StoryList from './StoryList';
@@ -11,12 +11,32 @@ import './Homepage.scss'
 import SuggestedFriends from '../ProfilePage/UserProfilePage/SuggestedFriends';
 import GroupPost from '../../Components/GroupPost';
 import { useAuthCheck } from '../../utils/checkAuth';
+import { getUserIdFromLocalStorage } from '../../utils/authUtils';
 
 
 const { Sider, Content } = Layout;
 
 const Homepage = () => {
   useAuthCheck();
+  const [posts, setPosts] = useState([]); // Lưu danh sách bài viết
+  const [loading, setLoading] = useState(true); // Trạng thái tải dữ liệu
+  const user_id = getUserIdFromLocalStorage(); // Lấy userId từ localStorage
+
+  const fetchPosts = async () => {
+    try {
+        setLoading(true);
+        const response = await getPostListFriendService(user_id);
+        setPosts(response?.data?.postResponses || []); // Lưu dữ liệu trả về
+    } catch (error) {
+        console.error("Error fetching posts:", error);
+    } finally {
+        setLoading(false);
+    }
+};
+
+useEffect(() => {
+    fetchPosts();
+}, []); // Chạy một lần khi component được render
 
   document.title = "Trang chủ";
   return (
@@ -38,21 +58,25 @@ const Homepage = () => {
       </Sider>
       
       <Content style={{ padding: '70px 370px', minHeight: '100vh', overflow: 'unset' }}>
-        <div className="page-content" style={{padding: '16px 30px'}}>
-          <StatusInput />
-          <Post />
-          <GroupPost />
-          <Post />
-          <Post />
-          <GroupPost />
-          <GroupPost />
-          <Post />
-          <Post />
-          <Post />
-          <GroupPost />
-          <SuggestedFriends />
-        </div>
-      </Content>
+    <div className="page-content" style={{ padding: '16px 30px' }}>
+        <StatusInput />
+        {loading ? (
+            <p>Đang tải bài viết...</p>
+        ) : posts.length > 0 ? (
+            posts.map((post) => (
+                <Post
+                    key={post.post_id}
+                    content={post.content}
+                    createdAt={post.create_at}
+                    userId={post.user_id}
+                    images={post.images}
+                />
+            ))
+        ) : (
+            <p>Không có bài viết nào để hiển thị.</p>
+        )}
+    </div>
+</Content>
       
       <Sider
         width={360}

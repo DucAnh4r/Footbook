@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Avatar, Button } from "antd";
 import { AiOutlineLike } from "react-icons/ai";
 import { FaRegComment } from "react-icons/fa";
@@ -14,32 +14,53 @@ import SadIcon from "../assets/image/Reacts/sad.png";
 import AngryIcon from "../assets/image/Reacts/angry.png";
 import ReactionIconsBox from "./ReactionIconsBox";
 import ShareModal from "../Modal/ShareModal";
+import { userFindByIdService } from "../services/userService";
 
-const Post = () => {
+const Post = ({ content, createdAt, userId, images }) => {
   const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isReactionBoxVisible, setIsReactionBoxVisible] = useState(false);
   const [selectedReaction, setSelectedReaction] = useState("NONE");
+  const [userInfo, setUserInfo] = useState([]);
+  const [loading, setLoading] = useState(true); // Trạng thái tải dữ liệu
+
   const [comments, setComments] = useState([
     { id: 1, user: "Quân A.P", content: "Vẫn đẹp trai ạ 😄" },
     { id: 2, user: "JSOL", content: "Mèo cute quá!" },
   ]);
   const reactionConfig = {
     NONE: { text: "Thích", icon: <AiOutlineLike />, color: "#65686c" },
-    LIKE: { text: "Thích", icon: <img style={{width: '20px', height: '20px'}} src={LikeIcon} alt="Haha" />, color: "blue" },
-    HAHA: { text: "Haha", icon: <img style={{width: '20px', height: '20px'}} src={HahaIcon} alt="Haha" />, color: "orange" },
-    LOVE: { text: "Yêu thích", icon: <img style={{width: '20px', height: '20px'}}  src={LoveIcon} alt="Love" />, color: "red" },
-    WOW: { text: "Wow", icon: <img style={{width: '20px', height: '20px'}}  src={WowIcon} alt="Wow" />, color: "orange" },
-    SAD: { text: "Buồn", icon: <img style={{width: '20px', height: '20px'}}  src={SadIcon} alt="Sad" />, color: "orange" },
-    ANGRY: { text: "Phẫn nộ", icon: <img style={{width: '18px', height: '18px'}}  src={AngryIcon} alt="Sad" />, color: "#e9710f" },
+    LIKE: { text: "Thích", icon: <img style={{ width: '20px', height: '20px' }} src={LikeIcon} alt="Haha" />, color: "blue" },
+    HAHA: { text: "Haha", icon: <img style={{ width: '20px', height: '20px' }} src={HahaIcon} alt="Haha" />, color: "orange" },
+    LOVE: { text: "Yêu thích", icon: <img style={{ width: '20px', height: '20px' }} src={LoveIcon} alt="Love" />, color: "red" },
+    WOW: { text: "Wow", icon: <img style={{ width: '20px', height: '20px' }} src={WowIcon} alt="Wow" />, color: "orange" },
+    SAD: { text: "Buồn", icon: <img style={{ width: '20px', height: '20px' }} src={SadIcon} alt="Sad" />, color: "orange" },
+    ANGRY: { text: "Phẫn nộ", icon: <img style={{ width: '18px', height: '18px' }} src={AngryIcon} alt="Sad" />, color: "#e9710f" },
   };
+
+  const fetchUser = async () => {
+    try {
+      setLoading(true);
+      const response = await userFindByIdService(userId);
+      setUserInfo(response?.data || []); // Lưu dữ liệu trả về
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, []); // Chạy một lần khi component được render
+
 
   const handleReactionAdded = (reactionType) => {
     setSelectedReaction((prev) => (prev === reactionType ? "NONE" : reactionType));
     setIsReactionBoxVisible(false);
     console.log("Cảm xúc mới:", reactionType);
   };
-  
+
 
   const addComment = (newComment) => {
     setComments((prevComments) => [
@@ -53,24 +74,29 @@ const Post = () => {
       <div className={styles.postContainer}>
         <div className={styles.header}>
           <Avatar
-            src="https://shopgarena.net/wp-content/uploads/2023/07/Meo-khoc-thet-len.jpg"
+            src={userInfo.profilePictureUrl}
             className={styles.avatar}
           />
           <div className={styles.userInfo}>
-            <span className={styles.userName}>Anh Đức Nguyễn</span>
+            <span className={styles.userName}>{userInfo.fullName}</span>
             <span className={styles.time}>
-              5 phút · <FaEarthAmericas style={{ marginLeft: "4px" }} />
+            {new Date(createdAt).toLocaleString()} · <FaEarthAmericas style={{ marginLeft: "4px" }} />
             </span>
           </div>
         </div>
 
         <div className={styles.content}>
-          <p>Mèo cute nè</p>
-          <img
-            src="https://shopgarena.net/wp-content/uploads/2023/07/Meo-khoc-thet-len.jpg"
-            alt="post content"
-            className={styles.mainImage}
-          />
+          <p>{content}</p>
+          {images.length > 0 && (
+            images.map((image, index) => (
+              <img
+                key={index}
+                src={image}
+                alt={`post-image-${index}`}
+                className={styles.mainImage}
+              />
+            ))
+          )}
         </div>
 
         <div className={styles.reactionsContainer}>
@@ -96,21 +122,21 @@ const Post = () => {
         </div>
 
         <div className={styles.footer}>
-        <Button
-          icon={reactionConfig[selectedReaction].icon}
-          type="text"
-          className={styles.likeButtonWrapper}
-          onMouseEnter={() => setIsReactionBoxVisible(true)}
-          onMouseLeave={() => setIsReactionBoxVisible(false)}
-          onClick={() =>
-            handleReactionAdded(selectedReaction === "LIKE" ? "NONE" : "LIKE")
-          }
-          style={{
-            color: reactionConfig[selectedReaction].color, // Màu chữ theo cấu hình
-          }}
-        >
-          {reactionConfig[selectedReaction].text}
-        </Button>
+          <Button
+            icon={reactionConfig[selectedReaction].icon}
+            type="text"
+            className={styles.likeButtonWrapper}
+            onMouseEnter={() => setIsReactionBoxVisible(true)}
+            onMouseLeave={() => setIsReactionBoxVisible(false)}
+            onClick={() =>
+              handleReactionAdded(selectedReaction === "LIKE" ? "NONE" : "LIKE")
+            }
+            style={{
+              color: reactionConfig[selectedReaction].color, // Màu chữ theo cấu hình
+            }}
+          >
+            {reactionConfig[selectedReaction].text}
+          </Button>
 
           {isReactionBoxVisible && (
             <div

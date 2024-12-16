@@ -6,6 +6,8 @@ import { HiMiniGif } from "react-icons/hi2";
 import "./CreatePostModal.scss";
 import AudienceModal from "./AudienceModal";
 import GifModal from "./GifModal";
+import { createPostService } from "../services/postService";
+import { getUserIdFromLocalStorage } from "../utils/authUtils";
 
 const themes = [
     { id: 0, name: "Default", background: "white" }, // Chủ đề mặc định
@@ -23,13 +25,34 @@ const CreatePostModal = ({ isModalOpen, onClose }) => {
     const [selectedAudience, setSelectedAudience] = useState("Friends");
     const [gifModalVisible, setGifModalVisible] = useState(false);
     const [selectedGif, setSelectedGif] = useState(null); // URL của GIF đã chọn
+    const userId = getUserIdFromLocalStorage()
 
-    const handleOk = () => {
-        console.log("Post content:", postContent);
-        console.log("Selected theme:", selectedTheme);
-        console.log("Uploaded files:", uploadedFiles);
-        onClose(); // Đóng modal
+    const handleOk = async () => {
+        // Kiểm tra điều kiện trước khi submit
+        if (!postContent.trim() && uploadedFiles.length === 0) {
+            console.error("Post content or images are required!");
+            return;
+        }
+
+        try {
+            const postData = {
+                userId: userId, 
+                content: postContent,
+                privacy: selectedAudience,
+                theme: selectedTheme.id,
+                images: uploadedFiles.map(file => file.originFileObj), // Chuyển fileList sang dạng File
+            };
+
+            // Gọi API tạo bài đăng
+            await createPostService(postData);
+
+            console.log("Post created successfully!");
+            onClose(); // Đóng modal
+        } catch (error) {
+            console.error("Failed to create post:", error);
+        }
     };
+
 
     const handleCloseUpload = (event) => {
         event.stopPropagation(); // Ngăn chặn sự kiện click từ nút đóng lan tới Upload
@@ -102,37 +125,36 @@ const CreatePostModal = ({ isModalOpen, onClose }) => {
                     {/* Chỉ hiển thị Upload hoặc Themes */}
                     {showUpload && (
                         <Upload
-                        className="ant-upload ant-upload-select"
-                        fileList={uploadedFiles} // Hiển thị danh sách file
-                        onChange={(info) => {
-                            setUploadedFiles(info.fileList); // Cập nhật danh sách file
-                            setSelectedTheme(themes[0]); // Reset theme về mặc định
-                        }}
-                        beforeUpload={(file) => {
-                            // Kiểm tra định dạng file (chỉ cho phép ảnh hoặc video)
-                            const isImageOrVideo = file.type.startsWith("image/") || file.type.startsWith("video/");
-                            if (!isImageOrVideo) {
-                                console.error("You can only upload image or video files!");
-                                return Upload.LIST_IGNORE; // Bỏ qua file không hợp lệ
-                            }
-                            return true; // Cho phép upload file hợp lệ
-                        }}
-                        listType="picture"
-                    >
-                        <div className="upload-area">
-                            <Button icon={<UploadOutlined />} type="text">
-                                Add photos/videos
-                            </Button>
-                            <div className="upload-hint">or drag and drop</div>
-                            <Button
-                                type="text"
-                                onClick={handleCloseUpload}
-                                className="close-upload-button"
-                            >
-                                ✕
-                            </Button>
-                        </div>
-                    </Upload>
+                            className="ant-upload ant-upload-select"
+                            fileList={uploadedFiles}
+                            onChange={(info) => setUploadedFiles(info.fileList)}
+                            onRemove={(file) => {
+                                setUploadedFiles((prev) => prev.filter((item) => item.uid !== file.uid));
+                            }}
+                            beforeUpload={(file) => {
+                                const isImageOrVideo = file.type.startsWith("image/") || file.type.startsWith("video/");
+                                if (!isImageOrVideo) {
+                                    console.error("You can only upload image or video files!");
+                                    return Upload.LIST_IGNORE;
+                                }
+                                return true;
+                            }}
+                            listType="picture"
+                        >
+                            <div className="upload-area">
+                                <Button icon={<UploadOutlined />} type="text">
+                                    Add photos/videos
+                                </Button>
+                                <div className="upload-hint">or drag and drop</div>
+                                <Button
+                                    type="text"
+                                    onClick={handleCloseUpload}
+                                    className="close-upload-button"
+                                >
+                                    ✕
+                                </Button>
+                            </div>
+                        </Upload>
                     )}
                     {(!showUpload && !selectedGif) && (
 
