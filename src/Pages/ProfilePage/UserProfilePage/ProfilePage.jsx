@@ -11,6 +11,10 @@ import Photos from './Tabs/Photos/Photos.jsx';
 import Videos from './Tabs/Videos/Videos.jsx';
 import FriendSuggestion from './SuggestedFriends.jsx';
 import { useAuthCheck } from '../../../utils/checkAuth.jsx';
+import { getUserIdFromLocalStorage } from '../../../utils/authUtils.jsx';
+import { countFriendService } from '../../../services/friendService.jsx';
+import { updateCoverService, updateProfileService, userFindByIdService } from '../../../services/userService.jsx';
+import { toast } from 'react-toastify';
 
 const ProfilePage = () => {
   useAuthCheck();
@@ -18,6 +22,73 @@ const ProfilePage = () => {
   const [isFriendSuggestionVisible, setFriendSuggestionVisible] = useState(false);
   const [headerWidth, setHeaderWidth] = useState('70%');
   const containerRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(true); // Trạng thái tải dữ liệu
+  const [userInfo, setUserInfo] = useState([]);
+  const [friendCount, setFriendCount] = useState([]);
+  const avatarInputRef = useRef(null);
+  const coverInputRef = useRef(null);
+  const userId = getUserIdFromLocalStorage();
+
+  const fetchUser = async () => {
+    try {
+      setIsLoading(true);
+      const response = await userFindByIdService(userId);
+      setUserInfo(response?.data?.data || []); 
+    } catch (error) {
+      console.error("Error fetching user:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const countFriend = async () => {
+    try {
+      setIsLoading(true);
+      const response = await countFriendService(userId);
+      setFriendCount(response?.data?.data || []);
+    } catch (error) {
+      console.error("Error count friend:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleImageClick = (type) => {
+    if (type === "avatar") {
+      avatarInputRef.current.click();
+    } else {
+      coverInputRef.current.click();
+    }
+  };
+
+  const handleImageChange = async (e, type) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = { profileImages: file };
+    setIsLoading(true);
+
+    try {
+      if (type === "avatar") {
+        await updateProfileService(formData, userId);
+        toast.success("Ảnh đại diện đã được cập nhật!");
+      } else if (type === "cover") {
+        await updateCoverService(formData, userId);
+        toast.success("Ảnh bìa đã được cập nhật!");
+      }
+      fetchUserData();
+    } catch (error) {
+      toast.error("Cập nhật ảnh thất bại!");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  useEffect(() => {
+    fetchUser();
+    countFriend();
+  }, []); // Chạy một lần khi component được render
+
 
   const handleTabChange = (key) => {
     setActiveTab(key);
@@ -89,8 +160,19 @@ const ProfilePage = () => {
     <>
       <div className={styles['container']} ref={containerRef}>
         <div className={styles['header']} style={{ width: headerWidth }}>
-          <div className={styles['wallpaper']}>
-            <img className={styles['wallpaper-img']} src="https://imagev3.vietnamplus.vn/1200x630/Uploaded/2024/mzdic/2024_06_23/ronaldo-2306-8285.jpg.webp" alt="" />
+        <div className={styles['wallpaper']} onClick={() => handleImageClick("cover")}>
+            <img
+              className={styles['wallpaper-img']}
+              src={userInfo.coverPictureUrl || "https://via.placeholder.com/1200x400"}
+              alt="Cover"
+            />
+            <input
+              type="file"
+              accept="image/*"
+              ref={coverInputRef}
+              style={{ display: "none" }}
+              onChange={(e) => handleImageChange(e, "cover")}
+            />
             <div className={styles['add-wallpaper']}>
               <IoIosCamera style={{ width: '25px', height: '25px' }} />
               <span style={{ fontSize: '16px', fontWeight: 500 }}>Thêm ảnh bìa</span>
@@ -98,15 +180,26 @@ const ProfilePage = () => {
           </div>
           <Row className={styles['info']} gutter={16}>
             <Col span={6}>
-              <div className={styles['avatar']}>
-                <img className={styles['avatar-img']} src="https://cdn.tuoitre.vn/thumb_w/480/471584752817336320/2024/7/6/2024-07-05t210215z828248098up1ek751mfqfvrtrmadp3soccer-euro-por-fra-report-1-1720260083640639014392.jpg" alt="" />
-              </div>
-              <div className={styles['add-avatar']}>
+            <div className={styles['avatar']} onClick={() => handleImageClick("avatar")}>
+                <img
+                  className={styles['avatar-img']}
+                  src={userInfo.profilePictureUrl || "https://via.placeholder.com/150"}
+                  alt="Avatar"
+                />
+                <input
+                  type="file"
+                  accept="image/*"
+                  ref={avatarInputRef}
+                  style={{ display: "none" }}
+                  onChange={(e) => handleImageChange(e, "avatar")}
+                />
+                </div>
+              <div className={styles['add-avatar']} onClick={() => handleImageClick("avatar")}>
                 <IoIosCamera style={{ width: '25px', height: '25px' }} />
               </div>
             </Col>
             <Col span={9} style={{ display: 'flex', flexDirection: 'column' }}>
-              <span style={{ fontSize: '30px', fontWeight: 700, marginTop: '24px' }}>Nguyễn Đức Anh</span>
+              <span style={{ fontSize: '30px', fontWeight: 700, marginTop: '24px' }}>{userInfo.fullName}</span>
               <a
                 style={{
                   fontSize: '16px',
@@ -117,7 +210,7 @@ const ProfilePage = () => {
                 onMouseEnter={(e) => e.target.style.textDecoration = 'underline'}
                 onMouseLeave={(e) => e.target.style.textDecoration = 'none'}
               >
-                392 người bạn
+                {friendCount} người bạn
               </a>
             </Col>
             <Col style={{ paddingRight: '0px' }} span={9}>

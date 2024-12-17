@@ -46,7 +46,7 @@ const Post = ({ content, createdAt, userId, images, postId }) => {
       const response = await userFindByIdService(userId);
       setUserInfo(response?.data?.data || []); // Lưu dữ liệu trả về
     } catch (error) {
-      console.error("Error fetching posts:", error);
+      console.error("Error fetching user:", error);
     } finally {
       setLoading(false);
     }
@@ -102,7 +102,7 @@ const Post = ({ content, createdAt, userId, images, postId }) => {
 
         <div className={styles.content}>
           <p>{content}</p>
-          {images.length > 0 && (
+          {/* {images.length > 0 && (
             images.map((image, index) => (
               <img
                 key={index}
@@ -111,7 +111,7 @@ const Post = ({ content, createdAt, userId, images, postId }) => {
                 className={styles.mainImage}
               />
             ))
-          )}
+          )} */}
         </div>
 
         <div className={styles.reactionsContainer}>
