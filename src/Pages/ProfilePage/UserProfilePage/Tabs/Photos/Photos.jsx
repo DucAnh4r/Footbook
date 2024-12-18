@@ -5,6 +5,7 @@ import { getImageByUserIdService } from '../../../../../services/postService';
 import { getUserIdFromLocalStorage } from '../../../../../utils/authUtils';
 import { useNavigate } from 'react-router-dom';
 
+
 const { TabPane } = Tabs;
 
 const Photos = () => {

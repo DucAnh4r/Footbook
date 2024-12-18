@@ -11,11 +11,12 @@ import HahaIcon from "../../assets/image/Reacts/haha.png";
 import LikeIcon from "../../assets/image/Reacts/like.png";
 import Comment from "./Components/Comment";
 import styles from './PhotoPage.module.scss';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { addCommentService, countCommentService, getCommentService } from '../../services/commentService';
 import { getPostByIdService } from '../../services/postService';
 import { countPostReactionService } from '../../services/postReactionService';
 import { getUserIdFromLocalStorage } from '../../utils/authUtils';
+import { userFindByIdService } from '../../services/userService';
 
 const PhotoPage = () => {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ const PhotoPage = () => {
   const [postReactionCount, setPostReactionCount] = useState([]);
   const [commentCount, setCommentCount] = useState([]);
   const myId = getUserIdFromLocalStorage();
-  const { post_id } = useParams();
+  const { postId } = useParams();
 
   const handleFullScreenToggle = () => {
     setIsFullScreen((prev) => {
@@ -42,8 +43,8 @@ const PhotoPage = () => {
   const fetchPost = async () => {
     try {
       setLoading(true);
-      const response = await getPostByIdService(post_id);
-      setPost(response?.data?.data?.postResponses || []); 
+      const response = await getPostByIdService(postId);
+      setPost(response?.data?.data?.postResponse || []); 
 
     } catch (error) {
       console.error("Error fetching posts:", error);
@@ -55,7 +56,7 @@ const PhotoPage = () => {
   const fetchComment = async () => {
     try {
       setLoading(true);
-      const response = await getCommentService(post_id);
+      const response = await getCommentService(postId);
       setGetComment(response?.data?.data || []); 
 
     } catch (error) {
@@ -80,7 +81,7 @@ const PhotoPage = () => {
   const countReaction = async () => {
     try {
       setLoading(true);
-      const response = await countPostReactionService(post_id);
+      const response = await countPostReactionService(postId);
       setPostReactionCount(response?.data?.data || 0);
     } catch (error) {
       console.error("Error count reaction:", error);
@@ -92,7 +93,7 @@ const PhotoPage = () => {
   const countComment = async () => {
     try {
       setLoading(true);
-      const response = await countCommentService(post_id);
+      const response = await countCommentService(postId);
       setCommentCount(response?.data?.data || 0);
     } catch (error) {
       console.error("Error count reaction:", error);
@@ -105,20 +106,21 @@ const PhotoPage = () => {
     try {
       const commentData = {
         userId: myId,
-        postId: post_id,
+        postId: postId,
         content: comment,
       };
 
       await addCommentService(commentData);
       fetchComment();
-      setComment("")
+      setComment("");
+      countComment();
     } catch (error) {
     }
   };
 
   useEffect(() => {
-    fetchComment();
     fetchPost();
+    fetchComment();
     fetchUser();
     countReaction();
     countComment();
@@ -298,7 +300,7 @@ const PhotoPage = () => {
                     createdAt={comment.createdAt}
                     userId={comment.userId}
                     childComments={comment.childComments}
-                    postId={post_id}
+                    postId={postId}
                   />
                 ))
               ) : (

@@ -28,7 +28,7 @@ const PhotoGallery = () => {
 
   // Xử lý click vào ảnh
   const handleImageClick = (postId) => {
-    navigate(`/photo${postId}`);
+    navigate(`/photo/${postId}`);
   };
 
   useEffect(() => {
@@ -56,7 +56,7 @@ const PhotoGallery = () => {
             <Col span={8} key={photo.imageId}>
               <div className={styles.photo} onClick={() => handleImageClick(photo.postId)}>
                 <img
-                  src={photo.imageURL}
+                  src={photo.imageUrl}
                   alt={`Photo ${photo.imageId}`}
                   onError={(e) => (e.target.src = 'https://via.placeholder.com/150')} // Fallback ảnh lỗi
                 />

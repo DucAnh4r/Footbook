@@ -31,7 +31,7 @@ const ChatWindow = ({ message, onClose, onHide, position }) => {
 
     useEffect(() => {
         // Kết nối với Socket.IO server
-        const newSocket = io("http://localhost:5000"); // Thay bằng URL server của bạn
+        const newSocket = io("http://localhost:5173"); // Thay bằng URL server của bạn
         setSocket(newSocket);
 
         // Lắng nghe sự kiện tin nhắn từ server

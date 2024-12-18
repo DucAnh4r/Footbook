@@ -72,6 +72,24 @@
   cursor: pointer; // Thêm hiệu ứng trỏ chuột
 }
 
+.viewMoreButton{
+  min-width: 200px;
+  width: 100%;
+  height: 36px;
+  border-radius: 7px;
+  border: none;
+  background: #e6e6e6;
+  color: black;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 0 10px;
+  margin-top: 4px;
+  &:hover{
+    cursor: pointer;
+    background: #f8f8f8;
+  }
+}
+
 .linkContainer {
   text-align: center;
   margin-top: 8px;
@@ -110,16 +128,32 @@
   }
 }
 
-.icon-left {
+.icon-1 {
   position: absolute; /* Đặt vị trí tuyệt đối cho ảnh bên trái */
   left: 0; /* Đặt ảnh bên trái ở vị trí bắt đầu */
-  z-index: 1; /* Đảm bảo ảnh này luôn ở trên ảnh bên phải */
+  z-index: 5; /* Đảm bảo ảnh này luôn ở trên ảnh bên phải */
 }
 
-.icon-right {
+.icon-2 {
   position: absolute; /* Đặt vị trí tuyệt đối cho ảnh bên phải */
   left: 16px; /* Đẩy ảnh bên phải sang phải một chút */
-  z-index: 0; /* Đảm bảo ảnh bên phải nằm dưới ảnh bên trái */
+  z-index: 4; /* Đảm bảo ảnh bên phải nằm dưới ảnh bên trái */
+}
+.icon-3 {
+  position: absolute; /* Đặt vị trí tuyệt đối cho ảnh bên phải */
+  left: 32px; /* Đẩy ảnh bên phải sang phải một chút */
+  z-index: 3; /* Đảm bảo ảnh bên phải nằm dưới ảnh bên trái */
+}
+.icon-4 {
+  position: absolute; /* Đặt vị trí tuyệt đối cho ảnh bên phải */
+  left: 48px; /* Đẩy ảnh bên phải sang phải một chút */
+  z-index: 2; /* Đảm bảo ảnh bên phải nằm dưới ảnh bên trái */
+}
+.icon-5 {
+  width: 20px;
+  position: absolute;
+  left: 67px;
+  z-index: 1;
 }
 
 .reactionCount {

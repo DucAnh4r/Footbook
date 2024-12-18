@@ -13,6 +13,7 @@ import GroupPost from '../../Components/GroupPost';
 import { useAuthCheck } from '../../utils/checkAuth';
 import { getUserIdFromLocalStorage } from '../../utils/authUtils';
 import { getPostListFriendService } from '../../services/postService';
+import SharedPost from '../../Components/SharedPost';
 
 
 const { Sider, Content } = Layout;
@@ -62,31 +63,40 @@ const Homepage = () => {
       <Content style={{ padding: '70px 370px', minHeight: '100vh', overflow: 'unset' }}>
         <div className="page-content" style={{ padding: '16px 30px' }}>
           <StatusInput />
+          <SharedPost 
+            key={"4e4bed83-6ad6-409b-84b1-0176b8e46cbe"}
+            postId={"4e4bed83-6ad6-409b-84b1-0176b8e46cbe"}
+            content={"test share"}
+            createdAt={"2024-12-18T18:48:38"}
+            userId={"10f16543-3682-4771-a315-12125a1eb60a"}
+            images={""}
+            shareId={"0cbcc2cc-54d2-4a9e-96f0-d51cdc992dd6"}
+          />
           {loading ? (
             <p>Đang tải bài viết...</p>
           ) : posts.length > 0 ? (
             posts.map((post) => (
-              <Post
-                key={post.post_id}
-                postId={post.post_id}
-                content={post.content}
-                createdAt={post.create_at}
-                userId={post.user_id}
-                images={post.images}
-              />
-
+                <Post
+                    key={post.post_id}
+                    postId={post.post_id}
+                    content={post.content}
+                    createdAt={post.create_at}
+                    userId={post.user_id}
+                    images={post.images}
+                    isModalOpen={false}
+                />
             ))
           ) : (
             <p>Không có bài viết nào để hiển thị.</p>
           )}
-          <Post
+          {/* <Post
             key={"123"}
             postId={"123"}
             content={"123"}
             createdAt={"123"}
             userId={"123"}
             images={""}
-          />
+          /> */}
         </div>
       </Content>
 

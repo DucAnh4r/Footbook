@@ -185,7 +185,10 @@ const Header = ({ onMessageClick }) => {
               className={styles["icon-container"]}
             >
               <Popover
-                content={<ProfileContent />}
+                content={<ProfileContent 
+                  userName={userInfo.fullName}
+                  UserAvatar={userInfo.profilePictureUrl}
+                />}
                 trigger="click"
                 placement="bottomRight"
                 open={selectedIcon === "profile"}
@@ -193,8 +196,7 @@ const Header = ({ onMessageClick }) => {
                   handleIconClick(visible ? "profile" : null)
                 }
                 getPopupContainer={(triggerNode) => triggerNode.parentNode}
-                userName={userInfo.fullName}
-                UserAvatar={userInfo.profilePictureUrl}
+                
               >
                 <div className={styles["avatar-wrapper"]}>
                   <img

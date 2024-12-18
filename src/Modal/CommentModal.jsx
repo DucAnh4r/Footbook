@@ -1,100 +1,104 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal, Avatar, Input, Button } from "antd";
-import { AiOutlineLike } from "react-icons/ai";
-import { FaRegComment } from "react-icons/fa";
-import { PiShareFat } from "react-icons/pi";
-import { FaEarthAmericas } from "react-icons/fa6";
-import "./CommentModal.scss";
+import styles from "./CommentModal.module.scss"; // Import SCSS module
+import Post from "../Components/Post";
+import SharedPost from "../Components/SharedPost";
 
-const CommentModal = ({ isModalOpen, onCancel, postContent, postImage, comments, addComment, userName }) => {
-    const [commentText, setCommentText] = useState("");
+const CommentModal = ({
+  type,
+  userId,
+  content,
+  comments,
+  isModalOpen,
+  onCancel,
+  postId,
+  images,
+  addComment,
+  userInfo,
+  createdAt,
+}) => {
+  const [commentText, setCommentText] = useState("");
 
-    const handleCommentSubmit = () => {
-        if (commentText.trim() !== "") {
-            addComment(commentText);
-            setCommentText("");
-        }
-    };
+  // Reset data every time the modal is closed
+  useEffect(() => {
+    if (!isModalOpen) {
+      // Reset comment text and any other states when modal closes
+      setCommentText("");
+    }
+  }, [isModalOpen]);
 
-    return (
-        <Modal
-            open={isModalOpen}
-            onCancel={onCancel}
-            footer={
-                <div className="commentInput">
-                    <Input
-                        placeholder="Viết bình luận..."
-                        value={commentText}
-                        onChange={(e) => setCommentText(e.target.value)}
-                        onPressEnter={handleCommentSubmit}
-                    />
-                    <Button type="primary" onClick={handleCommentSubmit}>
-                        Gửi
-                    </Button>
-                </div>
-            }
-            width="700px"
-            title={`${userName}'s post`}
-            className="commentModal"
-        >
-            <div className="postContainer">
-                {/* Header */}
-                <div className="header">
-                    <Avatar
-                        src="https://shopgarena.net/wp-content/uploads/2023/07/Meo-khoc-thet-len.jpg"
-                        className="avatar"
-                    />
-                    <div className="userInfo">
-                        <span className="userName">{userName || "Anonymous"}</span>
-                        <span className="time">
-                            5 phút · <FaEarthAmericas style={{ marginLeft: "4px" }} />
-                        </span>
-                    </div>
-                </div>
+  const handleCommentSubmit = () => {
+    if (commentText.trim() !== "") {
+      addComment(commentText);
+      setCommentText(""); // Reset after submitting
+    }
+  };
 
-                {/* Content */}
-                <div className="content">
-                    <p>{postContent}</p>
-                    <img
-                        src={postImage}
-                        alt="post content"
-                        className="mainImage"
-                    />
-                </div>
-
-                {/* Footer */}
-                <div className="footer">
-                    <Button icon={<AiOutlineLike />} type="text">
-                        Thích
-                    </Button>
-                    <Button icon={<FaRegComment />} type="text">
-                        Bình luận
-                    </Button>
-                    <Button icon={<PiShareFat />} type="text">
-                        Chia sẻ
-                    </Button>
-                </div>
-
-                <div className="commentsSection">
-                    {/* Comments List */}
-                    <div className="commentsList">
-                        {comments.map((comment, index) => (
-                            <div key={index} className="comment">
-                                <Avatar
-                                    src="https://shopgarena.net/wp-content/uploads/2023/07/Meo-khoc-thet-len.jpg"
-                                    className="commentAvatar"
-                                />
-                                <div className="commentContent">
-                                    <span className="commentUser">{comment.user}</span>
-                                    <p>{comment.content}</p>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
+  return (
+    <Modal
+      open={isModalOpen}
+      onCancel={onCancel}
+      footer={
+        <div className={styles.commentInput}>
+          <Input
+            placeholder="Viết bình luận..."
+            value={commentText}
+            onChange={(e) => setCommentText(e.target.value)}
+            onPressEnter={handleCommentSubmit}
+          />
+          <Button type="primary" onClick={handleCommentSubmit}>
+            Gửi
+          </Button>
+        </div>
+      }
+      width="700px"
+      title={`${userInfo.fullName}'s post`}
+      className={styles.commentModal}
+    >
+      {type === "post" ? (
+        // Set the `key` to postId to force re-mount
+        <Post
+          key={isModalOpen ? postId : `closed-${postId}`} // Use key change to force re-mount
+          postId={postId}
+          content={content}
+          createdAt={createdAt}
+          userId={userId}
+          images={images}
+          isModalOpen={true}
+        />
+      ) : type === "sharedpost" ? (
+        <SharedPost
+          key={isModalOpen ? postId : `closed-${postId}`} // Use key change to force re-mount
+          postId={postId}
+          content={content}
+          createdAt={createdAt}
+          userId={userId}
+          images={images}
+          isModalOpen={true}
+        />
+      ) : (
+        <p>Loại bài viết không hợp lệ</p>
+      )}
+      <div className={styles.commentsSection}>
+        <h3>Bình luận</h3>
+        {/* Comments List */}
+        <div className={styles.commentsList}>
+          {comments.map((comment, index) => (
+            <div key={index} className={styles.comment}>
+              <Avatar
+                src="https://shopgarena.net/wp-content/uploads/2023/07/Meo-khoc-thet-len.jpg"
+                className={styles.commentAvatar}
+              />
+              <div className={styles.commentContent}>
+                <span className={styles.commentUser}>{comment.user}</span>
+                <p>{comment.content}</p>
+              </div>
             </div>
-        </Modal>
-    );
+          ))}
+        </div>
+      </div>
+    </Modal>
+  );
 };
 
 export default CommentModal;

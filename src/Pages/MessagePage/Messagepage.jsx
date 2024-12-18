@@ -15,7 +15,7 @@ import { useAuthCheck } from '../../utils/checkAuth';
 
 const { Text } = Typography;
 
-const socket = io.connect('http://localhost:4000');
+const socket = io.connect('http://localhost:5173');
 
 const Messagepage = ({ selectedChat, toggleRightSidebar }) => {
   useAuthCheck();

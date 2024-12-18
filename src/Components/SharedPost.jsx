@@ -3,7 +3,7 @@ import { Avatar, Button, Tooltip } from "antd";
 import { FaRegComment } from "react-icons/fa";
 import { PiShareFat } from "react-icons/pi";
 import { FaEarthAmericas } from "react-icons/fa6";
-import styles from "./Post.module.scss";
+import styles from "./SharedPost.module.scss";
 import CommentModal from "../Modal/CommentModal";
 import HahaIcon from "../assets/image/Reacts/haha.png";
 import LikeIcon from "../assets/image/Reacts/like.png";
@@ -26,15 +26,20 @@ import { countCommentService } from "../services/commentService";
 import { getUserIdFromLocalStorage } from "../utils/authUtils";
 
 import { reactionConfig } from "../assets/Config";
+import { getPostByIdService } from "../services/postService";
 
-const Post = ({ content, createdAt, userId, images, postId, isModalOpen }) => {
+const Post = ({ content, createdAt, userId, images, postId, shareId }) => {
   const userId1 = getUserIdFromLocalStorage(); // Lấy userId1 từ localStorage
+
+  const [sharedPost, setSharedPost] = useState(null); // Lưu bài chia sẻ
+
   const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isReactionBoxVisible, setIsReactionBoxVisible] = useState(false);
   const [isReactionBoxVisible2, setIsReactionBoxVisible2] = useState(false);
   const [selectedReaction, setSelectedReaction] = useState("NONE");
   const [userInfo, setUserInfo] = useState([]);
+  const [mainUserInfo, setMainUserInfo] = useState([]);
   const [postReactionCount, setPostReactionCount] = useState([]);
   const [CommentCount, setCommentCount] = useState([]);
   const [reactions, setReactions] = useState([]);
@@ -45,6 +50,38 @@ const Post = ({ content, createdAt, userId, images, postId, isModalOpen }) => {
   const [hahaCount, setHahaCount] = useState(0);
   const [sadCount, setSadCount] = useState(0);
   const [angryCount, setAngryCount] = useState(0);
+
+
+  const getSharedPost = async () => {
+    try {
+      setLoading(true);
+      const response = await getPostByIdService(shareId);
+
+      if (response?.data?.data?.postResponse) {
+        setSharedPost(response.data.data.postResponse); // Lưu bài chia sẻ nếu có dữ liệu
+      } else {
+        console.warn("Shared post is null or undefined");
+        setSharedPost(null); // Đặt giá trị null nếu không có dữ liệu
+      }
+    } catch (error) {
+      console.error("Error fetching post:", error);
+      setSharedPost(null); // Đặt giá trị null nếu có lỗi
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchMainUser = async () => {
+    try {
+      setLoading(true);
+      const response = await userFindByIdService(sharedPost.user_id);
+      setMainUserInfo(response?.data?.data || []); // Lưu dữ liệu trả về
+    } catch (error) {
+      console.error("Error fetching user:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const getLikedUsers = () => {
     return reactions
@@ -116,30 +153,32 @@ const Post = ({ content, createdAt, userId, images, postId, isModalOpen }) => {
       const userReaction = reactions.find(
         (reaction) => reaction.userId === userId1
       );
-      
-      // Nếu tìm thấy userReaction, set selectedReaction bằng reactionType, nếu không, set là "NONE"
-      setSelectedReaction(userReaction ? userReaction.reactionType : "NONE");
+      if (userReaction) {
+        setSelectedReaction(userReaction.reactionType);
+      }
     } catch (error) {
       console.error("Error fetching user reactions:", error);
-      setSelectedReaction("NONE"); // Đảm bảo selectedReaction là "NONE" trong trường hợp lỗi
     }
   };
-  
 
   useEffect(() => {
+    getSharedPost();
+    fetchUser();
+    fetchMainUser();
+    countReaction();
+    fetchUserReaction(); // Gọi thêm hàm kiểm tra cảm xúc
+    fetchReactions();
+    countComment();
+  }, []);
+
+  useEffect(() => {
+    getSharedPost();
     fetchUser();
     countReaction();
     fetchUserReaction(); // Gọi thêm hàm kiểm tra cảm xúc
     fetchReactions();
     countComment();
-  }, [postId]); // Gọi lại khi postId thay đổi
-
-  useEffect(() => {
-    countReaction();
-    fetchUserReaction();
-    getAllReactions();
-    console.log("cảm xúc đang chọn: ", selectedReaction)
-  }, [isCommentModalOpen]); //đóng mở modal thì xem lại đang chọn cảm xúc gì
+  }, [isCommentModalOpen]); //đóng mở modal thì xem lại số lượt like
 
   const handleReactionAdded = async (reactionType) => {
     try {
@@ -209,7 +248,6 @@ const Post = ({ content, createdAt, userId, images, postId, isModalOpen }) => {
     fetchReactions();
     countReaction();
     getAllReactions();
-    fetchUserReaction();
     setIsReactionBoxVisible(false); // Đóng box cảm xúc
     setIsReactionBoxVisible2(false); // Đóng box cảm xúc
   };
@@ -227,7 +265,12 @@ const Post = ({ content, createdAt, userId, images, postId, isModalOpen }) => {
         <div className={styles.header}>
           <Avatar src={userInfo.profilePictureUrl} className={styles.avatar} />
           <div className={styles.userInfo}>
-            <span className={styles.userName}>{userInfo.fullName}</span>
+            <div>
+              <span className={styles.userName}>{userInfo.fullName}</span>
+              <span style={{ marginLeft: "4px", color: "#65686c" }}>
+                đã chia sẻ một bài viết
+              </span>
+            </div>
             <span className={styles.time}>
               {new Date(createdAt).toLocaleString()} ·{" "}
               <FaEarthAmericas style={{ marginLeft: "4px" }} />
@@ -237,27 +280,26 @@ const Post = ({ content, createdAt, userId, images, postId, isModalOpen }) => {
 
         <div className={styles.content}>
           <p>{content}</p>
-          {/* Hiển thị ảnh */}
-          {images.length > 0 &&
-            images
-              .slice(0, 2)
-              .map((image, index) => (
-                <img
-                  key={index}
-                  src={image}
-                  alt={`post-image-${index}`}
-                  className={styles.mainImage}
-                />
-              ))}
-          {/* Hiển thị nút "Xem tất cả" nếu có từ 3 ảnh trở lên */}
-          {images.length >= 3 && (
-            <button
-              onClick={() => setIsCommentModalOpen(true)}
-              className={styles.viewMoreButton}
-            >
-              Xem tất cả
-            </button>
-          )}
+          <div className={styles.sharedContent}>
+            <img
+              className={styles.mainImage}
+              src="https://cdn.bongdaplus.vn/Assets/Media/2024/12/18/70/messi2.jpg"
+              alt=""
+            />
+            <div style={{ padding: "10px" }} className={styles.header}>
+              <Avatar
+                src={userInfo.profilePictureUrl}
+                className={styles.avatar}
+              />
+              <div className={styles.userInfo}>
+                <span className={styles.userName}>{userInfo.fullName}</span>
+                <span className={styles.time}>
+                  {new Date(createdAt).toLocaleString()} ·{" "}
+                  <FaEarthAmericas style={{ marginLeft: "4px" }} />
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className={styles.reactionsContainer}>
@@ -369,17 +411,10 @@ const Post = ({ content, createdAt, userId, images, postId, isModalOpen }) => {
           <Button
             icon={<FaRegComment />}
             type="text"
-            onClick={() => {
-              
-              if (!isModalOpen) {
-                fetchUserReaction();
-                setIsCommentModalOpen(true); // Chỉ mở modal nếu nó chưa được mở
-              }
-            }}
+            onClick={() => setIsCommentModalOpen(true)}
           >
             Bình luận
           </Button>
-
           <Button
             icon={<PiShareFat />}
             type="text"
@@ -392,7 +427,7 @@ const Post = ({ content, createdAt, userId, images, postId, isModalOpen }) => {
 
       {/* Modal bình luận */}
       <CommentModal
-        type="post"
+        type="sharedpost"
         userId={userId}
         content={content}
         isModalOpen={isCommentModalOpen}
@@ -403,9 +438,8 @@ const Post = ({ content, createdAt, userId, images, postId, isModalOpen }) => {
         comments={comments}
         addComment={addComment}
         createdAt={createdAt}
-        onReactionChange={(reaction) => setSelectedReaction(reaction)} // Callback
-        
       />
+
       {/* Modal chia sẻ */}
       <ShareModal
         isModalOpen={isShareModalOpen}

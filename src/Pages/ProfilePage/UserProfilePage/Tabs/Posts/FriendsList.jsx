@@ -65,7 +65,12 @@ const FriendsList = () => {
                       style={{ cursor: 'pointer' }}
                     />
                   ) : (
-                    <div className={styles.placeholderAvatar}></div>
+                    <div 
+                      onClick={() => handleImageClick(friend.id)} // Truyền hàm đúng cách
+                      style={{ cursor: 'pointer' }}
+                      className={styles.placeholderAvatar}>
+                      
+                    </div>
                   )}
                 </div>
                 <Text className={styles.name}>{friend.fullName}</Text>

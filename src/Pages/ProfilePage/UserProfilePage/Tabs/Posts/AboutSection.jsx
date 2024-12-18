@@ -92,10 +92,7 @@ const AboutSection = () => {
         )}
       </div>
       <button className={styles.editHighlightButton} onClick={handleOpenModal}>Thêm phần Đáng chú ý</button>
-      <EditFeaturedModal
-        isVisible={isModalVisible}
-        onClose={handleCloseModal}
-      />
+      
     </div>
   );
 };
