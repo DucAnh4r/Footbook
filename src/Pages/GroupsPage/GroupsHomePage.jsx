@@ -16,7 +16,12 @@ const GroupsPage = () => {
   const renderPage = () => {
     switch (activePage) {
       case 'page1':
-        return <GroupsPost />;
+        return (
+          <>
+            <h3 style={{ marginBottom: '20px', marginTop: '30px' }}>Hoạt động gần đây</h3>
+            <GroupsPost />
+          </>
+        );
       case 'page2':
         return <GroupListPage />;
       case 'page3':
@@ -44,7 +49,7 @@ const GroupsPage = () => {
         <LeftSidebar setActivePage={setActivePage} /> {/* Truyền setActivePage vào LeftSidebar */}
       </Sider>
 
-      <Content style={{ padding: '70px 0px 0px 370px', minHeight: '100vh', overflow: 'unset', display: 'flex', justifyContent: 'center' }}>
+      <Content style={{ padding: '70px 0px 0px 370px', minHeight: '100vh', overflow: 'unset', display: 'flex', justifyContent: 'center', }}>
         <div className="page-content" style={{ width: 'max-content' }}>
           {renderPage()} {/* Render trang con dựa trên activePage */}
         </div>

@@ -25,10 +25,10 @@ const Homepage = () => {
 
   const fetchPosts = async () => {
     try {
-        setLoading(true);
-        const response = await getPostListFriendService(user_id);
-        setPosts(response?.data?.data?.postResponses || []); // Lưu dữ liệu trả về
-        
+      setLoading(true);
+      const response = await getPostListFriendService(user_id);
+      setPosts(response?.data?.data?.postResponses || []); // Lưu dữ liệu trả về
+
     } catch (error) {
       console.error("Error fetching posts:", error);
     } finally {
@@ -66,18 +66,27 @@ const Homepage = () => {
             <p>Đang tải bài viết...</p>
           ) : posts.length > 0 ? (
             posts.map((post) => (
-                <Post
-                    key={post.post_id}
-                    postId={post.post_id}
-                    content={post.content}
-                    createdAt={post.create_at}
-                    userId={post.user_id}
-                    images={post.images}
-                />
+              <Post
+                key={post.post_id}
+                postId={post.post_id}
+                content={post.content}
+                createdAt={post.create_at}
+                userId={post.user_id}
+                images={post.images}
+              />
+
             ))
           ) : (
             <p>Không có bài viết nào để hiển thị.</p>
           )}
+          {/* <Post
+            key={"123"}
+            postId={"123"}
+            content={"123"}
+            createdAt={"123"}
+            userId={"123"}
+            images={""}
+          /> */}
         </div>
       </Content>
 

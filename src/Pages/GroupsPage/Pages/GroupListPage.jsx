@@ -28,7 +28,7 @@ const GroupListPage = () => {
 
   return (
     <div className={styles['group-list-container']}>
-      <h1>Tất cả các nhóm bạn đã tham gia ({joinedGroups.length})</h1>
+      <h3 style={{ marginBottom: '20px', marginTop: '30px' }}>Tất cả các nhóm bạn đã tham gia ({joinedGroups.length})</h3>
       <div className={styles['group-grid']}>
         {joinedGroups.map((group, index) => (
           <div key={index} className={styles['group-card']}>

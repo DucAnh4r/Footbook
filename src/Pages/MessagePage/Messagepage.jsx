@@ -97,7 +97,7 @@ const Messagepage = ({ selectedChat, toggleRightSidebar }) => {
       const { audioUrl, audioBlob } = await stopRecording();
       setAudioUrl(audioUrl);
       setAudioBlob(audioBlob);
-  
+
       const audioMessage = {
         user: 'You',
         text: audioUrl, // Chỉ lưu URL âm thanh
@@ -111,7 +111,7 @@ const Messagepage = ({ selectedChat, toggleRightSidebar }) => {
       console.error('Error stopping recording:', error);
     }
   };
-  
+
 
   return (
     <div style={styles.chatContainer}>
@@ -121,7 +121,7 @@ const Messagepage = ({ selectedChat, toggleRightSidebar }) => {
           <Avatar src={selectedChat?.avatar || "https://via.placeholder.com/40"} />
           <Text strong>{selectedChat?.name || "Select a chat"}</Text>
         </Space>
-        <Space>
+        <Space style={{ paddingRight: '10px', columnGap: '15px' }} >
           <Tooltip title="Call"><PhoneOutlined style={styles.icon} /></Tooltip>
           <Tooltip title="Video"><VideoCameraOutlined style={styles.icon} /></Tooltip>
           <Tooltip title="Info">
@@ -132,31 +132,31 @@ const Messagepage = ({ selectedChat, toggleRightSidebar }) => {
 
       {/* Messages List */}
       <div className="messagesContainer" ref={chatBodyRef}>
-  {messages.map((msg, index) => (
-    <div
-      key={index}
-      className={`chat-message ${msg.user === 'You' ? 'sender' : 'receiver'
-        } ${msg.type === 'gif'
-          ? 'gif-message'
-          : msg.type === 'sticker'
-            ? 'sticker-message'
-            : msg.type === 'file'
-              ? 'file-message'
-              : msg.type === 'audio'
-                ? 'audio-message'
-                : 'text-message'
-        }`}
-    >
-      {msg.type === 'audio' ? (
-        <AudioMessage audioSrc={msg.text} />
-      ) : (
-        <div className="message-content">
-          <div dangerouslySetInnerHTML={{ __html: msg.text }} />
-        </div>
-      )}
-    </div>
-  ))}
-</div>
+        {messages.map((msg, index) => (
+          <div
+            key={index}
+            className={`chat-message ${msg.user === 'You' ? 'sender' : 'receiver'
+              } ${msg.type === 'gif'
+                ? 'gif-message'
+                : msg.type === 'sticker'
+                  ? 'sticker-message'
+                  : msg.type === 'file'
+                    ? 'file-message'
+                    : msg.type === 'audio'
+                      ? 'audio-message'
+                      : 'text-message'
+              }`}
+          >
+            {msg.type === 'audio' ? (
+              <AudioMessage audioSrc={msg.text} />
+            ) : (
+              <div className="message-content">
+                <div dangerouslySetInnerHTML={{ __html: msg.text }} />
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
 
       {/* Message Input */}
       <div style={styles.footer}>
@@ -190,17 +190,17 @@ const Messagepage = ({ selectedChat, toggleRightSidebar }) => {
             <Space>
               <Tooltip title="Record">
                 <Button
-                  icon={<FaMicrophone />}
+                  icon={<FaMicrophone style={{ color: '#0084ff' }} />}
                   onClick={isRecording ? handleStopRecording : handleStartRecording}
                   type="text"
                   style={{ color: isRecording ? 'red' : 'black' }}
                 />
               </Tooltip>
               <Tooltip title="GIF">
-                <Button icon={<PiGifFill />} onClick={() => setGifModalVisible(true)} />
+                <Button icon={<PiGifFill style={{ color: '#0084ff' }} />} onClick={() => setGifModalVisible(true)} />
               </Tooltip>
               <Tooltip title="Sticker">
-                <Button icon={<RiEmojiStickerLine />} onClick={() => setStickerModalVisible(true)} />
+                <Button icon={<RiEmojiStickerLine style={{ color: '#0084ff' }} />} onClick={() => setStickerModalVisible(true)} />
               </Tooltip>
 
             </Space>
@@ -212,7 +212,7 @@ const Messagepage = ({ selectedChat, toggleRightSidebar }) => {
               onPressEnter={sendMessage}
             />
             <Tooltip title="Like">
-              <Button icon={<AiFillLike />} />
+              <Button icon={<AiFillLike style={{ color: '#0084ff' }} />} />
             </Tooltip>
           </>
         )}
@@ -255,6 +255,7 @@ const styles = {
   icon: {
     fontSize: '18px',
     cursor: 'pointer',
+    color: '#0084ff',
   },
   messagesContainer: {
     flex: 1,
@@ -279,6 +280,7 @@ const styles = {
     backgroundColor: '#f1f1f1',
     margin: '8px 0',
     alignItems: 'center',
+
   },
   messageTime: {
     fontSize: '12px',
@@ -290,10 +292,12 @@ const styles = {
     padding: '10px',
     borderTop: '1px solid #f0f0f0',
     backgroundColor: '#fff',
+
   },
   input: {
     flex: 1,
     marginLeft: '10px',
+    borderRadius: '50px'
   },
 };
 

@@ -116,21 +116,32 @@ const MessageRightSidebar = ({ selectedChat }) => {
             <Text type="secondary">Đang hoạt động</Text>
             <Space size="middle">
               {!selectedChat?.isGroup && (
-                <Tooltip title="Trang cá nhân">
-                  <Button shape="circle" icon={<FaRegUserCircle />} />
+                <Tooltip title="Trang cá nhân" >
+                  <div style={styles.threeIcon} >
+                    <Button shape="circle" icon={<FaRegUserCircle />} /> Trang cá nhân
+                  </div>
                 </Tooltip>
               )}
               <Tooltip title="Tắt thông báo">
-                <Button shape="circle" onClick={() => setNotificationMuteVisible(true)} icon={<BellOutlined />} />
+
+
+                <div style={styles.threeIcon} >
+                  <Button shape="circle" onClick={() => setNotificationMuteVisible(true)} icon={<BellOutlined />} /> Tắt thông báo
+                </div>
+
+
               </Tooltip>
               <Tooltip title="Tìm kiếm">
-                <Button shape="circle"
-                  onClick={() => {
-                    showSearchView();
-                    setSearchQuery('');
-                  }}
-                  icon={<SearchOutlined />}
-                />
+                <div style={styles.threeIcon} >
+
+                  <Button shape="circle"
+                    onClick={() => {
+                      showSearchView();
+                      setSearchQuery('');
+                    }}
+                    icon={<SearchOutlined />}
+                  /> Tìm kiếm
+                </div>
               </Tooltip>
             </Space>
           </div>
@@ -141,7 +152,7 @@ const MessageRightSidebar = ({ selectedChat }) => {
           <Collapse bordered={false} expandIconPosition="end" style={{ backgroundColor: 'white' }}>
             <Panel header="Thông tin về đoạn chat" key="1">
               <Space direction="vertical" align="start" style={{ width: '100%' }}>
-                <Button type="text" icon={<MdPushPin />} style={styles.linkButton} onClick={() => setPinnedMessagesVisible(true)}>
+                <Button type="text" icon={<MdPushPin style={styles.icon} />} style={styles.linkButton} onClick={() => setPinnedMessagesVisible(true)}>
                   Xem tin nhắn đã ghim
                 </Button>
               </Space>
@@ -151,20 +162,20 @@ const MessageRightSidebar = ({ selectedChat }) => {
               <Space direction="vertical" align="start" style={{ width: '100%' }}>
                 {selectedChat?.isGroup && (
                   <>
-                    <Button type="text" icon={<EditOutlined />} style={styles.linkButton}>Đổi tên đoạn chat</Button>
-                    <Button type="text" icon={<FileImageOutlined />} style={styles.linkButton}>Thay đổi ảnh</Button>
+                    <Button type="text" icon={<EditOutlined style={styles.icon} />} style={styles.linkButton}>Đổi tên đoạn chat</Button>
+                    <Button type="text" icon={<FileImageOutlined style={styles.icon} />} style={styles.linkButton}>Thay đổi ảnh</Button>
                   </>
                 )}
-                <Button type="text" onClick={() => setThemePickerVisible(true)} icon={<FaThumbsUp />} style={styles.linkButton}>Đổi chủ đề</Button>
+                <Button type="text" onClick={() => setThemePickerVisible(true)} icon={<FaThumbsUp style={styles.icon} />} style={styles.linkButton}>Đổi chủ đề</Button>
                 <ThemePickerModal
                   visible={isThemePickerVisible}
                   onClose={() => setThemePickerVisible(false)}
                   onSave={handleThemeChange}
                 />
-                <Button type="text" onClick={() => setEmojiPickerVisible(true)} icon={<SmileOutlined />} style={styles.linkButton}>
+                <Button type="text" onClick={() => setEmojiPickerVisible(true)} icon={<SmileOutlined style={styles.icon} />} style={styles.linkButton}>
                   Thay đổi biểu tượng cảm xúc
                 </Button>
-                <Button type="text" icon={<FontSizeOutlined />} onClick={() => setNicknameModalVisible(true)} style={styles.linkButton}>Chỉnh sửa biệt danh</Button>
+                <Button type="text" icon={<FontSizeOutlined style={styles.icon} />} onClick={() => setNicknameModalVisible(true)} style={styles.linkButton}>Chỉnh sửa biệt danh</Button>
                 <NicknameModal visible={isNicknameModalVisible} onClose={() => setNicknameModalVisible(false)} />
               </Space>
             </Panel>
@@ -183,7 +194,7 @@ const MessageRightSidebar = ({ selectedChat }) => {
 
             {selectedChat?.isGroup && (
               <Panel header="Thành viên trong đoạn chat" key="4">
-                <Button type="text" icon={<TeamOutlined />} style={styles.linkButton}>Quản lý thành viên</Button>
+                <Button type="text" icon={<TeamOutlined style={styles.icon} />} style={styles.linkButton}>Quản lý thành viên</Button>
               </Panel>
             )}
 
@@ -191,29 +202,29 @@ const MessageRightSidebar = ({ selectedChat }) => {
               header={`File phương tiện, file${selectedChat?.isGroup ? ' và liên kết' : ''}`}
               key="5">
               <Space direction="vertical" align="start" style={{ width: '100%' }}>
-                <Button type="text" icon={<FileImageOutlined />} onClick={showMediaFilesView} style={styles.linkButton}>File phương tiện</Button>
-                <Button type="text" icon={<FileOutlined />} onClick={showFileListView} style={styles.linkButton}>File</Button>
+                <Button type="text" icon={<FileImageOutlined style={styles.icon} />} onClick={showMediaFilesView} style={styles.linkButton}>File phương tiện</Button>
+                <Button type="text" icon={<FileOutlined style={styles.icon} />} onClick={showFileListView} style={styles.linkButton}>File</Button>
                 {selectedChat?.isGroup && (
-                  <Button type="text" icon={<LinkOutlined />} style={styles.linkButton}>Liên kết</Button>
+                  <Button type="text" icon={<LinkOutlined style={styles.icon} />} style={styles.linkButton}>Liên kết</Button>
                 )}
               </Space>
             </Panel>
 
             <Panel header="Quyền riêng tư & hỗ trợ" key="6">
               <Space direction="vertical" align="start" style={{ width: '100%' }}>
-                <Button type="text" icon={<BellOutlined />} onClick={() => setNotificationMuteVisible(true)} style={styles.linkButton}>Tắt thông báo</Button>
+                <Button type="text" icon={<BellOutlined style={styles.icon} />} onClick={() => setNotificationMuteVisible(true)} style={styles.linkButton}>Tắt thông báo</Button>
                 {selectedChat?.isGroup ? (
                   <>
-                    <Button type="text" icon={<AiOutlineWarning />} style={styles.linkButton}>Báo cáo</Button>
+                    <Button type="text" icon={<AiOutlineWarning style={styles.icon} />} style={styles.linkButton}>Báo cáo</Button>
                     <Text type="secondary" style={styles.helperText}>Đóng góp ý kiến và báo cáo cuộc trò chuyện</Text>
-                    <Button type="text" icon={<BiExit />} style={styles.linkButton}>Rời nhóm</Button>
+                    <Button type="text" icon={<BiExit style={styles.icon} />} style={styles.linkButton}>Rời nhóm</Button>
                   </>
                 ) : (
                   <>
-                    <Button type="text" icon={<PiClockCountdownLight />} onClick={() => setSelfDestructVisible(true)} style={styles.linkButton}>Tin nhắn tự hủy</Button>
-                    <Button type="text" icon={<MdCommentsDisabled />} onClick={() => setRestrictUserVisible(true)} style={styles.linkButton}>Hạn chế</Button>
-                    <Button type="text" icon={<MdBlockFlipped />} onClick={() => setBlockUserVisible(true)} style={styles.linkButton}>Chặn</Button>
-                    <Button type="text" icon={<MdReportProblem />} onClick={() => setReportUserVisible(true)} style={styles.linkButton}>Báo cáo</Button>
+                    <Button type="text" icon={<PiClockCountdownLight style={styles.icon} />} onClick={() => setSelfDestructVisible(true)} style={styles.linkButton}>Tin nhắn tự hủy</Button>
+                    <Button type="text" icon={<MdCommentsDisabled style={styles.icon} />} onClick={() => setRestrictUserVisible(true)} style={styles.linkButton}>Hạn chế</Button>
+                    <Button type="text" icon={<MdBlockFlipped style={styles.icon} />} onClick={() => setBlockUserVisible(true)} style={styles.linkButton}>Chặn</Button>
+                    <Button type="text" icon={<MdReportProblem style={styles.icon} />} onClick={() => setReportUserVisible(true)} style={styles.linkButton}>Báo cáo</Button>
                   </>
                 )}
               </Space>
@@ -289,7 +300,7 @@ const MessageRightSidebar = ({ selectedChat }) => {
         <Space align="center" style={styles.header}>
           <Button
             type="text"
-            icon={<LeftOutlined />}
+            icon={<LeftOutlined style={styles.icon} />}
             onClick={showMainView}
             style={{ fontSize: '16px' }}
           />
@@ -309,10 +320,10 @@ const MessageRightSidebar = ({ selectedChat }) => {
 
         {/* Hint */}
         {searchQuery && (
-        <div style={styles.hintContainer}>
-          <Text type="secondary">Nhấn "Enter" để tìm kiếm.</Text>
-        </div>
-      )}
+          <div style={styles.hintContainer}>
+            <Text type="secondary">Nhấn "Enter" để tìm kiếm.</Text>
+          </div>
+        )}
       </div>
       }
 
@@ -379,6 +390,7 @@ const styles = {
     maxHeight: '93vh',
     overflowY: 'auto',
     height: 'inherit',
+    scrollbarWidth: 'none',
   },
   colorGrid: {
     display: 'grid',
@@ -438,6 +450,16 @@ const styles = {
     textAlign: 'center',
     marginTop: '20px',
   },
+  icon: {
+    color: '0084ff',
+  },
+  threeIcon: {
+    display: 'grid',
+    justifyItems: 'center',
+    alignItems: 'center',
+    fontWeight: 'normal',
+    width: '90px'
+  }
 };
 
 export default MessageRightSidebar;

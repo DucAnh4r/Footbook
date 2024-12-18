@@ -1,23 +1,18 @@
 import React, { useState } from "react";
-import { Modal, Button, Avatar, Input, Checkbox } from "antd";
+import { Modal, Button, Avatar, Input, Checkbox, Tooltip } from "antd";
 import { FaArrowLeft, FaEarthAmericas } from "react-icons/fa6";
 import styles from "./ShareModal.module.scss";
 import AudienceModal from "./AudienceModal";
 import { IoSearchOutline } from "react-icons/io5";
 
 const ShareModal = ({ isModalOpen, onCancel }) => {
-    const [view, setView] = useState("share"); // "share" hoặc "sendTo"
+    const [view, setView] = useState("share");
     const [selectedAudience, setSelectedAudience] = useState("Friends");
     const [isAudienceModalOpen, setIsAudienceModalOpen] = useState(false);
     const [searchText, setSearchText] = useState("");
     const [selectedUsers, setSelectedUsers] = useState([]);
 
     const users = [
-        { id: 1, name: "Trí Dũng", avatar: "https://randomuser.me/api/portraits/men/1.jpg" },
-        { id: 2, name: "1111111111111111111111111111111", avatar: "https://randomuser.me/api/portraits/men/2.jpg" },
-        { id: 3, name: "Ninh bình", avatar: "https://randomuser.me/api/portraits/men/3.jpg" },
-        { id: 4, name: "Fordeer Life Style", avatar: "https://randomuser.me/api/portraits/women/4.jpg" },
-        { id: 5, name: "IT4", avatar: "https://randomuser.me/api/portraits/men/5.jpg" },
         { id: 1, name: "Trí Dũng", avatar: "https://randomuser.me/api/portraits/men/1.jpg" },
         { id: 2, name: "1111111111111111111111111111111", avatar: "https://randomuser.me/api/portraits/men/2.jpg" },
         { id: 3, name: "Ninh bình", avatar: "https://randomuser.me/api/portraits/men/3.jpg" },
@@ -82,42 +77,21 @@ const ShareModal = ({ isModalOpen, onCancel }) => {
                 <div className={styles.shareOptions}>
                     <h4>Share to</h4>
                     <div className={styles.options}>
-                        <div className={styles.option}>
-                            <div className={styles.iconWrapper}>
-                                <img src="messenger-icon.svg" alt="Messenger" />
-                            </div>
-                            <span>Messenger</span>
-                        </div>
-                        <div className={styles.option}>
-                            <div className={styles.iconWrapper}>
-                                <img src="whatsapp-icon.svg" alt="WhatsApp" />
-                            </div>
-                            <span>WhatsApp</span>
-                        </div>
-                        <div className={styles.option}>
-                            <div className={styles.iconWrapper}>
-                                <img src="story-icon.svg" alt="Your Story" />
-                            </div>
-                            <span>Your Story</span>
-                        </div>
-                        <div className={styles.option}>
-                            <div className={styles.iconWrapper}>
-                                <img src="copy-link-icon.svg" alt="Copy Link" />
-                            </div>
-                            <span>Copy link</span>
-                        </div>
-                        <div className={styles.option}>
-                            <div className={styles.iconWrapper}>
-                                <img src="group-icon.svg" alt="Group" />
-                            </div>
-                            <span>Group</span>
-                        </div>
-                        <div className={styles.option}>
-                            <div className={styles.iconWrapper}>
-                                <img src="friend-profile-icon.svg" alt="Friend's Profile" />
-                            </div>
-                            <span>Friend's profile</span>
-                        </div>
+                        {["Messenger", "WhatsApp", "Your Story", "Copy link", "Group", "Friend's profile"].map(
+                            (option, idx) => (
+                                <Tooltip key={idx} title={option}>
+                                    <div className={styles.option}>
+                                        <div className={styles.iconWrapper}>
+                                            <img
+                                                src={`${option.toLowerCase().replace(" ", "-")}-icon.svg`}
+                                                alt={option}
+                                            />
+                                        </div>
+                                        <span>{option}</span>
+                                    </div>
+                                </Tooltip>
+                            )
+                        )}
                     </div>
                 </div>
             </div>
@@ -127,7 +101,7 @@ const ShareModal = ({ isModalOpen, onCancel }) => {
     const renderSendToContent = () => (
         <div className={styles.sendToContainer}>
             <Button className={styles.backButton} type="text" onClick={() => setView("share")}>
-            <FaArrowLeft />
+                <FaArrowLeft />
             </Button>
             <h2>Send to</h2>
             <Input
@@ -135,7 +109,7 @@ const ShareModal = ({ isModalOpen, onCancel }) => {
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
                 className={styles.searchInput}
-                prefix={<IoSearchOutline/>}
+                prefix={<IoSearchOutline />}
             />
             <div className={styles.userList}>
                 {users
@@ -186,8 +160,8 @@ const ShareModal = ({ isModalOpen, onCancel }) => {
             <AudienceModal
                 isModalOpen={isAudienceModalOpen}
                 onClose={() => setIsAudienceModalOpen(false)}
-                onSelect={(value) => setSelectedAudience(value)} // Cập nhật audience
-                defaultAudience={selectedAudience} // Truyền giá trị mặc định
+                onSelect={(value) => setSelectedAudience(value)}
+                defaultAudience={selectedAudience}
             />
         </>
     );
