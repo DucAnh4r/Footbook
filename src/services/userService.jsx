@@ -39,7 +39,7 @@ export const updateBioService = (Data, user_id) => {
 
 export const updateProfileService = (Data, user_id) => {
   const formData = new FormData();
-  formData.append("profileImages", Data.profileImages);
+  formData.append("profilePicture", Data.profilePicture);
   return axiosCreate.patch(`http://localhost:8080/api/v1/users/${user_id}/update-profile-picture`,
     formData,
     {
@@ -51,7 +51,7 @@ export const updateProfileService = (Data, user_id) => {
 
 export const updateCoverService = (Data, user_id) => {
   const formData = new FormData();
-  formData.append("coverImage", Data.coverImage);
+  formData.append("coverPicture", Data.coverPicture);
   return axiosCreate.patch(`http://localhost:8080/api/v1/users/${user_id}/update-cover-picture`,
     formData,
     {

@@ -45,7 +45,7 @@ const ProfilePage = () => {
     try {
       setIsLoading(true);
       const response = await countFriendService(userId);
-      setFriendCount(response?.data?.data || []);
+      setFriendCount(response?.data?.data || 0);
     } catch (error) {
       console.error("Error count friend:", error);
     } finally {
@@ -65,18 +65,19 @@ const ProfilePage = () => {
     const file = e.target.files[0];
     if (!file) return;
 
-    const formData = { profileImages: file };
     setIsLoading(true);
-
+    
     try {
       if (type === "avatar") {
+        const formData = { profilePicture: file };
         await updateProfileService(formData, userId);
         toast.success("Ảnh đại diện đã được cập nhật!");
       } else if (type === "cover") {
+        const formData = { coverPicture: file };
         await updateCoverService(formData, userId);
         toast.success("Ảnh bìa đã được cập nhật!");
       }
-      fetchUserData();
+      fetchUser();
     } catch (error) {
       toast.error("Cập nhật ảnh thất bại!");
     } finally {

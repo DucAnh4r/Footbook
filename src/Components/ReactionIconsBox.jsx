@@ -19,20 +19,6 @@ const ReactionIconsBox = ({ postId, onReactionAdded, currentReaction }) => {
     const newReaction = currentReaction === reactionType ? "NONE" : reactionType;
 
     try {
-      // Cập nhật API nếu cần
-      await addPostReactionService({
-        post_id: postId,
-        user_id: userId,
-        reaction_type: newReaction,
-      });
-
-      // Thông báo thành công
-      toast.success(
-        newReaction === "NONE"
-          ? "Bạn đã gỡ cảm xúc!"
-          : `Bạn đã thêm cảm xúc ${newReaction} thành công!`
-      );
-
       // Gọi callback để thông báo với parent component
       if (onReactionAdded) {
         onReactionAdded(newReaction);

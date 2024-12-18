@@ -25,17 +25,6 @@ const Posts = () => {
         <Space direction="vertical" size="middle" style={{ width: '100%' }}>
           <StatusInput />
           <PostFilter />
-          <Post />
-          <Post />
-          <Post />
-          <Post />
-          <Post />
-          <Post />
-          <Post />
-          <Post />
-          <Post />
-          <Post />
-          <Post />
         </Space>
       </Col>
     </Row>
