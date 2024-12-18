@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import AboutSection from './AboutSection';
 import { Col, Row, Space } from 'antd';
 import StatusInput from '../../../../Homepage/StatusInput';
@@ -7,8 +7,30 @@ import PostFilter from './PostFilter';
 import PhotoGallery from './PhotoGallery';
 import FriendsList from './FriendsList';
 import styles from './Posts.module.scss';
+import { getUserIdFromLocalStorage } from '../../../../../utils/authUtils';
+import { getPostByUserIdService } from '../../../../../services/postService';
 
 const Posts = () => {
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true); 
+  const user_id = getUserIdFromLocalStorage(); 
+
+  const fetchPosts = async () => {
+    try {
+        setLoading(true);
+        const response = await getPostByUserIdService(user_id);
+        setPosts(response?.data?.data?.postResponses || []);
+        
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPosts();
+  }, []); 
   return (
     <Row gutter={16}>
       <Col
@@ -25,6 +47,22 @@ const Posts = () => {
         <Space direction="vertical" size="middle" style={{ width: '100%' }}>
           <StatusInput />
           <PostFilter />
+          {loading ? (
+            <p>Đang tải bài viết...</p>
+          ) : posts.length > 0 ? (
+            posts.map((post) => (
+                <Post
+                    key={post.post_id}
+                    postId={post.post_id}
+                    content={post.content}
+                    createdAt={post.create_at}
+                    userId={post.user_id}
+                    images={post.images}
+                />
+            ))
+          ) : (
+            <p>Không có bài viết nào để hiển thị.</p>
+          )}
         </Space>
       </Col>
     </Row>

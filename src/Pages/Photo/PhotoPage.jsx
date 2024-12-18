@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Layout, Row, Col, Avatar, Button } from "antd";
 import { FaEarthAmericas, FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import { MdZoomIn, MdZoomOut } from "react-icons/md";
@@ -12,6 +12,10 @@ import LikeIcon from "../../assets/image/Reacts/like.png";
 import Comment from "./Components/Comment";
 import styles from './PhotoPage.module.scss';
 import { useNavigate } from "react-router-dom";
+import { addCommentService, countCommentService, getCommentService } from '../../services/commentService';
+import { getPostByIdService } from '../../services/postService';
+import { countPostReactionService } from '../../services/postReactionService';
+import { getUserIdFromLocalStorage } from '../../utils/authUtils';
 
 const PhotoPage = () => {
   const navigate = useNavigate();
@@ -20,14 +24,105 @@ const PhotoPage = () => {
   const [scale, setScale] = useState(1); // Zoom scale
   const imageRef = useRef(null);
   const [isFullScreen, setIsFullScreen] = useState(false); // State for fullscreen mode
+  const [getcomment, setGetComment] = useState([]);
+  const [post, setPost] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [userInfo, setUserInfo] = useState([]);
+  const [postReactionCount, setPostReactionCount] = useState([]);
+  const [commentCount, setCommentCount] = useState([]);
+  const myId = getUserIdFromLocalStorage();
+  const { post_id } = useParams();
 
   const handleFullScreenToggle = () => {
     setIsFullScreen((prev) => {
-      console.log(prev);  // Xem giá trị cũ trong khi cập nhật
       return !prev;
     });
   };
-  
+
+  const fetchPost = async () => {
+    try {
+      setLoading(true);
+      const response = await getPostByIdService(post_id);
+      setPost(response?.data?.data?.postResponses || []); 
+
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchComment = async () => {
+    try {
+      setLoading(true);
+      const response = await getCommentService(post_id);
+      setGetComment(response?.data?.data || []); 
+
+    } catch (error) {
+      console.error("Error fetching comment:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchUser = async () => {
+    try {
+      setLoading(true);
+      const response = await userFindByIdService(post.user_id);
+      setUserInfo(response?.data?.data || []);
+    } catch (error) {
+      console.error("Error fetching user:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const countReaction = async () => {
+    try {
+      setLoading(true);
+      const response = await countPostReactionService(post_id);
+      setPostReactionCount(response?.data?.data || 0);
+    } catch (error) {
+      console.error("Error count reaction:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const countComment = async () => {
+    try {
+      setLoading(true);
+      const response = await countCommentService(post_id);
+      setCommentCount(response?.data?.data || 0);
+    } catch (error) {
+      console.error("Error count reaction:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleOk = async () => {
+    try {
+      const commentData = {
+        userId: myId,
+        postId: post_id,
+        content: comment,
+      };
+
+      await addCommentService(commentData);
+      fetchComment();
+      setComment("")
+    } catch (error) {
+    }
+  };
+
+  useEffect(() => {
+    fetchComment();
+    fetchPost();
+    fetchUser();
+    countReaction();
+    countComment();
+  }, []);
 
   const handleZoomIn = () => {
     setScale((prev) => Math.min(prev + 0.5, 3)); // Zoom in, max scale 3
@@ -47,9 +142,9 @@ const PhotoPage = () => {
     if (scale > 1) { // Chỉ cho phép kéo khi ảnh đã được phóng to
       const initialX = e.clientX - offset.x;
       const initialY = e.clientY - offset.y;
-  
+
       setIsDragging(true); // Ngay lập tức bắt đầu kéo
-  
+
       // Hàm xử lý di chuyển chuột
       const handleMouseMove = (moveEvent) => {
         if (isDragging) {
@@ -59,20 +154,20 @@ const PhotoPage = () => {
           });
         }
       };
-  
+
       // Hàm xử lý khi nhả chuột
       const handleMouseUp = () => {
         setIsDragging(false); // Dừng kéo ngay khi thả chuột
         window.removeEventListener("mousemove", handleMouseMove); // Hủy sự kiện di chuyển chuột
         window.removeEventListener("mouseup", handleMouseUp); // Hủy sự kiện nhả chuột
       };
-  
+
       window.addEventListener("mousemove", handleMouseMove); // Bắt đầu di chuyển chuột ngay khi nhấn
       window.addEventListener("mouseup", handleMouseUp); // Dừng di chuyển khi thả chuột
     }
   };
-  
-  
+
+
 
   const [comment, setComment] = useState(""); // State for tracking comment input
 
@@ -118,37 +213,41 @@ const PhotoPage = () => {
             <FaAngleRight />
           </div>
           <div className={styles['image-container']}>
-            <img
-              ref={imageRef}
-              className={`${styles.image} disable-select`}
-              src="https://c.ndtvimg.com/2024-04/64v6v0mo_ronaldo_625x300_09_April_24.jpg?im=FitAndFill,algorithm=dnn,width=806,height=605"
-              alt="Example"
-              style={{
-                transform: `scale(${scale}) translate(${offset.x}px, ${offset.y}px)`,
-                transition: "transform 0.3s ease",
-                cursor: isDragging ? "grabbing" : "grab",
-              }}
-              onMouseDown={handleMouseDown} // Start dragging
-            />
+            {/* {post.images.length > 0 && (
+              post.images.map((image, index) => (
+                <img
+                  ref={imageRef}
+                  className={`${styles.image} disable-select`}
+                  key={index}
+                  src={image}
+                  style={{
+                    transform: `scale(${scale}) translate(${offset.x}px, ${offset.y}px)`,
+                    transition: "transform 0.3s ease",
+                    cursor: isDragging ? "grabbing" : "grab",
+                  }}
+                  onMouseDown={handleMouseDown} // Start dragging
+                />
+              ))
+            )} */}
           </div>
         </Col>
         <Col className={styles['right-row']}>
           <div style={{ padding: "16px" }}>
             <div className={styles.header}>
               <Avatar
-                src="https://shopgarena.net/wp-content/uploads/2023/07/Meo-khoc-thet-len.jpg"
+                src={userInfo.profilePictureUrl}
                 className={styles.avatar}
               />
               <div className={styles.userInfo}>
-                <span className={styles.userName}>Anh Đức Nguyễn</span>
+                <span className={styles.userName}>{userInfo.fullName}</span>
                 <span className={styles.time}>
-                  5 phút · <FaEarthAmericas style={{ marginLeft: "4px" }} />
+                  {post.create_at} phút · <FaEarthAmericas style={{ marginLeft: "4px" }} />
                 </span>
               </div>
             </div>
 
             <div className={styles.content}>
-              <p>Mèo cute nè</p>
+              <p>{post.content}</p>
             </div>
 
             <div className={styles.reactionsContainer}>
@@ -164,10 +263,10 @@ const PhotoPage = () => {
                   className={`${styles["icon"]} ${styles["icon-right"]}`}
                 />
               </div>
-              <span className={styles.reactionCount}>885</span>
+              <span className={styles.reactionCount}>{postReactionCount}</span>
               <div className={styles.rightFooter}>
                 <span className={styles.cmtCount} style={{ marginRight: "10px" }}>
-                  20 bình luận
+                  {commentCount} bình luận
                 </span>
                 <span className={styles.shareCount}>
                   1 lượt chia sẻ
@@ -188,18 +287,29 @@ const PhotoPage = () => {
             </div>
 
             <div className={styles.commentSection}>
-              <Comment />
-              <Comment />
-              <Comment />
-              <Comment />
-              <Comment />
-              <Comment />
+              {loading ? (
+                <p>Đang tải bình luận...</p>
+              ) : getcomment.length > 0 ? (
+                getcomment.map((comment) => (
+                  <Comment
+                    key={comment.commentId}
+                    commentId={comment.commentId}
+                    content={comment.content}
+                    createdAt={comment.createdAt}
+                    userId={comment.userId}
+                    childComments={comment.childComments}
+                    postId={post_id}
+                  />
+                ))
+              ) : (
+                <p>Không có bình luận nào để hiển thị.</p>
+              )}
             </div>
 
-            <div className={styles.seeMoreSection}>
+            {/* <div className={styles.seeMoreSection}>
               <p className={styles.seeMoreBtn}>Xem thêm bình luận</p>
               <p style={{ color: "#65686c" }}>6/84</p>
-            </div>
+            </div> */}
           </div>
 
           <div className={styles.writeCommentSection}>
@@ -217,9 +327,22 @@ const PhotoPage = () => {
                     placeholder="Viết bình luận..."
                     value={comment}
                     onChange={handleChange}
+                    onKeyPress={(e) => {
+                      if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault(); // Ngăn xuống dòng
+                        handleOk(); // Gửi bình luận khi nhấn Enter
+                      }
+                    }}
                   ></textarea>
                   <div className={styles.actionCommentContainer}>
-                    <IoIosSend className={styles["sendCommentButton"]} style={{ color: comment ? "blue" : "gray" }} />
+                    {/* Nút gửi bình luận */}
+                    <IoIosSend
+                      className={styles["sendCommentButton"]}
+                      style={{ color: comment ? "blue" : "gray", cursor: comment ? "pointer" : "not-allowed" }}
+                      onClick={() => {
+                        if (comment.trim()) handleOk(); // Chỉ gửi nếu comment không rỗng
+                      }}
+                    />
                   </div>
                 </div>
               </Col>

@@ -26,7 +26,7 @@ const languages = [
   { name: 'Bisaya', description: 'Tiếng Cebuano' }
 ];
 
-const ProfileContent = () => {
+const ProfileContent = ({userName, UserAvatar}) => {
   const [view, setView] = useState('main'); // 'main', 'settings', 'language', 'languageList'
   const [selectedLanguage, setSelectedLanguage] = useState('Tiếng Việt');
   const [darkMode, setDarkMode] = useState('off'); // 'off', 'on', 'auto'
@@ -71,10 +71,9 @@ const ProfileContent = () => {
               transition: 'background-color 0.3s ease', // Hiệu ứng chuyển màu khi hover
             }}
             onClick={handleProfileClick}
-            
           >
-            <Avatar icon={<FaUser />} size="large" />
-            <Text strong style={{ fontSize: '16px' }}>Duc Manh</Text>
+            <Avatar size="large" >{UserAvatar}</Avatar>
+            <Text strong style={{ fontSize: '16px' }}>{userName}</Text>
           </div>
             <Button type="link" style={{ padding: 0, color: 'black' }}>Xem tất cả trang cá nhân</Button>
           </Space>

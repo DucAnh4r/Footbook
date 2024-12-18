@@ -14,6 +14,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import LogoImg from "../assets/image/Header/logo.png";
 import styles from "./Header.module.scss";
 import { HeaderContext } from "../Context/HeaderContext.jsx";
+import { userFindByIdService } from "../services/userService.jsx";
+import { getUserIdFromLocalStorage } from "../utils/authUtils.jsx";
 
 const { Header: AntHeader } = Layout;
 
@@ -23,6 +25,9 @@ const Header = ({ onMessageClick }) => {
   const [selectedIcon, setSelectedIcon] = useState(null);
   const navigate = useNavigate(); // Initialize navigate
   const location = useLocation();
+  const [loading, setLoading] = useState(true); 
+  const [userInfo, setUserInfo] = useState([]);
+  const user_id = getUserIdFromLocalStorage();
 
   const handleLogoClick = () => {
     navigate("/"); // Điều hướng đến URL với tham số type
@@ -35,7 +40,20 @@ const Header = ({ onMessageClick }) => {
     }
   };
 
+  const fetchUser = async () => {
+    try {
+      setLoading(true);
+      const response = await userFindByIdService(user_id);
+      setUserInfo(response?.data?.data || []); 
+    } catch (error) {
+      console.error("Error fetching user:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
+    fetchUser();
     setSelectedIcon(null); // Close any open popover on navigation
   }, [location.pathname]);
 
@@ -175,11 +193,13 @@ const Header = ({ onMessageClick }) => {
                   handleIconClick(visible ? "profile" : null)
                 }
                 getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                userName={userInfo.fullName}
+                UserAvatar={userInfo.profilePictureUrl}
               >
                 <div className={styles["avatar-wrapper"]}>
                   <img
                     className={styles["avatar"]}
-                    src="https://ict-imgs.vgcloud.vn/2020/09/01/19/huong-dan-tao-facebook-avatar.jpg?width=0&s=Da0ZhtrqP8OmUxL88LuyTQ"
+                    src={userInfo.profilePictureUrl}
                     alt=""
                   />
                 </div>

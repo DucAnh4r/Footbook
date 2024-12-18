@@ -66,3 +66,34 @@
         cursor: pointer;
     }
 }
+
+.reply-input {
+  margin-left: 50px;
+  margin-top: 10px;
+
+  textarea {
+    width: 100%;
+    resize: none;
+  }
+
+  button {
+    margin-top: 5px;
+    float: right;
+  }
+}
+
+.commentContainer {
+  margin-bottom: 10px;
+}
+
+.child-comments {
+  margin-left: 50px; // Thụt vào cho các comment reply
+  border-left: 2px solid #e6e6e6;
+  padding-left: 10px;
+}
+
+.show-more {
+  margin-left: 50px;
+  color: #1877f2;
+  cursor: pointer;
+}

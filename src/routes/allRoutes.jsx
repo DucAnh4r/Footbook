@@ -22,7 +22,7 @@ const homeRoutes = [
     { path: "/pages", component: <FlagPage /> },
     { path: "/groups", component: <GroupsPage /> },
     { path: "/group/a", component: <GroupsProfile /> },
-    { path: "/photo", component: <PhotoPage /> },
+    { path: "/photo/:postId", component: <PhotoPage /> },
     { path: "/search/users", component: <SearchPage /> },
     { path: "/search/:type", component: <SearchPage /> },
     { path: "/login", component: <LoginPage /> },

@@ -1,19 +1,42 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Tabs, Card, Row, Col, Button, Dropdown, Menu } from 'antd';
 import { PlusOutlined, EllipsisOutlined, EditOutlined } from '@ant-design/icons';
+import { getImageByUserIdService } from '../../../../../services/postService';
+import { getUserIdFromLocalStorage } from '../../../../../utils/authUtils';
+import { useNavigate } from 'react-router-dom';
 
 const { TabPane } = Tabs;
 
-const photosData = [
-  { id: 1, src: 'https://dims.apnews.com/dims4/default/98c7c25/2147483647/strip/true/crop/3343x2229+0+0/resize/599x399!/quality/90/?url=https%3A%2F%2Fassets.apnews.com%2F23%2F2a%2Fc195983e0f48a7e07f43883f1803%2Fc4ddb5cfc45448f2b4827af26a565e49', editable: true },
-  { id: 2, src: 'https://dims.apnews.com/dims4/default/98c7c25/2147483647/strip/true/crop/3343x2229+0+0/resize/599x399!/quality/90/?url=https%3A%2F%2Fassets.apnews.com%2F23%2F2a%2Fc195983e0f48a7e07f43883f1803%2Fc4ddb5cfc45448f2b4827af26a565e49', editable: true },
-  // Add more photos as needed
-];
-
 const Photos = () => {
+  const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(true); 
+  const user_id = getUserIdFromLocalStorage();
+  const navigate = useNavigate();
+
+  const fetchUserImages = async () => {
+    try {
+      setLoading(true);
+      const response = await getImageByUserIdService(user_id);
+      setImages(response?.data?.data || []);
+
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleImageClick = (postId) => {
+    navigate(`/photo${postId}`);
+  }
+
+  useEffect(() => {
+    fetchUserImages();
+  }, []);
+
   const renderPhotoCard = (photo) => (
     <div
-      key={photo.id}
+      key={photo.imageId}
       style={{
         position: 'relative',
         width: '100%',
@@ -25,9 +48,12 @@ const Photos = () => {
     >
       <img
         alt="example"
-        src={photo.src}
+        src={photo.imageURL}
+        onError={(e) => e.target.src = "https://via.placeholder.com/150"} 
         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        onClick={() => handleImageClick(photo.postId)}
       />
+
       {photo.editable && (
         <Button
           type="link"
@@ -43,7 +69,7 @@ const Photos = () => {
         />
       )}
     </div>
-  );      
+  );
 
 
   return (
@@ -69,13 +95,17 @@ const Photos = () => {
       </Row>
       <Tabs defaultActiveKey="tagged">
         <TabPane tab="Ảnh có mặt bạn" key="tagged">
-          <Row gutter={16}>
-            {photosData.map((photo) => (
-              <Col span={6} key={photo.id}>
-                {renderPhotoCard(photo)}
-              </Col>
-            ))}
-          </Row>
+          {loading ? (
+            <div style={{ textAlign: "center", marginTop: "20px" }}>Đang tải ảnh...</div>
+          ) : (
+            <Row gutter={16}>
+              {images.map((photo) => (
+                <Col span={6} key={photo.imageId}>
+                  {renderPhotoCard(photo)}
+                </Col>
+              ))}
+            </Row>
+          )}
         </TabPane>
         <TabPane tab="Ảnh của bạn" key="yourPhotos">
           <Row gutter={16}>

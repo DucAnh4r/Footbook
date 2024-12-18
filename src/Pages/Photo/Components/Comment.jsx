@@ -1,49 +1,118 @@
-import React, {  } from "react";
-import { Layout } from "antd";
-import {Row, Col} from "antd";
-import "slick-carousel/slick/slick.css";
-import styles from './Comment.module.scss';
-import { Avatar, Button } from "antd";
-import { useLocation, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Row, Col, Avatar, Button, Input } from "antd";
+import styles from "./Comment.module.scss";
+import { userFindByIdService } from "../../../services/userService";
+import { addCommentService } from "../../../services/commentService"; // Import API gửi bình luận
 
+const { TextArea } = Input;
 
+const Comment = ({ content, createdAt, userId, childComments = [], commentId, postId }) => {
+  const [userInfo, setUserInfo] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [showReplies, setShowReplies] = useState(false); // Hiển thị comment con
+  const [showReplyInput, setShowReplyInput] = useState(false); // Hiển thị ô input phản hồi
+  const [replyContent, setReplyContent] = useState(""); // Nội dung phản hồi
 
+  const fetchUser = async () => {
+    try {
+      const response = await userFindByIdService(userId);
+      setUserInfo(response?.data?.data || {});
+    } catch (error) {
+      console.error("Error fetching user:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-const Comment = () => {
-  const navigate = useNavigate(); // Initialize navigate
-  const handleLogoClick = () => {
-    navigate("/"); // Điều hướng đến URL với tham số type
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
+  // Hàm gửi phản hồi
+  const handleReply = async () => {
+    if (!replyContent.trim()) return;
+
+    try {
+      const newComment = {
+        postId: postId,
+        userId: userId, 
+        parentCommentId: commentId, 
+        content: replyContent,
+      };
+
+      await addCommentService(newComment);
+      setReplyContent("");
+      setShowReplyInput(false);
+      console.log("Phản hồi thành công!");
+    } catch (error) {
+      console.error("Error replying to comment:", error);
+    }
   };
 
   return (
-    <Row className={styles["container"]}>
+    <div className={styles.commentContainer}>
+      {/* Comment chính */}
+      <Row className={styles["container"]}>
         <Col className={styles["avatar-col"]} span={4}>
-            <Avatar
-                src="https://shopgarena.net/wp-content/uploads/2023/07/Meo-khoc-thet-len.jpg"
-                className={styles.avatar}
-            />
+          <Avatar src={userInfo.profilePictureUrl} className={styles.avatar} />
         </Col>
         <Col span={18}>
-            <div className={styles["comment-box"]}>
-                <p className={styles["name"]}>Duy Lến</p>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati delectus quisquam ipsum ipsa eum non pariatur dolorum eveniet temporibus nemo, sapiente corrupti sint, blanditiis minima ut hic impedit molestiae. Mollitia.</p>
+          <div className={styles["comment-box"]}>
+            <p className={styles["name"]}>{userInfo.fullName}</p>
+            <p>{content}</p>
+          </div>
+          <div className={styles["option-box"]}>
+            <p>{createdAt}</p>
+            <p>Thích</p>
+            <p onClick={() => setShowReplyInput((prev) => !prev)} style={{ cursor: "pointer" }}>
+              Phản hồi
+            </p>
+          </div>
+
+          {/* Input phản hồi */}
+          {showReplyInput && (
+            <div className={styles["reply-input"]}>
+              <TextArea
+                rows={1}
+                value={replyContent}
+                placeholder="Viết phản hồi..."
+                onChange={(e) => setReplyContent(e.target.value)}
+              />
+              <Button type="primary" onClick={handleReply} style={{ marginTop: "5px" }}>
+                Gửi
+              </Button>
             </div>
-            <div className={styles["option-box"]}>
-                <p>2 giờ</p>
-                <p>Thích</p>
-                <p>Phản hồi</p>
-                <div style={styles["comment-reaction-box"]}>
-                    <p>3 cảm xúc</p>
-                </div>
-            </div>
+          )}
         </Col>
-        <Col span={2}>
-        
-        </Col>
-    </Row>
+      </Row>
+
+      {/* Nút Xem thêm */}
+      {childComments.length > 0 && !showReplies && (
+        <div className={styles["show-more"]}>
+          <Button type="link" onClick={() => setShowReplies(true)}>
+            Xem thêm {childComments.length} phản hồi
+          </Button>
+        </div>
+      )}
+
+      {/* Render comment con đệ quy */}
+      {showReplies && (
+        <div className={styles["child-comments"]}>
+          {childComments.map((child) => (
+            <Comment
+              key={child.commentId}
+              commentId={child.commentId}
+              content={child.content}
+              createdAt={child.createdAt}
+              userId={child.userId}
+              childComments={child.childComments}
+              postId={postId} // Truyền ID bài viết
+            />
+          ))}
+        </div>
+      )}
+    </div>
   );
 };
-
-
 
 export default Comment;

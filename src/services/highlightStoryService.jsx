@@ -1,4 +1,4 @@
-import axiosCreate from "react/utils/axiosRelease";
+import axiosCreate from "../utils/axiosRelease";
 
 export const createHighlightStoryService = (Data) => {
     const formData = new FormData();

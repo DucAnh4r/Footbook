@@ -1,40 +1,74 @@
-import React from 'react';
-import { Card, Col, Row, Typography } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Card, Col, Row, Typography, Spin } from 'antd';
 import styles from './PhotoGallery.module.scss';
+import { getImageByUserIdService } from '../../../../../services/postService';
+import { getUserIdFromLocalStorage } from '../../../../../utils/authUtils';
+import { useNavigate } from 'react-router-dom';
 
 const { Title, Link } = Typography;
 
 const PhotoGallery = () => {
-  // Dữ liệu mẫu cho các ảnh
-  const photos = [
-    'https://example.com/photo1.jpg',
-    'https://example.com/photo2.jpg',
-    'https://example.com/photo3.jpg',
-    'https://example.com/photo4.jpg',
-    'https://example.com/photo5.jpg',
-    'https://example.com/photo6.jpg',
-    'https://example.com/photo7.jpg',
-    'https://example.com/photo8.jpg',
-    'https://example.com/photo9.jpg',
-  ];
+  const [images, setImages] = useState([]); // State lưu ảnh
+  const [loading, setLoading] = useState(true); // State loading
+  const user_id = getUserIdFromLocalStorage(); // Lấy ID user
+  const navigate = useNavigate(); // Dùng để điều hướng trang
+
+  // Hàm fetch ảnh
+  const fetchUserImages = async () => {
+    try {
+      setLoading(true);
+      const response = await getImageByUserIdService(user_id);
+      setImages(response?.data?.data || []);
+    } catch (error) {
+      console.error('Error fetching images:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Xử lý click vào ảnh
+  const handleImageClick = (postId) => {
+    navigate(`/photo${postId}`);
+  };
+
+  useEffect(() => {
+    fetchUserImages();
+  }, []);
 
   return (
     <Card className={styles.container}>
+      {/* Header */}
       <div className={styles.header}>
         <Title level={4}>Ảnh</Title>
         <Link className={styles.viewAll} href="#">
           Xem tất cả ảnh
         </Link>
       </div>
-      <Row gutter={[8, 8]}>
-        {photos.slice(0, 9).map((photo, index) => (
-          <Col span={8} key={index}>
-            <div className={styles.photo}>
-              <img src={photo} alt={`Photo ${index + 1}`} />
-            </div>
-          </Col>
-        ))}
-      </Row>
+
+      {/* Nội dung */}
+      {loading ? (
+        <div className={styles.spinner}>
+          <Spin size="large" />
+        </div>
+      ) : images.length > 0 ? (
+        <Row gutter={[8, 8]}>
+          {images.slice(0, 9).map((photo) => (
+            <Col span={8} key={photo.imageId}>
+              <div className={styles.photo} onClick={() => handleImageClick(photo.postId)}>
+                <img
+                  src={photo.imageURL}
+                  alt={`Photo ${photo.imageId}`}
+                  onError={(e) => (e.target.src = 'https://via.placeholder.com/150')} // Fallback ảnh lỗi
+                />
+              </div>
+            </Col>
+          ))}
+        </Row>
+      ) : (
+        <div style={{ textAlign: 'center', padding: '20px' }}>
+          <p>Chưa có ảnh nào.</p>
+        </div>
+      )}
     </Card>
   );
 };

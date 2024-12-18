@@ -38,7 +38,7 @@ const Homepage = () => {
 
   useEffect(() => {
     fetchPosts();
-  }, []); // Chạy một lần khi component được render
+  }, []); 
 
   document.title = "Trang chủ";
   return (
