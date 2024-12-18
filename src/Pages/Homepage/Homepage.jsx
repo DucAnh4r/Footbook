@@ -79,14 +79,14 @@ const Homepage = () => {
           ) : (
             <p>Không có bài viết nào để hiển thị.</p>
           )}
-          {/* <Post
+          <Post
             key={"123"}
             postId={"123"}
             content={"123"}
             createdAt={"123"}
             userId={"123"}
             images={""}
-          /> */}
+          />
         </div>
       </Content>
 

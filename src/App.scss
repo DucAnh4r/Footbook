@@ -71,8 +71,22 @@
 
 .ant-avatar {
   flex: none !important;
+  margin-left: '0px' !important;
 }
 
 .ant-layout-sider {
   font-weight: bold !important;
+}
+
+.ant-checkbox-inner {
+  margin-left: 0px !important;
+}
+
+.ant-typography {
+  min-width: 50px !important;
+  text-align: right;
+}
+
+.ant-card-body {
+  padding: 0px !important;
 }

@@ -35,12 +35,12 @@ const SendToModal = ({ isModalOpen, onCancel }) => {
             onCancel={onCancel}
             footer={null}
             width="500px"
-            title="Send to"
+            title="Gửi tới"
             className={styles.sendToModal}
         >
             <div className={styles.container}>
                 <Input
-                    placeholder="Search for people and groups"
+                    placeholder="Tìm kiếm người và nhóm"
                     value={searchText}
                     onChange={(e) => setSearchText(e.target.value)}
                     className={styles.searchInput}
@@ -49,9 +49,9 @@ const SendToModal = ({ isModalOpen, onCancel }) => {
                     {users
                         .filter((user) => user.name.toLowerCase().includes(searchText.toLowerCase()))
                         .map((user) => (
-                            <div style={{ marginLeft: '0px' }} key={user.id} className={styles.userItem}>
-                                <Avatar style={{ marginLeft: '0px' }} src={user.avatar} />
-                                <span style={{ marginLeft: '0px' }}>{user.name}</span>
+                            <div key={user.id} className={styles.userItem}>
+                                <Avatar src={user.avatar} />
+                                <span >{user.name}</span>
                                 <Checkbox
                                     checked={selectedUsers.includes(user.id)}
                                     onChange={() => handleCheckboxChange(user.id)}
@@ -60,7 +60,7 @@ const SendToModal = ({ isModalOpen, onCancel }) => {
                         ))}
                 </div>
                 <Input.TextArea
-                    placeholder="Add an optional message here..."
+                    placeholder="Thêm tin nhắn tại đây (không bắt buộc)"
                     className={styles.messageInput}
                 />
                 <Button
@@ -69,7 +69,7 @@ const SendToModal = ({ isModalOpen, onCancel }) => {
                     onClick={handleSend}
                     disabled={selectedUsers.length === 0}
                 >
-                    Send
+                    Gửi
                 </Button>
             </div>
         </Modal>

@@ -1,18 +1,20 @@
 import React from 'react';
 import { Modal, Typography, Switch, Avatar, Divider, List } from 'antd';
 import { FaCircle, FaBell, FaCreditCard, FaClock, FaBan } from 'react-icons/fa';
+import { unset } from 'lodash';
 
 const { Title, Text } = Typography;
 
 const SettingsMessageModal = ({ visible, onClose }) => {
   return (
+
     <Modal
       title="Tùy chọn"
       open={visible}
       onCancel={onClose}
       footer={null}
-      centered
-      width={400}
+      center
+      width={600}
     >
       {/* Tài khoản */}
       <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
@@ -30,11 +32,11 @@ const SettingsMessageModal = ({ visible, onClose }) => {
         <Text>Trạng thái hoạt động: <strong>ĐANG BẬT</strong></Text>
       </div>
 
-      <Divider />
+      <Divider style={{ margin: '0px' }} />
 
       {/* Thông báo */}
-      <Title level={5} style={{ marginBottom: 16 }}>Thông báo</Title>
-      
+      <Title style={{ margin: '5px 0px', fontSize: '16px' }}>Thông báo</Title>
+
       <List>
         <List.Item>
           <List.Item.Meta
@@ -44,7 +46,7 @@ const SettingsMessageModal = ({ visible, onClose }) => {
           />
           <Switch defaultChecked />
         </List.Item>
-        
+
         <List.Item>
           <List.Item.Meta
             avatar={<FaClock style={{ fontSize: '16px' }} />}
@@ -55,7 +57,7 @@ const SettingsMessageModal = ({ visible, onClose }) => {
         </List.Item>
       </List>
 
-      <Divider />
+      <Divider style={{ margin: '0px' }} />
 
       {/* Các tùy chọn khác */}
       <List>
@@ -65,14 +67,14 @@ const SettingsMessageModal = ({ visible, onClose }) => {
             title="Quản lý khoản thanh toán"
           />
         </List.Item>
-        
+
         <List.Item>
           <List.Item.Meta
             avatar={<FaClock style={{ fontSize: '16px' }} />}
             title="Quản lý hoạt động gửi tin nhắn"
           />
         </List.Item>
-        
+
         <List.Item>
           <List.Item.Meta
             avatar={<FaBan style={{ fontSize: '16px' }} />}
@@ -81,6 +83,7 @@ const SettingsMessageModal = ({ visible, onClose }) => {
         </List.Item>
       </List>
     </Modal>
+
   );
 };
 

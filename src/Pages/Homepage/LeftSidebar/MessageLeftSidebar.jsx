@@ -9,7 +9,7 @@ const { Text, Title } = Typography;
 const { TabPane } = Tabs;
 
 const messages = [
-  { id: 1, name: 'Nguyễn Đức Anh', message: 'truyền được data vào rồi hiểu...', time: '14 phút', avatar: 'https://via.placeholder.com/40', online: true , isGroup: false },
+  { id: 1, name: 'Nguyễn Đức Anh', message: 'truyền được data vào rồi hiểu...', time: '14 phút', avatar: 'https://via.placeholder.com/40', online: true, isGroup: false },
   { id: 2, name: 'Chuẩn bị du hí hè thu', message: 'Bạn: Chỉ thấy đi chơi là lạ', time: '1 giờ', avatar: 'https://via.placeholder.com/40', isGroup: true },
   { id: 3, name: 'IT4', message: 'Loc no fuho đã gửi một nhắn...', time: '1 ngày', avatar: 'https://via.placeholder.com/40', isGroup: true },
   { id: 4, name: 'Nguyễn Hải', message: 'Bạn: https://www.facebook.com...', time: '3 ngày', avatar: 'https://via.placeholder.com/40', online: true, isGroup: false },
@@ -50,7 +50,7 @@ const MessageLeftSidebar = ({ onSelectChat }) => {
 
   // Dropdown menu options
   const menu = (
-    <Menu>
+    <Menu style={{ padding: '20px 10px' }}>
       <Menu.Item key="1" onClick={showModal} icon={<FaCog />}>Tùy chọn</Menu.Item>
       <Menu.Item key="2" icon={<FaEnvelope />}>Tin nhắn đang chờ</Menu.Item>
       <Menu.Item key="3" icon={<FaArchive />}>Đoạn chat đã lưu trữ</Menu.Item>
@@ -63,37 +63,37 @@ const MessageLeftSidebar = ({ onSelectChat }) => {
 
   return (
     !isRestrictedView ? (
-    <div style={styles.sidebar}>
-      <div style={styles.header}>
-        <Title level={5} style={styles.title}>Đoạn chat</Title>
-        <div style={styles.headerIcons}>
-          <Dropdown overlay={menu} trigger={['click']}>
-            <Tooltip title="Tùy chọn">
-              <EllipsisOutlined style={styles.icon} />
+      <div style={styles.sidebar}>
+        <div style={styles.header}>
+          <Title level={5} style={styles.title}>Đoạn chat</Title>
+          <div style={styles.headerIcons}>
+            <Dropdown overlay={menu} trigger={['click']}>
+              <Tooltip title="Tùy chọn">
+                <EllipsisOutlined style={styles.icon} />
+              </Tooltip>
+            </Dropdown>
+            <Tooltip title="Chỉnh sửa">
+              <EditOutlined style={styles.icon} />
             </Tooltip>
-          </Dropdown>
-          <Tooltip title="Chỉnh sửa">
-            <EditOutlined style={styles.icon} />
-          </Tooltip>
+          </div>
         </div>
+
+        <Input placeholder="Tìm kiếm trên Messenger" style={styles.searchInput} />
+
+        <Tabs defaultActiveKey="1" style={styles.tabs}>
+          <TabPane tab="Hộp thư" key="1">
+            <MessageList onSelectChat={handleSelectChat} selectedChatId={selectedChatId} />
+          </TabPane>
+          <TabPane tab="Cộng đồng" key="2">
+            {/* Content for "Cộng đồng" */}
+          </TabPane>
+        </Tabs>
+
+        <SettingsMessageModal visible={isModalVisible} onClose={closeModal} />
       </div>
-
-      <Input placeholder="Tìm kiếm trên Messenger" style={styles.searchInput} />
-
-      <Tabs defaultActiveKey="1" style={styles.tabs}>
-        <TabPane tab="Hộp thư" key="1">
-          <MessageList onSelectChat={handleSelectChat} selectedChatId={selectedChatId} />
-        </TabPane>
-        <TabPane tab="Cộng đồng" key="2">
-          {/* Content for "Cộng đồng" */}
-        </TabPane>
-      </Tabs>
-      
-      <SettingsMessageModal visible={isModalVisible} onClose={closeModal} />
-    </div>
-  ) : (
-    <RestrictedAccountsView onBack={goBackToMainView} />
-  )
+    ) : (
+      <RestrictedAccountsView onBack={goBackToMainView} />
+    )
   );
 };
 
@@ -108,7 +108,7 @@ const MessageList = ({ onSelectChat, selectedChatId }) => (
           ...(msg.highlight && styles.highlight),
           ...(msg.id === selectedChatId && styles.selected),
         }}
-        onClick={() => onSelectChat(msg)} 
+        onClick={() => onSelectChat(msg)}
       >
         <List.Item.Meta
           avatar={

@@ -7,8 +7,10 @@
     padding: 16px;
     padding-bottom: 8px;
     box-sizing: border-box;
-    max-height: 722px; /* Đặt chiều cao tối đa */
-    overflow-y: auto; /* Bật cuộn khi vượt quá chiều cao */
+    max-height: 722px;
+    /* Đặt chiều cao tối đa */
+    overflow-y: auto;
+    /* Bật cuộn khi vượt quá chiều cao */
   }
 
   .header {
@@ -94,6 +96,7 @@
     }
   }
 }
+
 .commentInput {
   flex-shrink: 0;
   display: flex;
@@ -136,10 +139,12 @@
 }
 
 .ant-modal-content {
-  max-height: 870px; /* Đặt chiều cao tối đa cho modal */
+  max-height: 870px;
+  /* Đặt chiều cao tối đa cho modal */
   display: flex;
   flex-direction: column;
-  margin-top: -80px;
+  top: 50%;
+  margin-top: -50px;
 }
 
 .ant-modal-body {
@@ -148,6 +153,6 @@
   overflow: hidden;
 }
 
-.ant-modal-title{
+.ant-modal-title {
   text-align: center;
 }

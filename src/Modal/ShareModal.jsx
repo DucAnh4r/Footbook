@@ -4,6 +4,7 @@ import { FaArrowLeft, FaEarthAmericas } from "react-icons/fa6";
 import styles from "./ShareModal.module.scss";
 import AudienceModal from "./AudienceModal";
 import { IoSearchOutline } from "react-icons/io5";
+import { FaFacebookMessenger, FaLink, FaRegFileAlt, FaUserFriends, FaUsers, FaWhatsapp } from "react-icons/fa";
 
 const ShareModal = ({ isModalOpen, onCancel }) => {
     const [view, setView] = useState("share");
@@ -50,17 +51,17 @@ const ShareModal = ({ isModalOpen, onCancel }) => {
                     </div>
                 </div>
                 <Input.TextArea
-                    placeholder="Say something about this (optional)"
+                    placeholder="Hãy nói gì đó về nội dung này (không bắt buộc)"
                     autoSize={{ minRows: 1, maxRows: 100 }}
                     className={styles.textArea}
                 />
                 <Button type="primary" block className={styles.shareButton}>
-                    Share now
+                    Chia sẻ ngay
                 </Button>
             </div>
             <div className={styles.shareTo}>
                 <div className={styles.messengerSection}>
-                    <h4>Send in Messenger</h4>
+                    <h4>Gửi bằng Messenger</h4>
                     <div className={styles.messengerUsers}>
                         <Avatar src="https://randomuser.me/api/portraits/men/32.jpg" />
                         <Avatar src="https://randomuser.me/api/portraits/women/44.jpg" />
@@ -75,17 +76,19 @@ const ShareModal = ({ isModalOpen, onCancel }) => {
                     </div>
                 </div>
                 <div className={styles.shareOptions}>
-                    <h4>Share to</h4>
+                    <h4>Chia sẻ lên</h4>
                     <div className={styles.options}>
-                        {["Messenger", "WhatsApp", "Your Story", "Copy link", "Group", "Friend's profile"].map(
+                        {["Messenger", "WhatsApp", "Tin", "Liên kết", "Nhóm", "Bạn bè"].map(
                             (option, idx) => (
                                 <Tooltip key={idx} title={option}>
                                     <div className={styles.option}>
                                         <div className={styles.iconWrapper}>
-                                            <img
-                                                src={`${option.toLowerCase().replace(" ", "-")}-icon.svg`}
-                                                alt={option}
-                                            />
+                                            {option === "Messenger" && <FaFacebookMessenger />}
+                                            {option === "WhatsApp" && <FaWhatsapp />}
+                                            {option === "Tin" && <FaRegFileAlt />}
+                                            {option === "Liên kết" && <FaLink />}
+                                            {option === "Nhóm" && <FaUsers />}
+                                            {option === "Bạn bè" && <FaUserFriends />}
                                         </div>
                                         <span>{option}</span>
                                     </div>
@@ -103,9 +106,9 @@ const ShareModal = ({ isModalOpen, onCancel }) => {
             <Button className={styles.backButton} type="text" onClick={() => setView("share")}>
                 <FaArrowLeft />
             </Button>
-            <h2>Send to</h2>
+            <h2>Gửi tới</h2>
             <Input
-                placeholder="Search for people and groups"
+                placeholder="Tìm kiếm người và nhóm"
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
                 className={styles.searchInput}
@@ -126,7 +129,7 @@ const ShareModal = ({ isModalOpen, onCancel }) => {
                     ))}
             </div>
             <Input.TextArea
-                placeholder="Add an optional message here..."
+                placeholder="Thêm tin nhắn tại đây (không bắt buộc)"
                 className={styles.messageInput}
                 autoSize={{ minRows: 1, maxRows: 100 }}
             />
@@ -139,7 +142,7 @@ const ShareModal = ({ isModalOpen, onCancel }) => {
                 }}
                 disabled={selectedUsers.length === 0}
             >
-                Send
+                Gửi
             </Button>
         </div>
     );

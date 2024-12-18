@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import styles from './AboutSection.module.scss';
 import { IoSchool, IoHome, IoEarth } from 'react-icons/io5';
-import EditFeaturedModal from '../../../../../Modal/EditFeaturedModal';
 
 const AboutSection = () => {
   // Mảng chứa các đối tượng với URL hình ảnh và tên bộ sưu tập

@@ -23,6 +23,7 @@ const NicknameModal = ({ visible, onClose, participants }) => {
     <Modal title="Biệt danh" open={visible} onCancel={onClose} footer={null} centered>
       <List
         dataSource={nicknames}
+        locale={{ emptyText: "Không có dữ liệu" }}
         renderItem={(participant) => (
           <List.Item
             actions={[
