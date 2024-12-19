@@ -107,10 +107,14 @@ const MessageList = ({ onSelectChat, selectedChatId }) => (
           ...styles.messageItem,
           ...(msg.highlight && styles.highlight),
           ...(msg.id === selectedChatId && styles.selected),
+
         }}
         onClick={() => onSelectChat(msg)}
       >
         <List.Item.Meta
+          style={{
+            padding: '10px 0px'
+          }}
           avatar={
             <Badge dot={msg.online} color="green" offset={[-2, 30]}>
               <Avatar src={msg.avatar} size="large" />
@@ -139,7 +143,7 @@ const styles = {
     padding: '16px',
     maxHeight: '93vh',
     overflowY: 'auto',
-    height: 'inherit',
+    height: '500px',
   },
   header: {
     display: 'flex',

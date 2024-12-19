@@ -49,6 +49,8 @@ const MessageContent = ({ onMessageClick, onClose }) => {
   const MessageItem = ({ userId, fullName, lastMessageTime, profilePictureUrl, unread }) => (
     <List.Item
       style={styles.messageItem}
+      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f0f0f0')}
+      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#fff')}
       onClick={() => {
         if (typeof onMessageClick === 'function') {
           onMessageClick({ userId, fullName, profilePictureUrl });
@@ -83,6 +85,7 @@ const MessageContent = ({ onMessageClick, onClose }) => {
               placement="bottomRight"
             >
               <EllipsisOutlined className={styles.icon} style={{ fontSize: '22px', color: 'gray' }} />
+              <EllipsisOutlined className={styles.icon} style={{ fontSize: '22px', color: 'gray' }} />
             </Popover>
           </Tooltip>
           <Tooltip title="Mở rộng">
@@ -109,7 +112,7 @@ const MessageContent = ({ onMessageClick, onClose }) => {
           />
         )}
       </div>
-      <Divider />
+
       <Button type="text" onClick={handleExpandClick} style={styles.viewAllButton}>
         Xem tất cả trong Messenger
       </Button>
@@ -119,15 +122,16 @@ const MessageContent = ({ onMessageClick, onClose }) => {
 
 
 const styles = {
-  container: { minWidth: '400px', padding: '0 8px' },
+  container: { minWidth: '400px', padding: '0 8px', },
   header: { display: 'flex', justifyContent: 'space-between', padding: '10px' },
   content: { minHeight: '400px', padding: '8px' },
   title: { margin: 0, fontWeight: 'bold' },
   icon: { fontSize: '18px', color: 'gray', cursor: 'pointer' },
   searchInput: { borderRadius: '20px', marginBottom: '8px' },
-  messageItem: { padding: '8px', borderBottom: '1px solid #f0f0f0', cursor: 'pointer' },
+  messageItem: { padding: '8px', borderBottom: '1px solid #f0f0f0', cursor: 'pointer', borderRadius: '10px' },
   messageDescription: { fontSize: '12px' },
   viewAllButton: { width: '100%', textAlign: 'center', color: '#1877f2' },
+
 };
 
 export default MessageContent;

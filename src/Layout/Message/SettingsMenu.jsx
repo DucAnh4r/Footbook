@@ -56,8 +56,13 @@ const SettingsMenu = () => {
 
 const styles = {
   container: {
-    width: '300px',
+    width: '400px',
     padding: '16px',
+    position: 'absolute',
+    top: '-6px',
+    right: '6px',
+    backgroundColor: 'white',
+    zIndex: 1000,
   },
   title: {
     marginBottom: 0,

@@ -1,6 +1,7 @@
 import React, { lazy } from 'react';
 import ShowFriendsPage from '../Pages/FriendsPage/Pages/ShowFriendsPage';
 import HighLightStoryViewer from '../Components/HighLightStoryViewer';
+import ErrorPage from '../Pages/ExtendPage/ErrorPage';
 const PhotoPage = lazy(() => import('../Pages/Photo/PhotoPage'));
 const Homepage = lazy(() => import('../Pages/Homepage/Homepage'));
 const Messagepage = lazy(() => import('../Pages/MessagePage/Messagepage'));
@@ -27,6 +28,7 @@ const homeRoutes = [
     { path: "/search/users", component: <SearchPage /> },
     { path: "/search/:type", component: <SearchPage /> },
     { path: "/login", component: <LoginPage /> },
+    { path: "/error", component: <ErrorPage /> },
     { path: "/highlight", component: <HighLightStoryViewer /> },
 ];
 

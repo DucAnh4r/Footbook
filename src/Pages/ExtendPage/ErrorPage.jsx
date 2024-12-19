@@ -1,24 +1,22 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import styles from "./ErrorPage.module.scss";
+import { useNavigate } from "react-router-dom";
 
 const ErrorPage = () => {
-    document.title="Không tìm thấy trang !"
+    const navigate = useNavigate();
+
+    const goHome = () => {
+        navigate("/");
+    };
+
     return (
-        <React.Fragment>
-            <div className='error-page h600px mt-6'>
-                <h1>Oops! Không tìm thấy trang</h1>
-                <section className="error-container">
-                    <span className="four"><span className="screen-reader-text">4</span></span>
-                    <span className="zero"><span className="screen-reader-text">0</span></span>
-                    <span className="four"><span className="screen-reader-text">4</span></span>
-                </section>
-                <div className="link-container">
-                    <Link to="/" className="more-link">
-                        Về trang chủ
-                    </Link>
-                </div>
+        <div className={styles.errorPage}>
+            <div className={styles.content}>
+                <h1>404</h1>
+                <p>Oops! The page you're looking for doesn't exist.</p>
+                <button onClick={goHome}>Go Back Home</button>
             </div>
-        </React.Fragment>
+        </div>
     );
 };
 

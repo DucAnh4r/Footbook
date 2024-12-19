@@ -77,8 +77,11 @@ const ProfileContent = ({ userName, UserAvatar }) => {
                 borderRadius: '10px',
                 cursor: 'pointer',
                 transition: 'background-color 0.3s ease', // Hover effect
+
               }}
               onClick={handleProfileClick}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f0f0f0')}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#fff')}
             >
               <img style={{width: "50px", height: "50px", borderRadius: "50px"}} src={UserAvatar} alt="" />
               <Text strong style={{ fontSize: '16px' }}>{userName}</Text>
@@ -99,7 +102,13 @@ const ProfileContent = ({ userName, UserAvatar }) => {
               { text: 'Đăng xuất', icon: <FaSignOutAlt /> }
             ]}
             renderItem={({ text, icon, view }) => (
-              <List.Item onClick={() => view && setView(view)} style={{ cursor: 'pointer' }}>
+              <List.Item onClick={() => view && setView(view)}
+                style={{
+                  padding: '0px', cursor: 'pointer',
+                  borderRadius: '10px'
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f0f0f0')}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#fff')}>
                 <Button
                   type="text"
                   style={{
@@ -154,7 +163,13 @@ const ProfileContent = ({ userName, UserAvatar }) => {
               { text: 'Xem tất cả cài đặt', icon: <FaCog /> }
             ]}
             renderItem={({ text, icon, view }) => (
-              <List.Item onClick={() => view && setView(view)} style={{ cursor: 'pointer' }}>
+              <List.Item onClick={() => view && setView(view)}
+                style={{
+                  padding: '0px', cursor: 'pointer',
+                  borderRadius: '10px'
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f0f0f0')}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#fff')}>
                 <Button
                   type="text"
                   style={{
@@ -199,10 +214,15 @@ const ProfileContent = ({ userName, UserAvatar }) => {
               backgroundColor: 'transparent',
               border: 'none',
               cursor: 'pointer',
-              padding: '10px'
+              padding: '10px',
+              borderRadius: '10px'
             }}
             onClick={() => setView('languageList')}
-          >
+
+
+            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f0f0f0')}
+            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#fff')}>
+
             <span style={{ display: 'flex', alignItems: 'center' }}>
               <FaGlobe style={{ marginRight: '8px', fontSize: '20px', color: '#333' }} />
               <div style={{ display: 'flex' }}>
@@ -229,8 +249,12 @@ const ProfileContent = ({ userName, UserAvatar }) => {
             renderItem={(language) => (
               <List.Item
                 onClick={() => setSelectedLanguage(language.name)}
-                style={{ cursor: 'pointer', padding: '10px', borderBottom: '1px solid #ddd' }}
-              >
+                style={{
+                  cursor: 'pointer', padding: '10px', borderBottom: '1px solid #ddd', borderRadius: '10px'
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f0f0f0')}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#fff')}>
+
                 <Space
                   style={{ width: '100%', justifyContent: 'space-between', padding: '0px 10px' }}
                 >
@@ -271,7 +295,12 @@ const ProfileContent = ({ userName, UserAvatar }) => {
               { text: 'Báo cáo sự cố', icon: <FaExclamationCircle /> }
             ]}
             renderItem={({ text, icon }) => (
-              <List.Item style={{ cursor: 'pointer' }}>
+              <List.Item
+                style={{
+                  padding: '0px', cursor: 'pointer', borderRadius: '10px'
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f0f0f0')}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#fff')}>
                 <Button
                   type="text"
                   icon={icon}

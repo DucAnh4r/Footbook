@@ -59,10 +59,14 @@
 
 /* Global CSS */
 .disable-select {
-  -ms-user-select: none; /* IE 10+ */
-  -webkit-user-select: none; /* Safari */
-  -moz-user-select: none; /* Firefox */
-  user-select: none; /* Hỗ trợ cho các trình duyệt hiện đại */
+  -ms-user-select: none;
+  /* IE 10+ */
+  -webkit-user-select: none;
+  /* Safari */
+  -moz-user-select: none;
+  /* Firefox */
+  user-select: none;
+  /* Hỗ trợ cho các trình duyệt hiện đại */
 }
 
 
@@ -81,13 +85,12 @@
 
 .ant-typography {
   min-width: 50px !important;
-  text-align: right;
 }
 
 .ant-card-body {
   padding: 0px !important;
 }
 
-.ant-list-item {
-  padding: 0px !important;
-}
+// .ant-list-item {
+//   padding: 0px !important;
+// }
