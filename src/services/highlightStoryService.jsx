@@ -53,11 +53,11 @@ export const deleteHighlightStoryImageService = (image_id) => {
 };
 
 export const getAllHighlightStoryService = (user_id) => {
-    return axiosCreate.delete(`http://localhost:8080/api/v1/highlightStory/allDetails/${user_id}`, {
+    return axiosCreate.get(`http://localhost:8080/api/v1/highlightStory/allDetails/${user_id}`, {
     });
 };
 
 export const getDetailHighlightStoryImageService = (hls_id) => {
-    return axiosCreate.delete(`http://localhost:8080/api/v1/highlightStory/getDetail/${hls_id}`, {
+    return axiosCreate.get(`http://localhost:8080/api/v1/highlightStory/getDetail/${hls_id}`, {
     });
 };
