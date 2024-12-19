@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Row, Col, Tabs, Dropdown, Menu } from 'antd';
 import styles from './FriendProfilePage.module.scss';
 import { IoIosArrowDown, IoMdAdd } from "react-icons/io";
@@ -9,6 +9,8 @@ import { useAuthCheck } from '../../../utils/checkAuth.jsx';
 import { countFriendService, createFriendshipService, getFriendshipStatusService, deleteFriendshipService, acceptFriendshipService } from '../../../services/friendService.jsx';
 import { useParams } from 'react-router-dom';
 import { getUserIdFromLocalStorage } from '../../../utils/authUtils.jsx';
+import { userFindByIdService } from '../../../services/userService.jsx';
+import Posts from './Tabs/Posts/Posts.jsx';
 
 const FriendProfilePage = ({ userId2: propUserId2, type }) => {
   useAuthCheck();
@@ -17,13 +19,30 @@ const FriendProfilePage = ({ userId2: propUserId2, type }) => {
   const { userId2: paramUserId2 } = useParams();
   const userId2 = type === 'prop' ? propUserId2 : paramUserId2;
 
+  const [headerWidth, setHeaderWidth] = useState('70%');
+  const containerRef = useRef(null);
+
+  const [friendInfo, setFriendInfo] = useState([]);
   const [activeTab, setActiveTab] = useState("1");
   const [isFriendSuggestionVisible, setFriendSuggestionVisible] = useState(false);
   const [friendshipStatus, setFriendshipStatus] = useState(null); // Lưu trạng thái kết bạn
   const [sender, setSender] = useState(null);
-  const [friends, setFriends] = useState(null);
+  const [friendsCount, setFriendsCount] = useState(null);  
+  const [isLoading, setIsLoading] = useState(true); // Trạng thái tải dữ liệu
+  
 
   const userId1 = getUserIdFromLocalStorage(); // Lấy userId1 từ localStorage
+
+  const fetchFriendProfile = async () => {
+    try {
+      const response = await userFindByIdService( userId2 );
+      setFriendInfo(response?.data?.data || []); 
+      console.log(response);
+
+    } catch (error) {
+      console.error("Lỗi khi lấy dữ liệu bạn bè:", error);
+    }
+  }
 
   const fetchFriendshipStatus = async () => {
     try {
@@ -36,18 +55,23 @@ const FriendProfilePage = ({ userId2: propUserId2, type }) => {
   };
 
   const countFriend = async () => {
-    try {
-      const response = await countFriendService({ userId1 });
-      setFriends(response?.data || 0);
-    } catch (error) {
-      console.error("Lỗi khi lấy số lượng bạn bè:", error);
-    }
-  };
+      try {
+        setIsLoading(true);
+        const response = await countFriendService(userId2);
+        setFriendsCount(response?.data?.data || 0);
+      } catch (error) {
+        console.error("Error count friend:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
   const handleAddFriend = async () => {
     try {
       await createFriendshipService({ userId1, userId2 });
+
       fetchFriendshipStatus(); // Cập nhật trạng thái
+      
     } catch (error) {
       console.error("Lỗi khi gửi lời mời kết bạn:", error);
     }
@@ -55,7 +79,8 @@ const FriendProfilePage = ({ userId2: propUserId2, type }) => {
 
   const handleAcceptFriend = async () => {
     try {
-      await acceptFriendshipService({ userId2, userId1 });
+      
+      await acceptFriendshipService({ userId2: userId2, userId1: userId1 });
       fetchFriendshipStatus(); // Cập nhật trạng thái
     } catch (error) {
       console.error("Lỗi khi gửi lời mời kết bạn:", error);
@@ -64,7 +89,7 @@ const FriendProfilePage = ({ userId2: propUserId2, type }) => {
 
   const handleDeleteFriend = async () => {
     try {
-      await deleteFriendshipService({ userId2, userId1 });
+      await deleteFriendshipService({ userId1: userId1, userId2: userId2 });
       setFriendshipStatus(null); // Cập nhật trạng thái thành không phải bạn bè
       countFriend(); // Cập nhật số lượng bạn bè
     } catch (error) {
@@ -87,7 +112,7 @@ const FriendProfilePage = ({ userId2: propUserId2, type }) => {
           <>
           <div style={{display:'flex', alignItems: 'center', justifyContent:'space-between', flexDirection: 'column', marginBottom: '10px'}}>
             <div style={{fontSize: '20px', fontWeight: '600'}}>
-              Duc sent you a friend request
+              {friendInfo.fullName} sent you a friend request
             </div>
           <div>
             <button
@@ -108,9 +133,20 @@ const FriendProfilePage = ({ userId2: propUserId2, type }) => {
         );
       } else {
         return (
-          <button className={styles["blue-button"]}>
-            Đã gửi lời mời kết bạn
-          </button>
+          <Dropdown
+            overlay={
+              <Menu>
+                <Menu.Item key="1" onClick={handleDeleteFriend}>
+                  Hủy lời mời
+                </Menu.Item>
+              </Menu>
+            }
+            trigger={['click']}
+          >
+            <button className={styles["blue-button"]}>
+              Đã gửi lời mời kết bạn
+            </button>
+          </Dropdown>
         );
       }
     } else if (friendshipStatus === "ACCEPTED") {
@@ -119,7 +155,7 @@ const FriendProfilePage = ({ userId2: propUserId2, type }) => {
           overlay={
             <Menu>
               <Menu.Item key="1" onClick={handleDeleteFriend}>
-                Xóa bạn bè
+                Hủy kết bạn
               </Menu.Item>
             </Menu>
           }
@@ -139,26 +175,70 @@ const FriendProfilePage = ({ userId2: propUserId2, type }) => {
     }
   };
 
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case "1":
+        return <Posts  friendId={userId2}/>;
+      // case "2":
+      //   return <Introduction />;
+      // case "3":
+      //   return <Friends />;
+      // case "4":
+      //   return <Photos />;
+      // case "5":
+      //   return <Videos />;
+      case "6":
+        return <div style={{ minHeight: '1000px' }}>Nội dung của tab Reels</div>;
+      case "7":
+        return <div style={{ minHeight: '1000px' }}>Nội dung của tab Xem thêm</div>;
+      default:
+        return null;
+    }
+  };
+
   useEffect(() => {
+    fetchFriendProfile();
     fetchFriendshipStatus();
     countFriend();
-  }, []);
+  }, [userId2]);
+
+  useEffect(() => {
+    // Hàm kiểm tra chiều rộng của container
+    const checkContainerWidth = () => {
+      if (containerRef.current) {
+        const containerWidth = containerRef.current.offsetWidth;
+        // Kiểm tra nếu chiều rộng container < 1000px thì set width của header khác
+        setHeaderWidth(containerWidth < 1300 ? '94%' : '70%');
+      }
+    };
+
+    // Lắng nghe sự thay đổi kích thước của container
+    const resizeObserver = new ResizeObserver(() => checkContainerWidth());
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
+
+    // Dọn dẹp ResizeObserver khi component unmount
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, []); // Chạy 1 lần khi component mount
 
   return (
     <>
-      <div className={styles['container']}>
-        <div className={styles['header']}>
+      <div className={styles['container']} ref={containerRef}>
+        <div className={styles['header']} style={{ width: headerWidth }}>
           <div className={styles['wallpaper']}>
-            <img className={styles['wallpaper-img']} src="https://imagev3.vietnamplus.vn/1200x630/Uploaded/2024/mzdic/2024_06_23/ronaldo-2306-8285.jpg.webp" alt="" />
+            <img className={styles['wallpaper-img']} src={friendInfo.coverPictureUrl} alt="" />
           </div>
           <Row className={styles['info']} gutter={16}>
             <Col span={6}>
               <div className={styles['avatar']}>
-                <img className={styles['avatar-img']} src="https://cdn.tuoitre.vn/thumb_w/480/471584752817336320/2024/7/6/2024-07-05t210215z828248098up1ek751mfqfvrtrmadp3soccer-euro-por-fra-report-1-1720260083640639014392.jpg" alt="" />
+                <img className={styles['avatar-img']} src={friendInfo.profilePictureUrl} alt="" />
               </div>
             </Col>
             <Col span={9} style={{ display: 'flex', flexDirection: 'column' }}>
-              <span style={{ fontSize: '30px', fontWeight: 700, marginTop: '24px' }}>Nguyễn Đức Anh</span>
+              <span style={{ fontSize: '30px', fontWeight: 700, marginTop: '24px' }}>{friendInfo.fullName}</span>
               <span
                 style={{
                   fontSize: '16px',
@@ -167,7 +247,7 @@ const FriendProfilePage = ({ userId2: propUserId2, type }) => {
                   textDecoration: 'none',
                 }}
               >
-                {friends} người bạn
+                {friendsCount} người bạn
               </span>
             </Col>
             <Col style={{ paddingRight: '0px' }} span={9}>
@@ -215,8 +295,9 @@ const FriendProfilePage = ({ userId2: propUserId2, type }) => {
         </div>
       </div>
       <div className={styles['container-2']}>
-        <div className={styles['content']}>
+        <div className={styles['content']} style={{ width: headerWidth }}>
           {/* Nội dung tab */}
+          {renderTabContent()}
         </div>
       </div>
     </>

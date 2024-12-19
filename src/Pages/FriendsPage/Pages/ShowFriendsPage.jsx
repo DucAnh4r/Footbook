@@ -21,6 +21,7 @@ const ShowFriendsPage = () => {
   // Hàm gọi khi click vào một bạn trong FriendRequestItem
   const handleSelectUser = (senderId) => {
     setSelectedUserId(senderId);
+    console.log(senderId);
   }
 
     // Dữ liệu mẫu người dùng

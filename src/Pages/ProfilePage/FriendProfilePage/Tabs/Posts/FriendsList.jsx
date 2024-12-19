@@ -1,48 +1,95 @@
-import React from 'react';
-import { Card, Col, Row, Typography } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Card, Col, Row, Typography, Spin } from 'antd';
 import styles from './FriendsList.module.scss';
+import { userListFriendService } from '../../../../../services/userService';
+import { useNavigate } from 'react-router-dom';
 
 const { Title, Link, Text } = Typography;
 
-const FriendsList = () => {
-  // Dữ liệu mẫu cho danh sách bạn bè
-  const friends = [
-    { name: 'Giang Đỗ', avatar: 'https://example.com/giang-do.jpg' },
-    { name: 'Âu Tuấn Thông', avatar: 'https://example.com/au-tuan-thong.jpg' },
-    { name: 'Duc Manh', avatar: '' },
-    { name: 'Thảo Quyên', avatar: 'https://example.com/thao-quyen.jpg' },
-    { name: 'Le Huy', avatar: '' },
-    { name: 'Bùi Tuấn Kiệt', avatar: 'https://example.com/bui-tuan-kiet.jpg' },
-    { name: 'Lê Du', avatar: 'https://example.com/le-du.jpg' },
-    { name: 'Minh Hoàng', avatar: 'https://example.com/minh-hoang.jpg' },
-    { name: 'Minh Hoàng', avatar: 'https://example.com/minh-hoang2.jpg' },
-  ];
+const FriendsList = ({ user_Id }) => {
+  const [friends, setFriends] = useState([]); // State lưu danh sách bạn bè
+  const [loading, setLoading] = useState(true); // State loading
+  const navigate = useNavigate(); // Dùng để điều hướng
+
+  const fetchFriends = async () => {
+    try {
+      setLoading(true);
+      const response = await userListFriendService(user_Id); // Lấy dữ liệu từ API
+      const friendsData = response?.data?.data?.friends || []; // Lấy danh sách bạn bè
+      console.log("API trả về:", friendsData); // Log dữ liệu từ API
+      setFriends(friendsData); // Cập nhật state
+    } catch (error) {
+      console.error("Error fetching friends:", error);
+    } finally {
+      setLoading(false); // Tắt trạng thái loading
+    }
+  };
+  
+
+  // Xử lý điều hướng tới trang cá nhân của bạn bè
+  const handleImageClick = (id) => {
+    navigate(`/friendprofile/${id}`);
+  };
+
+  useEffect(() => {
+    fetchFriends();
+  }, [user_Id]); // Chỉ gọi API khi userId thay đổi
 
   return (
     <Card className={styles.container}>
+      {/* Header */}
       <div className={styles.header}>
         <Title level={4}>Bạn bè</Title>
         <Link className={styles.viewAll} href="#">
           Xem tất cả bạn bè
         </Link>
       </div>
-      <Text className={styles.friendCount}>391 người bạn</Text>
-      <Row gutter={[16, 16]}>
-        {friends.map((friend, index) => (
-          <Col span={8} key={index}>
-            <div className={styles.friend}>
-              <div className={styles.avatar}>
-                {friend.avatar ? (
-                  <img src={friend.avatar} alt={friend.name} />
-                ) : (
-                  <div className={styles.placeholderAvatar}></div>
-                )}
+
+      {/* Hiển thị số lượng bạn bè */}
+      <Text className={styles.friendCount}>
+        {friends.length === 0
+          ? 'Chưa có bạn bè'
+          : friends.length === 1
+          ? '1 bạn'
+          : `${friends.length} người bạn`}
+      </Text>
+
+      {/* Loading State */}
+      {loading ? (
+        <div style={{ textAlign: 'center', padding: '20px' }}>
+          <Spin size="large" />
+        </div>
+      ) : friends.length === 0 ? ( // Kiểm tra danh sách bạn bè rỗng
+        <div style={{ textAlign: 'center', marginTop: '20px' }}>
+          <Text>Hiện tại bạn chưa có bạn bè nào.</Text>
+        </div>
+      ) : (
+        <Row gutter={[16, 16]}>
+          {friends.map((friend) => (
+            <Col span={8} key={friend.id}>
+              <div className={styles.friend}>
+                <div className={styles.avatar}>
+                  {friend.avatarUrl ? (
+                    <img
+                      src={friend.avatarUrl}
+                      alt={friend.fullName}
+                      onClick={() => handleImageClick(friend.id)} // Truyền hàm đúng cách
+                      style={{ cursor: 'pointer' }}
+                    />
+                  ) : (
+                    <div
+                      onClick={() => handleImageClick(friend.id)} // Truyền hàm đúng cách
+                      style={{ cursor: 'pointer' }}
+                      className={styles.placeholderAvatar}
+                    />
+                  )}
+                </div>
+                <Text className={styles.name}>{friend.fullName}</Text>
               </div>
-              <Text className={styles.name}>{friend.name}</Text>
-            </div>
-          </Col>
-        ))}
-      </Row>
+            </Col>
+          ))}
+        </Row>
+      )}
     </Card>
   );
 };
