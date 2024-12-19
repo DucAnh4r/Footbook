@@ -42,11 +42,11 @@ const SuggestedFriends = ({ users, onSelectUser }) => {
       <Row style={{ marginTop: "16px" }}>
         {users.map((user) => (
           <FriendRequestItem
-            key={user.id}
-            userId={user.id}
+            key={user.senderId}
+            userId={user.senderId}
+            user={user} // Truyền thêm dữ liệu người dùng
             onSelectUser={handleSelectUser}
-            isSelected={user.id === selectedUserId} // Truyền prop để biết thẻ nào được chọn
-
+            isSelected={user.senderId === selectedUserId} // Truyền prop để biết thẻ nào được chọn
           />
         ))}
       </Row>

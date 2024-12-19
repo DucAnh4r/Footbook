@@ -10,10 +10,13 @@ import { countFriendService, createFriendshipService, getFriendshipStatusService
 import { useParams } from 'react-router-dom';
 import { getUserIdFromLocalStorage } from '../../../utils/authUtils.jsx';
 
-const FriendProfilePage = () => {
+const FriendProfilePage = ({ userId2: propUserId2, type }) => {
   useAuthCheck();
-  const { userId2 } = useParams();
-  console.log(userId2); // Kiểm tra console để đảm bảo userId2 có giá trị
+
+  // Lấy userId2 từ param nếu type là 'param', nếu không lấy từ prop
+  const { userId2: paramUserId2 } = useParams();
+  const userId2 = type === 'prop' ? propUserId2 : paramUserId2;
+
   const [activeTab, setActiveTab] = useState("1");
   const [isFriendSuggestionVisible, setFriendSuggestionVisible] = useState(false);
   const [friendshipStatus, setFriendshipStatus] = useState(null); // Lưu trạng thái kết bạn
