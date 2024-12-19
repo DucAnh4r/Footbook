@@ -80,7 +80,7 @@ const ProfileContent = ({ userName, UserAvatar }) => {
               }}
               onClick={handleProfileClick}
             >
-              <Avatar size="large">{UserAvatar}</Avatar>
+              <img style={{width: "50px", height: "50px", borderRadius: "50px"}} src={UserAvatar} alt="" />
               <Text strong style={{ fontSize: '16px' }}>{userName}</Text>
             </div>
             <div style={{ display: 'flex', justifyContent: 'center' }}>

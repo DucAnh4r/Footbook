@@ -28,7 +28,7 @@ import { getUserIdFromLocalStorage } from "../utils/authUtils";
 import { reactionConfig } from "../assets/Config";
 import { getPostByIdService } from "../services/postService";
 
-const Post = ({ content, createdAt, userId, images, postId, shareId }) => {
+const SharedPost = ({ content, createdAt, userId, images, postId, shareId }) => {
   const userId1 = getUserIdFromLocalStorage(); // Lấy userId1 từ localStorage
 
   const [sharedPost, setSharedPost] = useState(null); // Lưu bài chia sẻ
@@ -161,7 +161,6 @@ const Post = ({ content, createdAt, userId, images, postId, shareId }) => {
   useEffect(() => {
     getSharedPost();
     fetchUser();
-    fetchMainUser();
     countReaction();
     fetchUserReaction(); // Gọi thêm hàm kiểm tra cảm xúc
     fetchReactions();
@@ -172,11 +171,15 @@ const Post = ({ content, createdAt, userId, images, postId, shareId }) => {
     getSharedPost();
     fetchUser();
     countReaction();
-    fetchUserReaction(); // Gọi thêm hàm kiểm tra cảm xúc
+    fetchUserReaction(); 
     fetchReactions();
     countComment();
   }, [isCommentModalOpen]); //đóng mở modal thì xem lại số lượt like
-
+  useEffect(() => {
+    if (sharedPost?.user_id) {
+      fetchMainUser();
+    }
+  }, [sharedPost?.user_id]);
   const handleReactionAdded = async (reactionType) => {
     try {
       console.log("Selected Reaction:", selectedReaction);
@@ -277,24 +280,43 @@ const Post = ({ content, createdAt, userId, images, postId, shareId }) => {
 
         <div className={styles.content}>
           <p>{content}</p>
+
           <div className={styles.sharedContent}>
-            <img
-              className={styles.mainImage}
-              src="https://cdn.bongdaplus.vn/Assets/Media/2024/12/18/70/messi2.jpg"
-              alt=""
-            />
+            {sharedPost?.images?.length > 0 &&
+              sharedPost?.images
+                .slice(0, 2)
+                .map((image, index) => (
+                  <img
+                    key={index}
+                    src={image}
+                    alt={`post-image-${index}`}
+                    className={styles.mainImage}
+                  />
+            ))}
+              {/* Hiển thị nút "Xem tất cả" nếu có từ 3 ảnh trở lên */}
+              {sharedPost?.images.length >= 3 && (
+                <button
+                  onClick={() => setIsCommentModalOpen(true)}
+                  className={styles.viewMoreButton}
+                >
+                  Xem tất cả
+                </button>
+              )}
             <div style={{ padding: "10px" }} className={styles.header}>
               <Avatar
-                src={userInfo.profilePictureUrl}
+                src={mainUserInfo?.profilePictureUrl}
                 className={styles.avatar}
               />
               <div className={styles.userInfo}>
-                <span className={styles.userName}>{userInfo.fullName}</span>
+                <span className={styles.userName}>{mainUserInfo?.fullName}</span>
                 <span className={styles.time}>
-                  {new Date(createdAt).toLocaleString()} ·{" "}
+                  {new Date(sharedPost?.create_at).toLocaleString()} ·{" "}
                   <FaEarthAmericas style={{ marginLeft: "4px" }} />
                 </span>
               </div>
+            </div>
+            <div className={styles.content}>
+              <p>{sharedPost?.content}</p>
             </div>
           </div>
         </div>
@@ -433,6 +455,7 @@ const Post = ({ content, createdAt, userId, images, postId, shareId }) => {
         userInfo={userInfo}
         images={images}
         addComment={addComment}
+        shareId={shareId}
         createdAt={createdAt}
       />
 
@@ -445,4 +468,4 @@ const Post = ({ content, createdAt, userId, images, postId, shareId }) => {
   );
 };
 
-export default Post;
+export default SharedPost;

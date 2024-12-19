@@ -186,8 +186,8 @@ const Header = ({ onMessageClick }) => {
             >
               <Popover
                 content={<ProfileContent 
-                  userName={userInfo.fullName}
-                  UserAvatar={userInfo.profilePictureUrl}
+                  userName={userInfo?.fullName}
+                  UserAvatar={userInfo?.profilePictureUrl}
                 />}
                 trigger="click"
                 placement="bottomRight"
@@ -201,7 +201,7 @@ const Header = ({ onMessageClick }) => {
                 <div className={styles["avatar-wrapper"]}>
                   <img
                     className={styles["avatar"]}
-                    src={userInfo.profilePictureUrl}
+                    src={userInfo?.profilePictureUrl}
                     alt=""
                   />
                 </div>

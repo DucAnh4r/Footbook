@@ -4,6 +4,7 @@ import { SearchOutlined, MoreOutlined } from '@ant-design/icons';
 import styles from './RightSidebar.module.scss';
 import { getUserMessageListService } from '../../../services/privateMessageService';
 import { getUserIdFromLocalStorage } from '../../../utils/authUtils';
+import ChatWindow from "../../../Pages/Homepage/ChatWindow";
 
 const { Text } = Typography;
 

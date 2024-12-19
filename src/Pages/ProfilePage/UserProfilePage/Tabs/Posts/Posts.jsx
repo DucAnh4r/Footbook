@@ -9,6 +9,7 @@ import FriendsList from './FriendsList';
 import styles from './Posts.module.scss';
 import { getUserIdFromLocalStorage } from '../../../../../utils/authUtils';
 import { getPostByUserIdService } from '../../../../../services/postService';
+import SharedPost from '../../../../../Components/SharedPost';
 
 const Posts = () => {
   const [posts, setPosts] = useState([]);
@@ -51,14 +52,28 @@ const Posts = () => {
             <p>Đang tải bài viết...</p>
           ) : posts.length > 0 ? (
             posts.map((post) => (
-                <Post
-                    key={post.post_id}
-                    postId={post.post_id}
-                    content={post.content}
-                    createdAt={post.create_at}
-                    userId={post.user_id}
-                    images={post.images}
+              post.share ? (
+                <SharedPost
+                  key={post.post_id}
+                  postId={post.post_id}
+                  content={post.content}
+                  createdAt={post.create_at}
+                  userId={post.user_id}
+                  images={post.images}
+                  shareId={post.share}
+                  
                 />
+              ) : (
+                <Post
+                  key={post.post_id}
+                  postId={post.post_id}
+                  content={post.content}
+                  createdAt={post.create_at}
+                  userId={post.user_id}
+                  images={post.images}
+                  isModalOpen={false}
+                />
+              )
             ))
           ) : (
             <p>Không có bài viết nào để hiển thị.</p>

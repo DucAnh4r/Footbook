@@ -17,6 +17,7 @@ const CommentModal = ({
   images,
   userInfo,
   createdAt,
+  shareId
 }) => {
   const [commentText, setCommentText] = useState(""); // Biến duy nhất để lưu nội dung bình luận
   const [comments, setComments] = useState([]); // Lưu danh sách bình luận
@@ -92,6 +93,7 @@ const CommentModal = ({
           createdAt={createdAt}
           userId={userId}
           images={images}
+          shareId={shareId}
           isModalOpen={true}
         />
       ) : (

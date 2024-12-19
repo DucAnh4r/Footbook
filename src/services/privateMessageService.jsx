@@ -1,15 +1,15 @@
 import axiosCreate from "../utils/axiosRelease";
 
-export const sendPrivateMessageService = (Data) => {
+export const sendPrivateMessageService = (data) => {
     const formData = new FormData();
-    formData.append("senderId", Data.senderId);
-    formData.append("receiverId", Data.receiverId);
-    formData.append("messageContent", Data.messageContent);
-    formData.append("messageType", Data.messageType);
+    formData.append("senderId", data.senderId);
+    formData.append("receiverId", data.receiverId);
+    formData.append("messageContent", data.messageContent);
+    formData.append("messageType", data.messageType);
 
-    if (Array.isArray(Data.attachments)) {
-        Data.attachments.forEach((attachment) => {
-            formData.append("attachments", attachment); // Gửi file theo chuẩn FormData
+    if (data.attachments && Array.isArray(data.attachments)) {
+        data.attachments.forEach((file) => {
+            formData.append("attachments", file);
         });
     }
 
