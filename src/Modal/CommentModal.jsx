@@ -1,36 +1,66 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Avatar, Input, Button } from "antd";
+import { Modal, Avatar, Input, Row, Col, Skeleton } from "antd";
 import styles from "./CommentModal.module.scss"; // Import SCSS module
 import Post from "../Components/Post";
 import SharedPost from "../Components/SharedPost";
+import { IoIosSend } from "react-icons/io";
+import { addCommentService, getCommentService, countCommentService } from "../services/commentService";
+import Comment from "../Pages/Photo/Components/Comment";
 
 const CommentModal = ({
   type,
   userId,
   content,
-  comments,
   isModalOpen,
   onCancel,
   postId,
   images,
-  addComment,
   userInfo,
   createdAt,
 }) => {
-  const [commentText, setCommentText] = useState("");
+  const [commentText, setCommentText] = useState(""); // Biến duy nhất để lưu nội dung bình luận
+  const [comments, setComments] = useState([]); // Lưu danh sách bình luận
+  const [loading, setLoading] = useState(true); // Trạng thái tải dữ liệu
+  const [commentCount, setCommentCount] = useState(0); // Đếm số lượng bình luận
 
-  // Reset data every time the modal is closed
+  // Fetch comments and comment count
+  const fetchCommentsAndCount = async () => {
+    try {
+      setLoading(true);
+      const [commentResponse, countResponse] = await Promise.all([
+        getCommentService(postId),
+        countCommentService(postId),
+      ]);
+      setComments(commentResponse?.data?.data || []);
+      setCommentCount(countResponse?.data?.data || 0);
+    } catch (error) {
+      console.error("Error fetching comments or count:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    if (!isModalOpen) {
-      // Reset comment text and any other states when modal closes
-      setCommentText("");
+    if (isModalOpen) {
+      fetchCommentsAndCount();
     }
   }, [isModalOpen]);
 
-  const handleCommentSubmit = () => {
-    if (commentText.trim() !== "") {
-      addComment(commentText);
-      setCommentText(""); // Reset after submitting
+  // Xử lý gửi bình luận
+  const handleAddComment = async () => {
+    if (!commentText.trim()) return; // Không gửi bình luận rỗng
+
+    try {
+      const newComment = {
+        userId,
+        postId,
+        content: commentText.trim(),
+      };
+      await addCommentService(newComment);
+      setCommentText(""); // Reset input
+      fetchCommentsAndCount(); // Refresh comments and count
+    } catch (error) {
+      console.error("Error adding comment:", error);
     }
   };
 
@@ -38,27 +68,15 @@ const CommentModal = ({
     <Modal
       open={isModalOpen}
       onCancel={onCancel}
-      footer={
-        <div className={styles.commentInput}>
-          <Input
-            placeholder="Viết bình luận..."
-            value={commentText}
-            onChange={(e) => setCommentText(e.target.value)}
-            onPressEnter={handleCommentSubmit}
-          />
-          <Button type="primary" onClick={handleCommentSubmit}>
-            Gửi
-          </Button>
-        </div>
-      }
+      footer={null}
       width="700px"
-      title={`${userInfo.fullName}'s post`}
+      title={`${userInfo?.fullName || "Người dùng"}'s post`}
       className={styles.commentModal}
     >
+      {/* Render bài post */}
       {type === "post" ? (
-        // Set the `key` to postId to force re-mount
         <Post
-          key={isModalOpen ? postId : `closed-${postId}`} // Use key change to force re-mount
+          key={postId}
           postId={postId}
           content={content}
           createdAt={createdAt}
@@ -68,7 +86,7 @@ const CommentModal = ({
         />
       ) : type === "sharedpost" ? (
         <SharedPost
-          key={isModalOpen ? postId : `closed-${postId}`} // Use key change to force re-mount
+          key={postId}
           postId={postId}
           content={content}
           createdAt={createdAt}
@@ -79,23 +97,68 @@ const CommentModal = ({
       ) : (
         <p>Loại bài viết không hợp lệ</p>
       )}
+
+      {/* Section bình luận */}
       <div className={styles.commentsSection}>
-        <h3>Bình luận</h3>
-        {/* Comments List */}
-        <div className={styles.commentsList}>
-          {comments.map((comment, index) => (
-            <div key={index} className={styles.comment}>
-              <Avatar
-                src="https://shopgarena.net/wp-content/uploads/2023/07/Meo-khoc-thet-len.jpg"
-                className={styles.commentAvatar}
-              />
-              <div className={styles.commentContent}>
-                <span className={styles.commentUser}>{comment.user}</span>
-                <p>{comment.content}</p>
-              </div>
+        <h3>{`Bình luận (${commentCount})`}</h3>
+        {loading ? (
+          // Hiển thị Skeleton khi đang tải dữ liệu
+          Array.from({ length: 3 }).map((_, index) => (
+            <div key={index} className={styles.skeletonComment}>
+              <Skeleton.Avatar active size="small" style={{ marginRight: 10 }} />
+              <Skeleton.Input active style={{ width: "80%" }} />
             </div>
-          ))}
-        </div>
+          ))
+        ) : comments.length > 0 ? (
+          comments.map((comment) => (
+            <Comment
+              key={comment.commentId}
+              commentId={comment.commentId}
+              content={comment.content}
+              createdAt={comment.createdAt}
+              userId={comment.userId}
+              childComments={comment.childComments}
+              postId={postId}
+            />
+          ))
+        ) : (
+          <p>Không có bình luận nào để hiển thị.</p>
+        )}
+      </div>
+
+      {/* Section viết bình luận */}
+      <div className={styles.writeCommentSection}>
+        <Row>
+          <Col span={4}>
+            <Avatar
+              src={userInfo?.profilePictureUrl || "https://via.placeholder.com/40"}
+              className={styles.avatar}
+            />
+          </Col>
+          <Col span={20}>
+            <div className={styles.writeCommentContainer}>
+              <textarea
+                placeholder="Viết bình luận..."
+                value={commentText}
+                onChange={(e) => setCommentText(e.target.value)}
+                onKeyPress={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault(); // Ngăn xuống dòng
+                    handleAddComment(); // Gửi bình luận
+                  }
+                }}
+              ></textarea>
+              <IoIosSend
+                className={styles["sendCommentButton"]}
+                style={{
+                  color: commentText.trim() ? "blue" : "gray",
+                  cursor: commentText.trim() ? "pointer" : "not-allowed",
+                }}
+                onClick={handleAddComment}
+              />
+            </div>
+          </Col>
+        </Row>
       </div>
     </Modal>
   );

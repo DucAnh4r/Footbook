@@ -1,12 +1,19 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LogoImg from "../../assets/image/Header/logo.png";
 import styles from './LoginPage.module.scss';
 import { userLoginService, userRegisterService } from '../../services/userService';
+import { HeaderContext } from '../../Context/HeaderContext';
 
 const LoginPage = () => {
+    const { setShowHeader } = useContext(HeaderContext);
+    useEffect(() => {
+      setShowHeader(false); 
+      return () => setShowHeader(true);
+    }, [setShowHeader]);
+  
     const [isSignUp, setIsSignUp] = useState(false);
     const [animate, setAnimate] = useState(false);
     const [formData, setFormData] = useState({

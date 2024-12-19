@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Layout, Row, Col, Avatar, Button } from "antd";
+import { Layout, Row, Col, Avatar, Button, Skeleton } from "antd";
 import { FaEarthAmericas, FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import { MdZoomIn, MdZoomOut } from "react-icons/md";
 import { AiOutlineFullscreen, AiOutlineLike } from "react-icons/ai";
@@ -44,7 +44,7 @@ const PhotoPage = () => {
     try {
       setLoading(true);
       const response = await getPostByIdService(postId);
-      setPost(response?.data?.data?.postResponse || []); 
+      setPost(response?.data?.data?.postResponse || []);
 
     } catch (error) {
       console.error("Error fetching posts:", error);
@@ -57,7 +57,7 @@ const PhotoPage = () => {
     try {
       setLoading(true);
       const response = await getCommentService(postId);
-      setGetComment(response?.data?.data || []); 
+      setGetComment(response?.data?.data || []);
 
     } catch (error) {
       console.error("Error fetching comment:", error);
@@ -176,7 +176,7 @@ const PhotoPage = () => {
 
 
 
-  const [comment, setComment] = useState(""); // State for tracking comment input
+  const [comment, setComment] = useState("");
 
   const handleChange = (e) => {
     setComment(e.target.value);
@@ -295,7 +295,13 @@ const PhotoPage = () => {
 
             <div className={styles.commentSection}>
               {loading ? (
-                <p>Đang tải bình luận...</p>
+                // Hiển thị Skeleton khi đang tải dữ liệu
+                Array.from({ length: 3 }).map((_, index) => (
+                  <div key={index} className={styles.skeletonComment}>
+                    <Skeleton.Avatar active size="small" style={{ marginRight: 10 }} />
+                    <Skeleton.Input active style={{ width: "80%" }} />
+                  </div>
+                ))
               ) : getcomment.length > 0 ? (
                 getcomment.map((comment) => (
                   <Comment

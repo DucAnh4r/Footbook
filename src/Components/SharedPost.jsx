@@ -96,10 +96,7 @@ const Post = ({ content, createdAt, userId, images, postId, shareId }) => {
       .join("<br />"); // Thay thế '\n' bằng '<br />'
   };
 
-  const [comments, setComments] = useState([
-    { id: 1, user: "Quân A.P", content: "Vẫn đẹp trai ạ 😄" },
-    { id: 2, user: "JSOL", content: "Mèo cute quá!" },
-  ]);
+  const [comments, setComments] = useState([]);
 
   const fetchUser = async () => {
     try {
@@ -435,7 +432,6 @@ const Post = ({ content, createdAt, userId, images, postId, shareId }) => {
         postId={postId}
         userInfo={userInfo}
         images={images}
-        comments={comments}
         addComment={addComment}
         createdAt={createdAt}
       />
