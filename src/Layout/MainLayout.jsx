@@ -13,9 +13,10 @@ const MainLayout = ({ children }) => {
     const MAX_CHAT_WINDOWS = 3; // Giới hạn số lượng cửa sổ chat
 
     const handleMessageClick = (message) => {
-        const isHidden = hiddenMessages.some((m) => m.id === message.id);
+        const isHidden = hiddenMessages.some((m) => m.userId === message.userId);
+        
         if (isHidden) {
-            setHiddenMessages((prev) => prev.filter((m) => m.id !== message.id));
+            setHiddenMessages((prev) => prev.filter((m) => m.userId !== message.userId));
             setSelectedMessages((prev) => {
                 const newMessages = [...prev, message];
                 if (newMessages.length > MAX_CHAT_WINDOWS) {
@@ -27,7 +28,8 @@ const MainLayout = ({ children }) => {
                 return newMessages;
             });
         } else {
-            const isAlreadyOpen = selectedMessages.some((m) => m.id === message.id);
+            const isAlreadyOpen = selectedMessages.some((m) => m.userId === message.userId);
+        console.log("message",message);
             if (!isAlreadyOpen) {
                 setSelectedMessages((prev) => {
                     const newMessages = [...prev, message];
@@ -44,21 +46,21 @@ const MainLayout = ({ children }) => {
     };
 
     const handleCloseChat = (id) => {
-        setSelectedMessages((prev) => prev.filter((message) => message.id !== id));
+        setSelectedMessages((prev) => prev.filter((message) => message.userId !== id));
     };
 
     const handleHideChat = (id) => {
-        const messageToHide = selectedMessages.find((m) => m.id === id);
+        const messageToHide = selectedMessages.find((m) => m.userId === id);
         if (messageToHide) {
             setHiddenMessages((prev) => [...prev, messageToHide]);
-            setSelectedMessages((prev) => prev.filter((m) => m.id !== id));
+            setSelectedMessages((prev) => prev.filter((m) => m.userId !== id));
         }
     };
 
     const handleShowChat = (id) => {
-        const messageToShow = hiddenMessages.find((m) => m.id === id);
+        const messageToShow = hiddenMessages.find((m) => m.userId === id);
         if (messageToShow) {
-            setHiddenMessages((prev) => prev.filter((m) => m.id !== id));
+            setHiddenMessages((prev) => prev.filter((m) => m.userId !== id));
             setSelectedMessages((prev) => {
                 const newMessages = [...prev, messageToShow];
                 if (newMessages.length > MAX_CHAT_WINDOWS) {
@@ -106,7 +108,7 @@ const MainLayout = ({ children }) => {
             <FloatButton.Group shape="circle" style={{ bottom: '14px', right: '24px' }}>
                 {hiddenMessages.map((message) => (
                     <Tooltip
-                        key={message.id}
+                        key={message.userId}
                         title={
                             <div>
                                 <Typography.Text strong>{message.name || 'Không có tên'}</Typography.Text>
@@ -135,7 +137,7 @@ const MainLayout = ({ children }) => {
                             <Avatar
                                 src="https://i.pravatar.cc/300"
                                 size={48}
-                                onClick={() => handleShowChat(message.id)}
+                                onClick={() => handleShowChat(message.userId)}
                                 style={{ cursor: 'pointer' }}
                             />
                         </Badge>
@@ -150,10 +152,11 @@ const MainLayout = ({ children }) => {
                 const position = calculatePosition(index);
                 return (
                     <ChatWindow
-                        key={message.id}
+                        key={message.userId}
+                        receiverId={message.userId}
                         message={message}
-                        onClose={() => handleCloseChat(message.id)}
-                        onHide={() => handleHideChat(message.id)}
+                        onClose={() => handleCloseChat(message.userId)}
+                        onHide={() => handleHideChat(message.userId)}
                         position={position}
                     />
                 );

@@ -14,10 +14,12 @@ import GifModal from '../../Modal/GifModal';
 import StickerModal from '../../Modal/StickerModal';
 import FileUploadButton from '../../Components/FileUploadButton';
 import ChatSettingsPopup from '../../Components/ChatSettingsPopup';
+import { getMessageHistoryService } from '../../services/privateMessageService';
+import { getUserIdFromLocalStorage } from '../../utils/authUtils';
 
 const { TextArea } = Input;
 
-const ChatWindow = ({ message, onClose, onHide, position }) => {
+const ChatWindow = ({ message, onClose, onHide, position, receiverId }) => {
     const [socket, setSocket] = useState(null);
     const [chatMessages, setChatMessages] = useState([]); // Lưu trữ tin nhắn
     const [inputValue, setInputValue] = useState(""); // Giá trị input của TextArea
@@ -28,6 +30,13 @@ const ChatWindow = ({ message, onClose, onHide, position }) => {
     const [isRecordingMode, setIsRecordingMode] = useState(false); // Chế độ ghi âm
     const [gifModalVisible, setGifModalVisible] = useState(false); // Quản lý trạng thái hiển thị modal GIF
     const [stickerModalVisible, setStickerModalVisible] = useState(false);
+    const senderId = getUserIdFromLocalStorage();
+    const [receiver, setReceiver] = useState({});
+    const [sender, setSender] = useState({});
+    const [messages, setMessages] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [page, setPage] = useState(0);
+    const pageSize = 10;
 
     useEffect(() => {
         // Kết nối với Socket.IO server
@@ -61,16 +70,25 @@ const ChatWindow = ({ message, onClose, onHide, position }) => {
         };
     }, [chatMessages]);
 
-
     // Xử lý gửi tin nhắn
     const handleSendMessage = () => {
-        if (inputValue.trim() !== "") {
-            const newMessage = { content: inputValue, sender: "You" }; // Tin nhắn mới
-            setChatMessages((prevMessages) => [newMessage, ...prevMessages]); // Thêm vào danh sách tin nhắn
-            socket.emit("sendMessage", { content: inputValue, recipient: message.name }); // Gửi tin nhắn qua socket
-            setInputValue(""); // Reset input
-        }
-    };
+        if (inputValue.trim() === "") return;
+    
+        const newMessage = {
+          messageContent: inputValue,
+          messageType: "TEXT",
+          isSender: true,
+        };
+    
+        setMessages((prevMessages) => [...prevMessages, newMessage]);
+        socket.emit("sendMessage", {
+          content: inputValue,
+          senderId,
+          receiverId,
+        });
+    
+        setInputValue("");
+      };
 
     const handleStartRecording = async () => {
         try {
@@ -144,117 +162,106 @@ const ChatWindow = ({ message, onClose, onHide, position }) => {
         return text;
     };
 
-    return (
-        <div
-            className="chat-window"
-            style={{
-                position: 'fixed',
-                bottom: position.bottom,
-                right: position.right,
-                width: '338px',
-                height: '455px',
-                background: '#fff',
-                borderRadius: '10px',
-                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-                zIndex: 200,
-                display: 'flex',
-                flexDirection: 'column',
-                overflow: 'hidden',
-            }}
-        >
-            {/* Header */}
-            <div className="chat-header">
-                <ChatSettingsPopup>
-                <Tooltip title="Cài đặt chat">
-                    <div className="chat-setting-container" style={{ cursor: 'pointer' }}>
-                    <Flex gap={4} align='center'>
-                        <Avatar size={34} src="https://i.pravatar.cc/300" />
-                        <Flex vertical>
-                            <Typography.Text style={{
-                                whiteSpace: 'nowrap',
-                                overflow: 'hidden',
-                                textOverflow: 'ellipsis',
-                                maxWidth: '120px', // Đặt chiều rộng tối đa
-                            }}>
-                                {truncateText(message.name || 'Người dùng', 20)}
-                            </Typography.Text>
-                            <Typography.Text>active</Typography.Text>
-                        </Flex>
-                        <FaChevronDown size={10} color="#000" />
-                    </Flex>
-                    </div>
-                </Tooltip>
-                </ChatSettingsPopup>
-                <Flex gap={4}>
-                    <Tooltip title="Gọi điện">
-                        <Button
-                            type="text"
-                            icon={<PhoneOutlined />}
-                            style={{ color: '#000', fontSize: '20px' }}
-                        />
-                    </Tooltip>
-                    <Tooltip title="Gọi video">
-                        <Button
-                            type="text"
-                            icon={<VideoCameraOutlined />}
-                            style={{ color: '#000', fontSize: '20px' }}
-                        />
-                    </Tooltip>
-                    <Tooltip title="Thu nhỏ cửa sổ">
-                        <Button
-                            type="text"
-                            icon={<MinusOutlined />}
-                            onClick={onHide}
-                            style={{ color: '#000', fontSize: '20px' }}
-                        />
-                    </Tooltip>
-                    <Tooltip title="Đóng cửa sổ">
-                        <Button
-                            type="text"
-                            icon={<CloseOutlined />}
-                            onClick={onClose}
-                            style={{ color: '#000', fontSize: '20px' }}
-                        />
-                    </Tooltip>
-                </Flex>
-            </div>
+    // Lấy lịch sử tin nhắn
+  const fetchMessageHistory = async () => {
+    try {
+      setLoading(true);
+      const response = await getMessageHistoryService({
+        senderId,
+        receiverId,
+        page,
+        size: pageSize,
+      });
 
-            {/* Body */}
-            <div className="chat-body" ref={chatBodyRef}>
-                {chatMessages.map((msg, index) => (
-                    <div
-                        key={index}
-                        className={`chat-message ${msg.sender === "You" ? "sender" : "receiver"} ${msg.type === "gif"
-                                ? "gif-message"
-                                : msg.type === "sticker"
-                                    ? "sticker-message"
-                                    : msg.type === "file"
-                                        ? "file-message"
-                                        : msg.type === "like"
-                                            ? "like-message"
-                                            : "text-message"
-                            }`}
-                    >
-                        {/* Hiển thị avatar nếu là người nhận */}
-                        {msg.sender !== "You" && (
-                            <div className="chat-avatar">
-                                <img src="https://i.pravatar.cc/300" alt="Avatar" />
-                            </div>
-                        )}
+      const data = response?.data?.data || {};
+      setMessages((prev) => [...data.messages, ...prev]);
+      setReceiver(data.receiver);
+      setSender(data.sender);
+    } catch (error) {
+      console.error("Error fetching message history:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-                        {/* Render nội dung */}
-                        <div dangerouslySetInnerHTML={{ __html: msg.content }} />
-                    </div>
-                ))}
-                {/* Phát lại âm thanh */}
-                {audioUrl && (
-                    <div className="audio-player">
-                        <audio controls src={audioUrl}></audio>
-                        <Button onClick={() => playAudio(audioUrl)}>Phát</Button>
-                        <Button onClick={() => downloadAudio(audioBlob)}>Tải xuống</Button>
-                    </div>
-                )}
+  useEffect(() => {
+    fetchMessageHistory();
+  }, [page]);
+
+  useEffect(() => {
+    if (chatBodyRef.current) {
+      chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
+    }
+  }, [messages]);
+
+  return (
+    <div
+      className="chat-window"
+      style={{
+        position: 'fixed',
+        bottom: position.bottom,
+        right: position.right,
+        width: '338px',
+        height: '455px',
+        background: '#fff',
+        borderRadius: '10px',
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+        zIndex: 200,
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden',
+      }}
+    >
+      {/* Header */}
+      <div className="chat-header">
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <Avatar src={receiver.avatarUrl || "https://via.placeholder.com/40"} />
+          <div style={{ marginLeft: '8px' }}>
+            <Typography.Text strong>{receiver.fullName || "Người dùng"}</Typography.Text>
+            <Typography.Text type="secondary">Active now</Typography.Text>
+          </div>
+        </div>
+        <div style={{ marginLeft: 'auto' }}>
+          <Tooltip title="Gọi điện">
+            <Button type="text" icon={<PhoneOutlined />} />
+          </Tooltip>
+          <Tooltip title="Gọi video">
+            <Button type="text" icon={<VideoCameraOutlined />} />
+          </Tooltip>
+          <Tooltip title="Thu nhỏ cửa sổ">
+            <Button type="text" icon={<MinusOutlined />} onClick={onHide} />
+          </Tooltip>
+          <Tooltip title="Đóng cửa sổ">
+            <Button type="text" icon={<CloseOutlined />} onClick={onClose} />
+          </Tooltip>
+        </div>
+      </div>
+
+      {/* Body */}
+      <div className="chat-body" ref={chatBodyRef}>
+        {loading ? (
+          <div style={{ textAlign: 'center', padding: '10px' }}>Loading...</div>
+        ) : messages.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '10px' }}>No messages yet.</div>
+        ) : (
+          messages.map((msg, index) => (
+            <div
+              key={msg.messageId || index}
+              className={`chat-message ${msg.isSender ? "sender" : "receiver"}`}
+            >
+              {!msg.isSender && (
+                <Avatar
+                  src={receiver.avatarUrl || "https://via.placeholder.com/40"}
+                  style={{ marginRight: '8px' }}
+                />
+              )}
+              <div className="message-content">
+                {msg.messageType === "TEXT" && <span>{msg.messageContent}</span>}
+              </div>
             </div>
+          ))
+        )}
+      </div>
 
             {/* Footer */}
             <div className="chat-footer">

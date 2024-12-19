@@ -19,8 +19,8 @@ export const acceptFriendshipService = (Data) => {//chap nhan ban
     const { userId1, userId2 } = Data;
     return axiosCreate.put(`http://localhost:8080/api/v1/friendship/accept`, {}, {
         params: {
-            userId1,//no
-            userId2,//minh
+            userId1, //no
+            userId2, //minh
         },
     });
 };

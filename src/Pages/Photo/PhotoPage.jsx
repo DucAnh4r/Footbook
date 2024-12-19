@@ -121,10 +121,15 @@ const PhotoPage = () => {
   useEffect(() => {
     fetchPost();
     fetchComment();
-    fetchUser();
     countReaction();
     countComment();
-  }, []);
+  }, [postId]); // Chỉ gọi các fetch ban đầu
+  
+  useEffect(() => {
+    if (post.user_id) {
+      fetchUser(); // Gọi fetchUser chỉ khi post.user_id đã được cập nhật
+    }
+  }, [post.user_id]); // Theo dõi thay đổi của post.user_id
 
   const handleZoomIn = () => {
     setScale((prev) => Math.min(prev + 0.5, 3)); // Zoom in, max scale 3
@@ -215,7 +220,7 @@ const PhotoPage = () => {
             <FaAngleRight />
           </div>
           <div className={styles['image-container']}>
-            {/* {post.images.length > 0 && (
+            {post?.images?.length > 0 && (
               post.images.map((image, index) => (
                 <img
                   ref={imageRef}
@@ -230,7 +235,7 @@ const PhotoPage = () => {
                   onMouseDown={handleMouseDown} // Start dragging
                 />
               ))
-            )} */}
+            )}
           </div>
         </Col>
         <Col className={styles['right-row']}>

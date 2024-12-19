@@ -1,17 +1,20 @@
 import axiosCreate from "../utils/axiosRelease";
 
-export const createHighlightStoryService = (Data) => {
+export const createHighlightStoryService = (data) => {
     const formData = new FormData();
-    formData.append("userId", Data.userId);
-    formData.append("storyName", Data.storyName);
-    if (Array.isArray(Data.images)) {
-        Data.images.forEach((image) => {
-            formData.append("images", image);
+
+    // Thêm userId và storyName
+    formData.append("userId", data.userId);
+    formData.append("storyName", data.storyName);
+
+    // Thêm từng file trong danh sách images
+    if (Array.isArray(data.images)) {
+        data.images.forEach((image) => {
+            formData.append("images", image); // Gửi file theo chuẩn FormData
         });
-    } else {
-        formData.append("images", Data.images);
     }
 
+    // Gửi request tới backend
     return axiosCreate.post("http://localhost:8080/api/v1/highlightStory/create", formData, {
         headers: {
             "Content-Type": "multipart/form-data",
