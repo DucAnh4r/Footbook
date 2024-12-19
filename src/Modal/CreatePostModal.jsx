@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Modal, Input, Button, Upload, Avatar, Card } from "antd";
+import { Modal, Input, Button, Upload, Avatar, Card, Spin } from "antd";
 import { SmileOutlined, UploadOutlined, UserOutlined } from "@ant-design/icons";
 import { MdInsertEmoticon, MdOutlineAddPhotoAlternate } from "react-icons/md";
 import { HiMiniGif } from "react-icons/hi2";
@@ -10,7 +10,7 @@ import { createPostService } from "../services/postService";
 import { getUserIdFromLocalStorage } from "../utils/authUtils";
 
 const themes = [
-  { id: 0, name: "Default", background: "white" }, // Chủ đề mặc định
+  { id: 0, name: "Default", background: "white" },
   {
     id: 1,
     name: "Rainbow",
@@ -48,7 +48,7 @@ const CreatePostModal = ({ isModalOpen, onClose }) => {
     }
 
     try {
-      setLoading(true)
+      setLoading(true);
       const postData = {
         userId: userId,
         content: postContent,
@@ -62,9 +62,10 @@ const CreatePostModal = ({ isModalOpen, onClose }) => {
 
       console.log("Post created successfully!");
       onClose(); // Đóng modal
-      setLoading(false)
     } catch (error) {
       console.error("Failed to create post:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -81,192 +82,188 @@ const CreatePostModal = ({ isModalOpen, onClose }) => {
       open={isModalOpen}
       onOk={handleOk}
       onCancel={onClose}
-      footer={[
-        <div className="modal-footer">
-          <Button
-            key="post"
-            type="primary"
-            onClick={handleOk}
-            className="post-button"
-            disabled={isPostDisabled} // Vô hiệu hóa nếu không có nội dung hoặc ảnh
-          >
-            Post
-          </Button>
-        </div>,
-      ]}
+      footer={null}
       style={{ padding: 0 }}
       className="scrollable-modal"
     >
       <div className="modal-content">
-        <div className="user-info">
-          <Avatar size={40} icon={<UserOutlined />} />
-          <div className="user-details">
-            <div className="user-name">Duc Manh</div>
-            <Button
-              size="small"
-              className="friends-button"
-              onClick={() => setIsAudienceModalOpen(true)}
-            >
-              {selectedAudience}
-            </Button>
+        {loading ? (
+          <div className="loading-spinner">
+            <Spin tip="Posting..." size="large" />
           </div>
-        </div>
-        <div
-          className="custom-textarea-container"
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            height: "290px",
-            background: selectedTheme.background,
-            color: selectedTheme.id === 0 ? "#000" : "#111",
-          }}
-        >
-          <Input.TextArea
-            style={{ backgroundColor: "unset" }}
-            autoSize={{ minRows: 1, maxRows: 100 }}
-            placeholder="What's on your mind, Duc?"
-            value={postContent}
-            onChange={(e) => setPostContent(e.target.value)}
-            className="custom-textarea"
-          />
-          <SmileOutlined className="emoji-icon" />
-
-          {/* Hiển thị ảnh GIF đã chọn */}
-          {selectedGif && (
-            <div className="selected-gif-container">
-              <img
-                src={selectedGif}
-                alt="Selected GIF"
-                className="selected-gif"
-                onClick={() => setSelectedGif(null)} // Cho phép xóa GIF khi nhấp vào
-              />
-            </div>
-          )}
-
-          {/* Chỉ hiển thị Upload hoặc Themes */}
-          {showUpload && (
-            <div
-              className="upload-area"
-              style={{ textAlign: "center", margin: "10px 0" }}
-            >
-              <input
-                type="file"
-                accept="image/*,video/*" // Chỉ chấp nhận ảnh và video
-                multiple
-                onChange={(e) => {
-                  const files = Array.from(e.target.files); // Lấy danh sách file
-                  const formattedFiles = files.map((file) => ({
-                    uid: file.name + Date.now(),
-                    name: file.name,
-                    originFileObj: file,
-                  }));
-                  setUploadedFiles((prev) => [...prev, ...formattedFiles]);
-                }}
-                style={{ display: "none" }}
-                id="custom-file-input"
-              />
-              <label
-                htmlFor="custom-file-input"
-                className="custom-upload-button"
-              >
-                <Button icon={<UploadOutlined />} type="text">
-                  Add photos/videos
-                </Button>
-                <div className="upload-hint">or drag and drop</div>
-              </label>
-
-              {/* Hiển thị danh sách file đã upload */}
-              <div style={{ marginTop: "10px" }}>
-                {uploadedFiles.map((file, index) => (
-                  <div key={file.uid} style={{ marginBottom: "5px" }}>
-                    <span>{file.name}</span>
-                    <Button
-                      type="text"
-                      danger
-                      onClick={() =>
-                        setUploadedFiles((prev) =>
-                          prev.filter((item, idx) => idx !== index)
-                        )
-                      }
-                      style={{ marginLeft: "10px" }}
-                    >
-                      ✕
-                    </Button>
-                  </div>
-                ))}
-              </div>
-
-              {/* Nút đóng */}
-              <Button
-                type="text"
-                onClick={handleCloseUpload}
-                className="close-upload-button"
-                style={{ marginTop: "10px" }}
-              >
-                ✕
-              </Button>
-            </div>
-          )}
-
-          {!showUpload && !selectedGif && (
-            <div className="themes-container">
-              {themes.map((theme) => (
+        ) : (
+          <>
+            <div className="user-info">
+              <Avatar size={40} icon={<UserOutlined />} />
+              <div className="user-details">
+                <div className="user-name">Duc Manh</div>
                 <Button
-                  key={theme.id}
-                  className={`theme-button ${
-                    selectedTheme.id === theme.id ? "active" : ""
-                  }`}
-                  style={{
-                    background: theme.background,
-                    color: selectedTheme.id === 0 ? "#000" : "#fff",
-                  }}
-                  onClick={() => {
-                    setSelectedTheme(theme);
-                    if (theme.id !== 0) {
-                      setShowUpload(false); // Ẩn Upload khi chọn Theme
-                    }
-                  }}
-                  disabled={uploadedFiles.length > 0} // Disable khi có Photo hoặc GIF
-                ></Button>
-              ))}
+                  size="small"
+                  className="friends-button"
+                  onClick={() => setIsAudienceModalOpen(true)}
+                >
+                  {selectedAudience}
+                </Button>
+              </div>
             </div>
-          )}
-        </div>
+            <div
+              className="custom-textarea-container"
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                height: "290px",
+                background: selectedTheme.background,
+                color: selectedTheme.id === 0 ? "#000" : "#111",
+              }}
+            >
+              <Input.TextArea
+                style={{ backgroundColor: "unset" }}
+                autoSize={{ minRows: 1, maxRows: 100 }}
+                placeholder="What's on your mind, Duc?"
+                value={postContent}
+                onChange={(e) => setPostContent(e.target.value)}
+                className="custom-textarea"
+              />
+              <SmileOutlined className="emoji-icon" />
 
-        <Card className="card-container ant-card-body" style={{ padding: 0 }}>
-          <div className="add-post-options">
-            <Button type="text" className="add-post-text">
-              Add to your post
-            </Button>
-            <div className="icon-container">
-              <Button
-                type="text"
-                icon={<MdOutlineAddPhotoAlternate />}
-                className="icon"
-                onClick={() => {
-                  setShowUpload(true);
-                  setSelectedTheme(themes[0]);
-                }}
-                disabled={selectedTheme.id !== 0}
-              />
-              <Button
-                type="text"
-                icon={<MdInsertEmoticon />}
-                className="icon"
-              />
-              <Button
-                type="text"
-                icon={<HiMiniGif />}
-                className="icon"
-                onClick={() => {
-                  setGifModalVisible(true);
-                  setSelectedTheme(themes[0]); // Reset về Default Theme khi chọn GIF
-                }}
-                disabled={selectedTheme.id !== 0 || showUpload === true}
-              />
+              {/* Hiển thị ảnh GIF đã chọn */}
+              {selectedGif && (
+                <div className="selected-gif-container">
+                  <img
+                    src={selectedGif}
+                    alt="Selected GIF"
+                    className="selected-gif"
+                    onClick={() => setSelectedGif(null)} // Cho phép xóa GIF khi nhấp vào
+                  />
+                </div>
+              )}
+
+              {/* Chỉ hiển thị Upload hoặc Themes */}
+              {showUpload && (
+                <div
+                  className="upload-area"
+                  style={{ textAlign: "center", margin: "10px 0" }}
+                >
+                  <input
+                    type="file"
+                    accept="image/*,video/*" // Chỉ chấp nhận ảnh và video
+                    multiple
+                    onChange={(e) => {
+                      const files = Array.from(e.target.files); // Lấy danh sách file
+                      const formattedFiles = files.map((file) => ({
+                        uid: file.name + Date.now(),
+                        name: file.name,
+                        originFileObj: file,
+                      }));
+                      setUploadedFiles((prev) => [...prev, ...formattedFiles]);
+                    }}
+                    style={{ display: "none" }}
+                    id="custom-file-input"
+                  />
+                  <label
+                    htmlFor="custom-file-input"
+                    className="custom-upload-button"
+                  >
+                    <Button icon={<UploadOutlined />} type="text">
+                      Add photos/videos
+                    </Button>
+                    <div className="upload-hint">or drag and drop</div>
+                  </label>
+
+                  {/* Hiển thị danh sách file đã upload */}
+                  <div style={{ marginTop: "10px" }}>
+                    {uploadedFiles.map((file, index) => (
+                      <div key={file.uid} style={{ marginBottom: "5px" }}>
+                        <span>{file.name}</span>
+                        <Button
+                          type="text"
+                          danger
+                          onClick={() =>
+                            setUploadedFiles((prev) =>
+                              prev.filter((item, idx) => idx !== index)
+                            )
+                          }
+                          style={{ marginLeft: "10px" }}
+                        >
+                          ✕
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Nút đóng */}
+                  <Button
+                    type="text"
+                    onClick={handleCloseUpload}
+                    className="close-upload-button"
+                    style={{ marginTop: "10px" }}
+                  >
+                    ✕
+                  </Button>
+                </div>
+              )}
+
+              {!showUpload && !selectedGif && (
+                <div className="themes-container">
+                  {themes.map((theme) => (
+                    <Button
+                      key={theme.id}
+                      className={`theme-button ${
+                        selectedTheme.id === theme.id ? "active" : ""
+                      }`}
+                      style={{
+                        background: theme.background,
+                        color: selectedTheme.id === 0 ? "#000" : "#fff",
+                      }}
+                      onClick={() => {
+                        setSelectedTheme(theme);
+                        if (theme.id !== 0) {
+                          setShowUpload(false); // Ẩn Upload khi chọn Theme
+                        }
+                      }}
+                      disabled={uploadedFiles.length > 0} // Disable khi có Photo hoặc GIF
+                    ></Button>
+                  ))}
+                </div>
+              )}
             </div>
-          </div>
-        </Card>
+
+            <Card className="card-container ant-card-body" style={{ padding: 0 }}>
+              <div className="add-post-options">
+                <Button type="text" className="add-post-text">
+                  Add to your post
+                </Button>
+                <div className="icon-container">
+                  <Button
+                    type="text"
+                    icon={<MdOutlineAddPhotoAlternate />}
+                    className="icon"
+                    onClick={() => {
+                      setShowUpload(true);
+                      setSelectedTheme(themes[0]);
+                    }}
+                    disabled={selectedTheme.id !== 0}
+                  />
+                  <Button
+                    type="text"
+                    icon={<MdInsertEmoticon />}
+                    className="icon"
+                  />
+                  <Button
+                    type="text"
+                    icon={<HiMiniGif />}
+                    className="icon"
+                    onClick={() => {
+                      setGifModalVisible(true);
+                      setSelectedTheme(themes[0]); // Reset về Default Theme khi chọn GIF
+                    }}
+                    disabled={selectedTheme.id !== 0 || showUpload === true}
+                  />
+                </div>
+              </div>
+            </Card>
+          </>
+        )}
       </div>
       <GifModal
         visible={gifModalVisible}

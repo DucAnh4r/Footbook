@@ -1,26 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { Avatar, Badge, Button, Input, List, Tabs, Tooltip, Typography, Dropdown, Menu } from 'antd';
+import { Avatar, Badge, Button, Input, List, Tabs, Tooltip, Typography, Dropdown, Menu, Spin } from 'antd';
 import { EllipsisOutlined, EditOutlined } from '@ant-design/icons';
 import { FaCog, FaUserShield, FaQuestionCircle, FaDesktop, FaEnvelope, FaArchive, FaShieldAlt } from 'react-icons/fa';
 import SettingsMessageModal from '../../../Modal/SettingsMessageModal';
-import RestrictedAccountsView from './RestrictedAccountsView'; // Import view cho "Tài khoản đã hạn chế"
+import RestrictedAccountsView from './RestrictedAccountsView';
+import { getUserMessageListService } from '../../../services/privateMessageService';
+import { getUserIdFromLocalStorage } from '../../../utils/authUtils';
 
 const { Text, Title } = Typography;
 const { TabPane } = Tabs;
 
-const messages = [
-  { id: 1, name: 'Nguyễn Đức Anh', message: 'truyền được data vào rồi hiểu...', time: '14 phút', avatar: 'https://via.placeholder.com/40', online: true, isGroup: false },
-  { id: 2, name: 'Chuẩn bị du hí hè thu', message: 'Bạn: Chỉ thấy đi chơi là lạ', time: '1 giờ', avatar: 'https://via.placeholder.com/40', isGroup: true },
-  { id: 3, name: 'IT4', message: 'Loc no fuho đã gửi một nhắn...', time: '1 ngày', avatar: 'https://via.placeholder.com/40', isGroup: true },
-  { id: 4, name: 'Nguyễn Hải', message: 'Bạn: https://www.facebook.com...', time: '3 ngày', avatar: 'https://via.placeholder.com/40', online: true, isGroup: false },
-  { id: 5, name: 'dm', message: 'Đức Duy: mà đíu gửi đc 😴', time: '2 ngày', avatar: 'https://via.placeholder.com/40', isGroup: true },
-  { id: 6, name: 'Naruto Ramen', message: 'Naruto Ramen đã gửi một...', time: '2 ngày', avatar: 'https://via.placeholder.com/40', unread: true, isGroup: true },
-];
-
 const MessageLeftSidebar = ({ onSelectChat }) => {
-  const [selectedChatId, setSelectedChatId] = useState(messages[0].id); // Default to the first message
+  const [selectedChatId, setSelectedChatId] = useState(null); // ID của đoạn chat được chọn
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isRestrictedView, setIsRestrictedView] = useState(false);
+  const userId = getUserIdFromLocalStorage();
+  const [loading, setLoading] = useState(true);
+  const [list, setList] = useState([]);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -31,7 +27,7 @@ const MessageLeftSidebar = ({ onSelectChat }) => {
   };
 
   const openRestrictedView = () => {
-    setIsModalVisible(false); // Đóng modal trước khi chuyển view
+    setIsModalVisible(false);
     setIsRestrictedView(true);
   };
 
@@ -39,14 +35,33 @@ const MessageLeftSidebar = ({ onSelectChat }) => {
     setIsRestrictedView(false);
   };
 
-  useEffect(() => {
-    onSelectChat(messages[0]);
-  }, [onSelectChat]);
-
   const handleSelectChat = (msg) => {
-    setSelectedChatId(msg.id);
+    setSelectedChatId(msg.userId);
     onSelectChat(msg);
   };
+
+  const fetchUserMessageList = async () => {
+    try {
+      setLoading(true);
+      const response = await getUserMessageListService(userId.toString());
+      const data = response?.data?.data || [];
+      setList(data);
+
+      // Đặt đoạn chat đầu tiên làm mặc định nếu chưa chọn
+      if (data.length > 0 && !selectedChatId) {
+        setSelectedChatId(data[0].userId);
+        onSelectChat(data[0]);
+      }
+    } catch (error) {
+      console.error("Error fetching List:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserMessageList();
+  }, []);
 
   // Dropdown menu options
   const menu = (
@@ -54,7 +69,7 @@ const MessageLeftSidebar = ({ onSelectChat }) => {
       <Menu.Item key="1" onClick={showModal} icon={<FaCog />}>Tùy chọn</Menu.Item>
       <Menu.Item key="2" icon={<FaEnvelope />}>Tin nhắn đang chờ</Menu.Item>
       <Menu.Item key="3" icon={<FaArchive />}>Đoạn chat đã lưu trữ</Menu.Item>
-      <Menu.Item key="4" onClick={openRestrictedView} icon={<FaUserShield />}>Tài khoản đã hạn chế</Menu.Item> {/* Thay đổi onClick để mở RestrictedAccountsView */}
+      <Menu.Item key="4" onClick={openRestrictedView} icon={<FaUserShield />}>Tài khoản đã hạn chế</Menu.Item>
       <Menu.Item key="5" icon={<FaShieldAlt />}>Quyền riêng tư & an toàn</Menu.Item>
       <Menu.Item key="6" icon={<FaQuestionCircle />}>Trợ giúp</Menu.Item>
       <Menu.Item key="7" icon={<FaDesktop />}>Dùng thử Messenger dành cho máy tính</Menu.Item>
@@ -82,7 +97,43 @@ const MessageLeftSidebar = ({ onSelectChat }) => {
 
         <Tabs defaultActiveKey="1" style={styles.tabs}>
           <TabPane tab="Hộp thư" key="1">
-            <MessageList onSelectChat={handleSelectChat} selectedChatId={selectedChatId} />
+            {loading ? (
+              <div style={{ textAlign: 'center', padding: '20px' }}>
+                <Spin size="large" />
+              </div>
+            ) : list.length === 0 ? (
+              <Text type="secondary">Không có tin nhắn nào</Text>
+            ) : (
+              <List
+                itemLayout="horizontal"
+                dataSource={list}
+                renderItem={(msg) => (
+                  <List.Item
+                    style={{
+                      ...styles.messageItem,
+                      ...(msg.userId === selectedChatId && styles.selected),
+                    }}
+                    onClick={() => handleSelectChat(msg)}
+                  >
+                    <List.Item.Meta
+                      avatar={
+                        <Badge dot={msg.online} color="green" offset={[-2, 30]}>
+                          <Avatar src={msg.profilePictureUrl} size="large" />
+                        </Badge>
+                      }
+                      title={<Text strong>{msg.fullName}</Text>}
+                      description={
+                        <div style={styles.messageDescription}>
+                          <Text type="secondary" ellipsis>{msg.lastMessage}</Text>
+                          <Text style={styles.timeText}>{msg.lastMessageTime}</Text>
+                        </div>
+                      }
+                    />
+                    {msg.unread && <Badge dot color="#1890ff" />}
+                  </List.Item>
+                )}
+              />
+            )}
           </TabPane>
           <TabPane tab="Cộng đồng" key="2">
             {/* Content for "Cộng đồng" */}
@@ -96,43 +147,6 @@ const MessageLeftSidebar = ({ onSelectChat }) => {
     )
   );
 };
-
-const MessageList = ({ onSelectChat, selectedChatId }) => (
-  <List
-    itemLayout="horizontal"
-    dataSource={messages}
-    renderItem={(msg) => (
-      <List.Item
-        style={{
-          ...styles.messageItem,
-          ...(msg.highlight && styles.highlight),
-          ...(msg.id === selectedChatId && styles.selected),
-
-        }}
-        onClick={() => onSelectChat(msg)}
-      >
-        <List.Item.Meta
-          style={{
-            padding: '10px 0px'
-          }}
-          avatar={
-            <Badge dot={msg.online} color="green" offset={[-2, 30]}>
-              <Avatar src={msg.avatar} size="large" />
-            </Badge>
-          }
-          title={<Text strong>{msg.name}</Text>}
-          description={
-            <div style={styles.messageDescription}>
-              <Text type="secondary" ellipsis>{msg.message}</Text>
-              <Text style={styles.timeText}>{msg.time}</Text>
-            </div>
-          }
-        />
-        {msg.unread && <Badge dot color="#1890ff" />}
-      </List.Item>
-    )}
-  />
-);
 
 const styles = {
   sidebar: {
@@ -174,10 +188,6 @@ const styles = {
     padding: '10px 0',
     borderBottom: '1px solid #f0f0f0',
     cursor: 'pointer',
-  },
-  highlight: {
-    backgroundColor: '#e6f7ff',
-    borderRadius: '8px',
   },
   selected: {
     backgroundColor: '#d6e4ff',
