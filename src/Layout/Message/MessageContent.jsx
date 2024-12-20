@@ -85,7 +85,6 @@ const MessageContent = ({ onMessageClick, onClose }) => {
               placement="bottomRight"
             >
               <EllipsisOutlined className={styles.icon} style={{ fontSize: '22px', color: 'gray' }} />
-              <EllipsisOutlined className={styles.icon} style={{ fontSize: '22px', color: 'gray' }} />
             </Popover>
           </Tooltip>
           <Tooltip title="Mở rộng">

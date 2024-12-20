@@ -26,6 +26,7 @@ export const createPostService = (Data) => {
     formData.append("content", Data.content);
     formData.append("privacy", Data.privacy);
     formData.append("theme", Data.theme);
+    formData.append("share", Data.share);
 
     if (Array.isArray(Data.images)) {
         Data.images.forEach((image) => {
@@ -41,6 +42,8 @@ export const createPostService = (Data) => {
         },
     });
 };
+
+
 
 export const updatePostService = (Data, Post_id) => {
     const formData = new FormData();

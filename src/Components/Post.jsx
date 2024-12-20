@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Avatar, Button, Tooltip } from "antd";
+import { Avatar, Button, Dropdown, Menu, Tooltip } from "antd";
 import { FaRegComment } from "react-icons/fa";
 import { PiShareFat } from "react-icons/pi";
 import { FaEarthAmericas } from "react-icons/fa6";
@@ -13,6 +13,9 @@ import SadIcon from "../assets/image/Reacts/sad.png";
 import AngryIcon from "../assets/image/Reacts/angry.png";
 import ReactionIconsBox from "./ReactionIconsBox";
 import ShareModal from "../Modal/ShareModal";
+import { BsThreeDots } from "react-icons/bs";
+import Toastify from "../assets/Toastify";
+import { ToastContainer } from 'react-toastify';
 import { userFindByIdService } from "../services/userService";
 import {
   countPostReactionService,
@@ -26,6 +29,7 @@ import { countCommentService } from "../services/commentService";
 import { getUserIdFromLocalStorage } from "../utils/authUtils";
 
 import { reactionConfig } from "../assets/Config";
+import { DeletePostByIdService } from "../services/postService";
 
 const Post = ({ content, createdAt, userId, images, postId, isModalOpen }) => {
   const userId1 = getUserIdFromLocalStorage(); // Lấy userId1 từ localStorage
@@ -121,7 +125,22 @@ const Post = ({ content, createdAt, userId, images, postId, isModalOpen }) => {
       setSelectedReaction("NONE"); // Đảm bảo selectedReaction là "NONE" trong trường hợp lỗi
     }
   };
+
+  const handleDeletePost = async (postId) => {
+    try {
+      const response = await DeletePostByIdService(postId);
   
+      if (response?.data?.success) {
+        console.log(response.data.message); // Hiển thị thông báo thành công
+        Toastify("Xóa bài viết thành công!", "success");
+
+      } else {
+        console.error("Không thể xóa bài viết. Vui lòng thử lại.");
+      }
+    } catch (error) {
+      console.error("Lỗi khi xóa bài viết:", error);
+    }
+  };
 
   useEffect(() => {
     fetchUser();
@@ -220,6 +239,7 @@ const Post = ({ content, createdAt, userId, images, postId, isModalOpen }) => {
 
   return (
     <>
+      <ToastContainer /> 
       <div className={styles.postContainer}>
         <div className={styles.header}>
           <Avatar src={userInfo.profilePictureUrl} className={styles.avatar} />
@@ -230,10 +250,30 @@ const Post = ({ content, createdAt, userId, images, postId, isModalOpen }) => {
               <FaEarthAmericas style={{ marginLeft: "4px" }} />
             </span>
           </div>
+          {userId === getUserIdFromLocalStorage() ? (
+            <Dropdown
+              overlay={
+                <Menu>
+                  <Menu.Item key="1" onClick={() => handleDeletePost(postId)}>
+                    Xóa bài viết
+                  </Menu.Item>
+                </Menu>
+              }
+              trigger={['click']}
+            >
+              <div className={styles.optionContainer}>
+                <BsThreeDots />
+              </div>
+            </Dropdown>
+          ) : (
+            <div className={styles.optionContainer}>
+              <BsThreeDots />
+            </div>
+          )}  
         </div>
 
         <div className={styles.content}>
-          <p>{content}</p>
+          <p style={{margin: '0'}}>{content}</p>
           {/* Hiển thị ảnh */}
           {images.length > 0 &&
             images
@@ -406,6 +446,8 @@ const Post = ({ content, createdAt, userId, images, postId, isModalOpen }) => {
       <ShareModal
         isModalOpen={isShareModalOpen}
         onCancel={() => setIsShareModalOpen(false)}
+        postId = {postId}
+        userInfo = {userInfo}
       />
     </>
   );

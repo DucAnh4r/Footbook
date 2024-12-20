@@ -5,13 +5,20 @@ import styles from "./ShareModal.module.scss";
 import AudienceModal from "./AudienceModal";
 import { IoSearchOutline } from "react-icons/io5";
 import { FaFacebookMessenger, FaLink, FaRegFileAlt, FaUserFriends, FaUsers, FaWhatsapp } from "react-icons/fa";
+import { getUserIdFromLocalStorage } from "../utils/authUtils";
+import { createPostService } from "../services/postService";
 
-const ShareModal = ({ isModalOpen, onCancel }) => {
+const ShareModal = ({ isModalOpen, onCancel, postId, userInfo }) => {
     const [view, setView] = useState("share");
     const [selectedAudience, setSelectedAudience] = useState("Friends");
     const [isAudienceModalOpen, setIsAudienceModalOpen] = useState(false);
     const [searchText, setSearchText] = useState("");
+    const [postContent, setPostContent] = useState("");
     const [selectedUsers, setSelectedUsers] = useState([]);
+    const [loading, setLoading] = useState(true); // Trạng thái tải dữ liệu
+    
+
+    const userId = getUserIdFromLocalStorage();
 
     const users = [
         { id: 1, name: "Trí Dũng", avatar: "https://randomuser.me/api/portraits/men/1.jpg" },
@@ -27,13 +34,35 @@ const ShareModal = ({ isModalOpen, onCancel }) => {
         );
     };
 
+     const handleShare = async () => {
+        try {
+            setLoading(true)
+            const postData = {
+                userId: userId,
+                content: postContent,
+                privacy: selectedAudience,
+                share: postId,
+                images: [],
+          };
+    
+          // Gọi API tạo bài đăng
+          await createPostService(postData);
+    
+          console.log("Post created successfully!");
+          onClose(); // Đóng modal
+          setLoading(false)
+        } catch (error) {
+          console.error("Failed to create post:", error);
+        }
+      };
+
     const renderShareContent = () => (
         <div className={styles.shareContainer}>
             <div className={styles.content}>
                 <div className={styles.header}>
-                    <Avatar src="https://shopgarena.net/wp-content/uploads/2023/07/Meo-khoc-thet-len.jpg" />
+                    <Avatar src={userInfo?.profilePictureUrl} />
                     <div className={styles.userInfo}>
-                        <span className={styles.userName}>Duc Manh</span>
+                        <span className={styles.userName}>{userInfo?.fullName}</span>
                         <div className={styles.privacyContainer}>
                             <div className={styles.underName}>
                                 <span className={styles.privacy}>
@@ -54,8 +83,10 @@ const ShareModal = ({ isModalOpen, onCancel }) => {
                     placeholder="Hãy nói gì đó về nội dung này (không bắt buộc)"
                     autoSize={{ minRows: 1, maxRows: 100 }}
                     className={styles.textArea}
+                    value={postContent} // Gắn giá trị từ state
+                    onChange={(e) => setPostContent(e.target.value)} // Cập nhật state khi thay đổi
                 />
-                <Button type="primary" block className={styles.shareButton}>
+                <Button onClick={handleShare} type="primary" block className={styles.shareButton}>
                     Chia sẻ ngay
                 </Button>
             </div>

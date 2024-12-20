@@ -14,7 +14,26 @@
     align-items: center;
     margin-bottom: 8px;
   }
+
+  .optionContainer {
+    width: 40px;
+    height: 40px;
+    /* background: blue; */
+    position: absolute;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    border-radius: 50px;
+    color: #65686c;
   
+    &:hover {
+      background-color: #f8f8f8;
+      cursor: pointer;
+    }
+  }
+
   .avatar {
     margin-right: 8px;
     width: 40px;

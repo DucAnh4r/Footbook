@@ -67,8 +67,10 @@ const Homepage = () => {
           {loading ? (
             <p>Đang tải bài viết...</p>
           ) : posts.length > 0 ? (
-            posts.map((post) => (
-              post.share ? (
+            posts
+              .filter((post) => !post.isDeleted) 
+              .map((post) => (         
+              post.share ? (          
                 <SharedPost
                   key={post.post_id}
                   postId={post.post_id}

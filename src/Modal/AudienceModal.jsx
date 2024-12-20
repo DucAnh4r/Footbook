@@ -63,7 +63,10 @@ const AudienceModal = ({ isModalOpen, onClose, onSelect, defaultAudience }) => {
                           <Button key="cancel" onClick={onClose}>
                               Cancel
                           </Button>,
-                          <Button key="done" type="primary" onClick={() => onSelect(selectedAudience)}>
+                          <Button key="done" type="primary" onClick={() => {
+                                onSelect(selectedAudience); // Thực hiện chọn lựa
+                                onClose(); // Đóng modal
+                            }}>
                               Done
                           </Button>,
                       ]

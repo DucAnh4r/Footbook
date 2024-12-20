@@ -80,7 +80,7 @@ const FriendProfilePage = ({ userId2: propUserId2, type }) => {
   const handleAcceptFriend = async () => {
     try {
       
-      await acceptFriendshipService({ userId2: userId2, userId1: userId1 });
+      await acceptFriendshipService({ userId1: userId2, userId2: userId1 });
       fetchFriendshipStatus(); // Cập nhật trạng thái
     } catch (error) {
       console.error("Lỗi khi gửi lời mời kết bạn:", error);
@@ -89,7 +89,7 @@ const FriendProfilePage = ({ userId2: propUserId2, type }) => {
 
   const handleDeleteFriend = async () => {
     try {
-      await deleteFriendshipService({ userId1: userId1, userId2: userId2 });
+      await deleteFriendshipService({ userId1: userId2, userId2: userId1 });
       setFriendshipStatus(null); // Cập nhật trạng thái thành không phải bạn bè
       countFriend(); // Cập nhật số lượng bạn bè
     } catch (error) {

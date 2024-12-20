@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Avatar, Button, Tooltip } from "antd";
+import { Avatar, Button, Tooltip, Menu, Dropdown } from "antd";
 import { FaRegComment } from "react-icons/fa";
 import { PiShareFat } from "react-icons/pi";
 import { FaEarthAmericas } from "react-icons/fa6";
@@ -13,6 +13,9 @@ import SadIcon from "../assets/image/Reacts/sad.png";
 import AngryIcon from "../assets/image/Reacts/angry.png";
 import ReactionIconsBox from "./ReactionIconsBox";
 import ShareModal from "../Modal/ShareModal";
+import { BsThreeDots } from "react-icons/bs";
+import Toastify from "../assets/Toastify";
+import { ToastContainer } from 'react-toastify';
 import { userFindByIdService } from "../services/userService";
 import {
   countPostReactionService,
@@ -27,6 +30,8 @@ import { getUserIdFromLocalStorage } from "../utils/authUtils";
 
 import { reactionConfig } from "../assets/Config";
 import { getPostByIdService } from "../services/postService";
+import { DeletePostByIdService } from "../services/postService";
+
 
 const SharedPost = ({ content, createdAt, userId, images, postId, shareId }) => {
   const userId1 = getUserIdFromLocalStorage(); // Lấy userId1 từ localStorage
@@ -158,6 +163,22 @@ const SharedPost = ({ content, createdAt, userId, images, postId, shareId }) => 
     }
   };
 
+  const handleDeletePost = async (postId) => {
+    try {
+      const response = await DeletePostByIdService(postId);
+  
+      if (response?.data?.success) {
+        console.log(response.data.message); // Hiển thị thông báo thành công
+        Toastify("Xóa bài viết thành công!", "success");
+
+      } else {
+        console.error("Không thể xóa bài viết. Vui lòng thử lại.");
+      }
+    } catch (error) {
+      console.error("Lỗi khi xóa bài viết:", error);
+    }
+  };
+
   useEffect(() => {
     getSharedPost();
     fetchUser();
@@ -261,6 +282,7 @@ const SharedPost = ({ content, createdAt, userId, images, postId, shareId }) => 
 
   return (
     <>
+      <ToastContainer /> 
       <div className={styles.postContainer}>
         <div className={styles.header}>
           <Avatar src={userInfo.profilePictureUrl} className={styles.avatar} />
@@ -276,10 +298,30 @@ const SharedPost = ({ content, createdAt, userId, images, postId, shareId }) => 
               <FaEarthAmericas style={{ marginLeft: "4px" }} />
             </span>
           </div>
+          {userId === getUserIdFromLocalStorage() ? (
+            <Dropdown
+              overlay={
+                <Menu>
+                  <Menu.Item key="1" onClick={() => handleDeletePost(postId)}>
+                    Xóa bài viết
+                  </Menu.Item>
+                </Menu>
+              }
+              trigger={['click']}
+            >
+              <div className={styles.optionContainer}>
+                <BsThreeDots />
+              </div>
+            </Dropdown>
+          ) : (
+            <div className={styles.optionContainer}>
+              <BsThreeDots />
+            </div>
+          )} 
         </div>
 
         <div className={styles.content}>
-          <p>{content}</p>
+          <p style={{margin: '0'}}>{content}</p>
 
           <div className={styles.sharedContent}>
             {sharedPost?.images?.length > 0 &&
@@ -461,7 +503,7 @@ const SharedPost = ({ content, createdAt, userId, images, postId, shareId }) => 
 
       {/* Modal chia sẻ */}
       <ShareModal
-        isModalOpen={isShareModalOpen}
+        isModalOpen={false}
         onCancel={() => setIsShareModalOpen(false)}
       />
     </>

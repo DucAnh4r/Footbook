@@ -8,9 +8,11 @@ import { userListFriendService } from "../../../../services/userService";
 import { getUserIdFromLocalStorage } from "../../../../utils/authUtils";
 
 const AllFriends = ({ onSelectUser }) => {
-  const [users, setUsers] = useState([]); // Lưu danh sách lời mời kết bạn
-  const [selectedUserId, setSelectedUserId] = useState(null); // State để lưu id người dùng được chọn
-  const [loading, setLoading] = useState(true); // Hiển thị trạng thái loading
+  const [users, setUsers] = useState([]); // Lưu danh sách bạn bè
+  const [filteredUsers, setFilteredUsers] = useState([]); // Lưu danh sách bạn bè đã lọc
+  const [selectedUserId, setSelectedUserId] = useState(null); // Người dùng được chọn
+  const [loading, setLoading] = useState(true); // Trạng thái loading
+  const [searchQuery, setSearchQuery] = useState(""); // Lưu giá trị tìm kiếm
   const navigate = useNavigate();
 
   const user_id = getUserIdFromLocalStorage();
@@ -20,10 +22,9 @@ const AllFriends = ({ onSelectUser }) => {
   };
 
   const handleSelectUser = (senderId) => {
-    // Cập nhật selectedUserId khi thẻ FriendRequestItem được chọn
     setSelectedUserId(senderId);
     if (onSelectUser) {
-      onSelectUser(senderId); // Gọi callback từ cha nếu có
+      onSelectUser(senderId);
     }
   };
 
@@ -31,28 +32,49 @@ const AllFriends = ({ onSelectUser }) => {
     const fetchListFriend = async () => {
       try {
         const response = await userListFriendService(user_id);
-        console.log(response.data.data.friends); // Kiểm tra dữ liệu từ API
         if (response.data.success) {
-          // Nếu có dữ liệu và là mảng, set dữ liệu vào state, nếu không thì set là mảng rỗng
           setUsers(
+            Array.isArray(response.data.data.friends)
+              ? response.data.data.friends
+              : []
+          );
+          setFilteredUsers(
             Array.isArray(response.data.data.friends)
               ? response.data.data.friends
               : []
           );
         } else {
           console.error(response.data.message);
-          setUsers([]); // Trường hợp nếu API trả về thông báo lỗi, gán mảng rỗng
+          setUsers([]);
+          setFilteredUsers([]);
         }
       } catch (error) {
         console.error("Error fetching friend requests:", error);
-        setUsers([]); // Nếu có lỗi xảy ra, gán mảng rỗng
+        setUsers([]);
+        setFilteredUsers([]);
       } finally {
-        setLoading(false); // Tắt trạng thái loading
+        setLoading(false);
       }
     };
 
     fetchListFriend();
-  }, [user_id]); // user_id là một dependency nếu cần thay đổi
+  }, [user_id]);
+
+  useEffect(() => {
+    if (searchQuery.trim() === "") {
+      setFilteredUsers(users); // Nếu không có giá trị tìm kiếm, hiển thị toàn bộ bạn bè
+    } else {
+      setFilteredUsers(
+        users.filter(
+          (user) =>
+            user && // Đảm bảo `user` không phải là null hoặc undefined
+            user?.fullName && // Đảm bảo `allName` tồn tại
+            user?.fullName.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      );
+    }
+  }, [searchQuery, users]);
+  
 
   return (
     <>
@@ -67,19 +89,27 @@ const AllFriends = ({ onSelectUser }) => {
         <Col className={styles.titleCol}>
           <span className={styles.subTitle}>Bạn bè</span>
           <span className={styles.title}>Tất cả bạn bè</span>
-          <input type="text" placeholder="Tìm kiếm bạn bè" />
+          <div style={style.searchBoxContainer}>
+            <span style={style.searchIcon}>🔍</span>
+            <input
+              type="text"
+              placeholder="Tìm kiếm Bạn bè"
+              style={style.searchInput}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)} // Cập nhật `searchQuery`
+            />
+          </div>
         </Col>
       </Row>
       <Row style={{ padding: "0 16px" }} className={styles.statsRow}>
-        <span>{Array.isArray(users) ? users.length : 0} người bạn</span>{" "}
-        {/* Kiểm tra nếu users là mảng */}
+        <span>{filteredUsers.length} người bạn</span>
       </Row>
 
       <Row style={{ marginTop: "16px" }}>
         {loading ? (
           <span>Đang tải...</span>
-        ) : Array.isArray(users) && users.length > 0 ? ( // Kiểm tra nếu users là mảng và có phần tử
-          users.map((user) => (
+        ) : filteredUsers.length > 0 ? (
+          filteredUsers.map((user) => (
             <FriendItem
               key={user.id}
               userId={user.id}
@@ -89,11 +119,34 @@ const AllFriends = ({ onSelectUser }) => {
             />
           ))
         ) : (
-          <span>Không có bạn bè nào</span> // Thông báo khi không có bạn bè
+          <span style={{ marginLeft: "10px" }}>Không có kết quả phù hợp</span>
         )}
       </Row>
     </>
   );
+};
+
+const style = {
+  searchBoxContainer: {
+    display: "flex",
+    alignItems: "center",
+    backgroundColor: "#f1f1f1",
+    borderRadius: "20px",
+    padding: "5px 10px",
+    width: "286px",
+    marginTop: "10px",
+    boxShadow: "0 1px 2px rgba(0,0,0,0.1)",
+  },
+  searchIcon: {
+    marginRight: "8px",
+    color: "#888",
+  },
+  searchInput: {
+    border: "none",
+    outline: "none",
+    backgroundColor: "transparent",
+    width: "100%",
+  },
 };
 
 export default AllFriends;

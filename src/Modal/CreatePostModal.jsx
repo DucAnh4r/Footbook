@@ -55,6 +55,7 @@ const CreatePostModal = ({ isModalOpen, onClose }) => {
         privacy: selectedAudience,
         theme: selectedTheme.id,
         images: uploadedFiles.map((file) => file.originFileObj), // Chuyển fileList sang dạng File
+        share: "",
       };
 
       // Gọi API tạo bài đăng
@@ -66,6 +67,7 @@ const CreatePostModal = ({ isModalOpen, onClose }) => {
       console.error("Failed to create post:", error);
     } finally {
       setLoading(false);
+      
     }
   };
 
@@ -82,7 +84,19 @@ const CreatePostModal = ({ isModalOpen, onClose }) => {
       open={isModalOpen}
       onOk={handleOk}
       onCancel={onClose}
-      footer={null}
+      footer={
+        <div className="modal-footer">
+        <Button
+          key="post"
+          type="primary"
+          onClick={handleOk}
+          className="post-button"
+          disabled={isPostDisabled || loading}
+        >
+          Post
+        </Button>
+      </div>
+      }
       style={{ padding: 0 }}
       className="scrollable-modal"
     >
