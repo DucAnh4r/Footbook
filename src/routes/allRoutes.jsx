@@ -2,6 +2,7 @@ import React, { lazy } from 'react';
 import ShowFriendsPage from '../Pages/FriendsPage/Pages/ShowFriendsPage';
 import HighLightStoryViewer from '../Components/HighLightStoryViewer';
 import ErrorPage from '../Pages/ExtendPage/ErrorPage';
+import PostPage from '../Pages/PostPage/PostPage';
 const PhotoPage = lazy(() => import('../Pages/Photo/PhotoPage'));
 const Homepage = lazy(() => import('../Pages/Homepage/Homepage'));
 const Messagepage = lazy(() => import('../Pages/MessagePage/Messagepage'));
@@ -30,6 +31,7 @@ const homeRoutes = [
     { path: "/login", component: <LoginPage /> },
     { path: "/error", component: <ErrorPage /> },
     { path: "/highlight", component: <HighLightStoryViewer /> },
+    { path: "/post/:postId", component: <PostPage /> },
 ];
 
 const messageRoutes = [

@@ -12,15 +12,17 @@ const Toastify = (message, type = 'success') => {
     progress: undefined,
   };
 
-  if (type === 'success') {
-    toast.success(message, options);
-  } else if (type === 'error') {
-    toast.error(message, options);
-  } else if (type === 'info') {
-    toast.info(message, options);
-  } else if (type === 'warning') {
-    toast.warn(message, options);
-  }
+  // Dùng switch hoặc object để đơn giản hoá
+  const toastTypes = {
+    success: toast.success,
+    error: toast.error,
+    info: toast.info,
+    warning: toast.warn,
+  };
+
+  const showToast = toastTypes[type] || toast.success; // Default is 'success'
+
+  showToast(message, options); // Gọi toast phù hợp
 };
 
 export default Toastify;

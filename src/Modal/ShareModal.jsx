@@ -7,6 +7,8 @@ import { IoSearchOutline } from "react-icons/io5";
 import { FaFacebookMessenger, FaLink, FaRegFileAlt, FaUserFriends, FaUsers, FaWhatsapp } from "react-icons/fa";
 import { getUserIdFromLocalStorage } from "../utils/authUtils";
 import { createPostService } from "../services/postService";
+import Toastify from "../assets/Toastify";
+import { ToastContainer } from 'react-toastify';
 
 const ShareModal = ({ isModalOpen, onCancel, postId, userInfo, onClose }) => {
     const [view, setView] = useState("share");
@@ -34,102 +36,120 @@ const ShareModal = ({ isModalOpen, onCancel, postId, userInfo, onClose }) => {
         );
     };
 
-     const handleShare = async () => {
+    const handleShare = async () => {
         try {
-            setLoading(true)
+            setLoading(true);
             const postData = {
                 userId: userId,
                 content: postContent,
                 privacy: selectedAudience,
                 share: postId,
                 images: [],
-          };
+            };
     
-          // Gọi API tạo bài đăng
-          await createPostService(postData);
+            // Gọi API tạo bài đăng
+            await createPostService(postData);
     
-          console.log("Post created successfully!");
-          onClose(); // Đóng modal
-          setLoading(false)
+            console.log("Post created successfully!");
+            onClose(); // Đóng modal
+            Toastify("Chia sẻ bài viết thành công!", "success");
         } catch (error) {
-          console.error("Failed to create post:", error);
+            console.error("Failed to create post:", error);
+        } finally {
+            setLoading(false); // Đảm bảo trạng thái luôn được cập nhật
         }
+    };
+    
+
+      const handleCopyLink = () => {
+        const link = `http://localhost:5173/post/${postId}`;
+        navigator.clipboard
+          .writeText(link)
+          .then(() => {Toastify("Sao chép liên kết bài viết thành công!", "success")})
+          .catch(() => alert("Không thể sao chép liên kết. Vui lòng thử lại."));
+        
       };
 
     const renderShareContent = () => (
-        <div className={styles.shareContainer}>
-            <div className={styles.content}>
-                <div className={styles.header}>
-                    <Avatar src={userInfo?.profilePictureUrl} />
-                    <div className={styles.userInfo}>
-                        <span className={styles.userName}>{userInfo?.fullName}</span>
-                        <div className={styles.privacyContainer}>
-                            <div className={styles.underName}>
-                                <span className={styles.privacy}>
-                                    Feed · <FaEarthAmericas />
-                                </span>
-                                <Button
-                                    size="small"
-                                    className={styles.friendsButton}
-                                    onClick={() => setIsAudienceModalOpen(true)}
-                                >
-                                    {selectedAudience}
-                                </Button>
+        <>
+            <ToastContainer />
+            <div className={styles.shareContainer}>
+                <div className={styles.content}>
+                    <div className={styles.header}>
+                        <Avatar src={userInfo?.profilePictureUrl} />
+                        <div className={styles.userInfo}>
+                            <span className={styles.userName}>{userInfo?.fullName}</span>
+                            <div className={styles.privacyContainer}>
+                                <div className={styles.underName}>
+                                    <span className={styles.privacy}>
+                                        Feed · <FaEarthAmericas />
+                                    </span>
+                                    <Button
+                                        size="small"
+                                        className={styles.friendsButton}
+                                        onClick={() => setIsAudienceModalOpen(true)}
+                                    >
+                                        {selectedAudience}
+                                    </Button>
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <Input.TextArea
+                        placeholder="Hãy nói gì đó về nội dung này (không bắt buộc)"
+                        autoSize={{ minRows: 1, maxRows: 100 }}
+                        className={styles.textArea}
+                        value={postContent} // Gắn giá trị từ state
+                        onChange={(e) => setPostContent(e.target.value)} // Cập nhật state khi thay đổi
+                    />
+                    <Button onClick={handleShare} type="primary" block className={styles.shareButton}>
+                        Chia sẻ ngay
+                    </Button>
                 </div>
-                <Input.TextArea
-                    placeholder="Hãy nói gì đó về nội dung này (không bắt buộc)"
-                    autoSize={{ minRows: 1, maxRows: 100 }}
-                    className={styles.textArea}
-                    value={postContent} // Gắn giá trị từ state
-                    onChange={(e) => setPostContent(e.target.value)} // Cập nhật state khi thay đổi
-                />
-                <Button onClick={handleShare} type="primary" block className={styles.shareButton}>
-                    Chia sẻ ngay
-                </Button>
-            </div>
-            <div className={styles.shareTo}>
-                <div className={styles.messengerSection}>
-                    <h4>Gửi bằng Messenger</h4>
-                    <div className={styles.messengerUsers}>
-                        <Avatar src="https://randomuser.me/api/portraits/men/32.jpg" />
-                        <Avatar src="https://randomuser.me/api/portraits/women/44.jpg" />
-                        <Avatar src="https://randomuser.me/api/portraits/men/47.jpg" />
-                        <Avatar src="https://randomuser.me/api/portraits/women/30.jpg" />
-                        <Button
-                            className={styles.moreButton}
-                            onClick={() => setView("sendTo")}
-                        >
-                            ...
-                        </Button>
+                <div className={styles.shareTo}>
+                    <div className={styles.messengerSection}>
+                        <h4>Gửi bằng Messenger</h4>
+                        <div className={styles.messengerUsers}>
+                            <Avatar src="https://randomuser.me/api/portraits/men/32.jpg" />
+                            <Avatar src="https://randomuser.me/api/portraits/women/44.jpg" />
+                            <Avatar src="https://randomuser.me/api/portraits/men/47.jpg" />
+                            <Avatar src="https://randomuser.me/api/portraits/women/30.jpg" />
+                            <Button
+                                className={styles.moreButton}
+                                onClick={() => setView("sendTo")}
+                            >
+                                ...
+                            </Button>
+                        </div>
                     </div>
-                </div>
-                <div className={styles.shareOptions}>
-                    <h4>Chia sẻ lên</h4>
-                    <div className={styles.options}>
-                        {["Messenger", "WhatsApp", "Tin", "Liên kết", "Nhóm", "Bạn bè"].map(
-                            (option, idx) => (
-                                <Tooltip key={idx} title={option}>
-                                    <div className={styles.option}>
-                                        <div className={styles.iconWrapper}>
-                                            {option === "Messenger" && <FaFacebookMessenger />}
-                                            {option === "WhatsApp" && <FaWhatsapp />}
-                                            {option === "Tin" && <FaRegFileAlt />}
-                                            {option === "Liên kết" && <FaLink />}
-                                            {option === "Nhóm" && <FaUsers />}
-                                            {option === "Bạn bè" && <FaUserFriends />}
+                    <div className={styles.shareOptions}>
+                        <h4>Chia sẻ lên</h4>
+                        <div className={styles.options}>
+                            {["Messenger", "WhatsApp", "Tin", "Liên kết", "Nhóm", "Bạn bè"].map(
+                                (option, idx) => (
+                                    <Tooltip key={idx} title={option}>
+                                        <div 
+                                            className={styles.option} 
+                                            onClick={option === "Liên kết" ? handleCopyLink : undefined} // Thêm sự kiện nhấn cho "Liên kết"
+                                        >
+                                            <div className={styles.iconWrapper}>
+                                                {option === "Messenger" && <FaFacebookMessenger />}
+                                                {option === "WhatsApp" && <FaWhatsapp />}
+                                                {option === "Tin" && <FaRegFileAlt />}
+                                                {option === "Liên kết" && <FaLink />}
+                                                {option === "Nhóm" && <FaUsers />}
+                                                {option === "Bạn bè" && <FaUserFriends />}
+                                            </div>
+                                            <span>{option}</span>
                                         </div>
-                                        <span>{option}</span>
-                                    </div>
-                                </Tooltip>
-                            )
-                        )}
+                                    </Tooltip>
+                                )
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 
     const renderSendToContent = () => (

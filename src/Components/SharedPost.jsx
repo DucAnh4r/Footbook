@@ -50,7 +50,6 @@ const SharedPost = ({ content, createdAt, userId, images, postId, shareId }) => 
   const [CommentCount, setCommentCount] = useState([]);
   const [reactions, setReactions] = useState([]);
   const [loading, setLoading] = useState(true); // Trạng thái tải dữ liệu
-  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const [likeCount, setLikeCount] = useState(0);
   const [loveCount, setLoveCount] = useState(0);
@@ -95,11 +94,7 @@ const SharedPost = ({ content, createdAt, userId, images, postId, shareId }) => 
   };
 
   const closeModal = () => {
-    setIsModalVisible(false);
-  };
-
-  const showModal = () => {
-    setIsModalVisible(true);
+    setIsShareModalOpen(false);
   };
 
   const getLikedUsers = () => {
@@ -494,7 +489,7 @@ const SharedPost = ({ content, createdAt, userId, images, postId, shareId }) => 
           <Button
             icon={<PiShareFat />}
             type="text"
-            onClick={showModal}
+            onClick={() => setIsShareModalOpen(true)}
           >
             Chia sẻ
           </Button>
@@ -517,15 +512,19 @@ const SharedPost = ({ content, createdAt, userId, images, postId, shareId }) => 
       />
 
       {/* Modal chia sẻ */}
-      {isModalVisible && (
+      {isShareModalOpen && (
       <ShareModal
-        isModalOpen={isModalVisible}
+        isModalOpen={isShareModalOpen}
         onCancel={() => setIsShareModalOpen(false)}
         onClose={closeModal}
+        userInfo={userInfo}
+        postId = {shareId}
       />
       )}
     </>
   );
 };
+
+
 
 export default SharedPost;
