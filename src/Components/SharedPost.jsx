@@ -31,6 +31,7 @@ import { getUserIdFromLocalStorage } from "../utils/authUtils";
 import { reactionConfig } from "../assets/Config";
 import { getPostByIdService } from "../services/postService";
 import { DeletePostByIdService } from "../services/postService";
+import { useNavigate } from "react-router-dom";
 
 
 const SharedPost = ({ content, createdAt, userId, images, postId, shareId }) => {
@@ -49,13 +50,18 @@ const SharedPost = ({ content, createdAt, userId, images, postId, shareId }) => 
   const [CommentCount, setCommentCount] = useState([]);
   const [reactions, setReactions] = useState([]);
   const [loading, setLoading] = useState(true); // Trạng thái tải dữ liệu
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const [likeCount, setLikeCount] = useState(0);
   const [loveCount, setLoveCount] = useState(0);
   const [hahaCount, setHahaCount] = useState(0);
   const [sadCount, setSadCount] = useState(0);
   const [angryCount, setAngryCount] = useState(0);
+  const navigate = useNavigate();
 
+  const handleImageClick = (shareId) => {
+    navigate(`/photo/${shareId}`);
+  };
 
   const getSharedPost = async () => {
     try {
@@ -86,6 +92,14 @@ const SharedPost = ({ content, createdAt, userId, images, postId, shareId }) => 
     } finally {
       setLoading(false);
     }
+  };
+
+  const closeModal = () => {
+    setIsModalVisible(false);
+  };
+
+  const showModal = () => {
+    setIsModalVisible(true);
   };
 
   const getLikedUsers = () => {
@@ -333,6 +347,7 @@ const SharedPost = ({ content, createdAt, userId, images, postId, shareId }) => 
                     src={image}
                     alt={`post-image-${index}`}
                     className={styles.mainImage}
+                    onClick={() => handleImageClick(shareId)}
                   />
             ))}
               {/* Hiển thị nút "Xem tất cả" nếu có từ 3 ảnh trở lên */}
@@ -479,7 +494,7 @@ const SharedPost = ({ content, createdAt, userId, images, postId, shareId }) => 
           <Button
             icon={<PiShareFat />}
             type="text"
-            onClick={() => setIsShareModalOpen(true)}
+            onClick={showModal}
           >
             Chia sẻ
           </Button>
@@ -502,10 +517,13 @@ const SharedPost = ({ content, createdAt, userId, images, postId, shareId }) => 
       />
 
       {/* Modal chia sẻ */}
+      {isModalVisible && (
       <ShareModal
-        isModalOpen={false}
+        isModalOpen={isModalVisible}
         onCancel={() => setIsShareModalOpen(false)}
+        onClose={closeModal}
       />
+      )}
     </>
   );
 };

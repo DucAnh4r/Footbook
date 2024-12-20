@@ -11,6 +11,7 @@ import { useParams } from 'react-router-dom';
 import { getUserIdFromLocalStorage } from '../../../utils/authUtils.jsx';
 import { userFindByIdService } from '../../../services/userService.jsx';
 import Posts from './Tabs/Posts/Posts.jsx';
+import { useChat } from '../../../utils/ChatContext.jsx';
 
 const FriendProfilePage = ({ userId2: propUserId2, type }) => {
   useAuthCheck();
@@ -29,7 +30,8 @@ const FriendProfilePage = ({ userId2: propUserId2, type }) => {
   const [sender, setSender] = useState(null);
   const [friendsCount, setFriendsCount] = useState(null);  
   const [isLoading, setIsLoading] = useState(true); // Trạng thái tải dữ liệu
-  
+  const { addChat } = useChat();
+
 
   const userId1 = getUserIdFromLocalStorage(); // Lấy userId1 từ localStorage
 
@@ -89,13 +91,18 @@ const FriendProfilePage = ({ userId2: propUserId2, type }) => {
 
   const handleDeleteFriend = async () => {
     try {
-      await deleteFriendshipService({ userId1: userId2, userId2: userId1 });
-      setFriendshipStatus(null); // Cập nhật trạng thái thành không phải bạn bè
-      countFriend(); // Cập nhật số lượng bạn bè
+        const data = {
+            userId1: userId1, // ID của bạn
+            userId2: userId2, // ID của người bạn muốn xóa
+        };
+        await deleteFriendshipService(data); // Gọi API
+        setFriendshipStatus(null); // Cập nhật trạng thái thành không phải bạn bè
+        countFriend(); // Cập nhật số lượng bạn bè
     } catch (error) {
-      console.error("Lỗi khi xóa bạn bè:", error);
+        console.error("Lỗi khi xóa bạn bè:", error);
     }
-  };
+};
+
 
   const handleTabChange = (key) => {
     setActiveTab(key);
@@ -103,6 +110,16 @@ const FriendProfilePage = ({ userId2: propUserId2, type }) => {
 
   const toggleFriendSuggestion = () => {
     setFriendSuggestionVisible(!isFriendSuggestionVisible);
+  };
+
+  const handleSendMessage = () => {
+    const message = {
+      userId: userId2,
+      name: friendInfo.fullName || "Unknown User", // Lấy tên từ `friendInfo`
+      message: "Nhắn tin mới",
+    };
+    console.log("handleSendMessage called with message:", message);
+    addChat(message);
   };
 
   const renderButton = () => {
@@ -253,7 +270,7 @@ const FriendProfilePage = ({ userId2: propUserId2, type }) => {
             <Col style={{ paddingRight: '0px' }} span={9}>
               <div style={{ marginTop: '40px', textAlign: 'right' }}>
                 {renderButton()}
-                <button className={styles['white-button']}>
+                <button className={styles['white-button']} onClick={handleSendMessage}>
                   <AiFillMessage />
                   Nhắn tin
                 </button>

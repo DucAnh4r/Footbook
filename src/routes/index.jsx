@@ -4,9 +4,11 @@ import { homeRoutes, messageRoutes } from "./allRoutes";
 import MainLayout from "../Layout/MainLayout";
 import ErrorPage from "../Pages/ExtendPage/ErrorPage";
 import MessageLayout from "../Layout/MessageLayout";
+import { ChatProvider } from "../utils/ChatContext";
 
 const Index = () => {
     return (
+        <ChatProvider>
         <React.Fragment>
                 <Suspense>
                     <Routes>
@@ -24,6 +26,8 @@ const Index = () => {
                     </Routes>
                 </Suspense>
         </React.Fragment>
+        </ChatProvider>
+
     );
 };
 

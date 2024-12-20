@@ -14,6 +14,7 @@ import { useAuthCheck } from '../../utils/checkAuth';
 import { getUserIdFromLocalStorage } from '../../utils/authUtils';
 import { getPostListFriendService } from '../../services/postService';
 import SharedPost from '../../Components/SharedPost';
+import { userFindByIdService } from '../../services/userService';
 
 
 const { Sider, Content } = Layout;
@@ -23,6 +24,19 @@ const Homepage = () => {
   const [posts, setPosts] = useState([]); // Lưu danh sách bài viết
   const [loading, setLoading] = useState(true); // Trạng thái tải dữ liệu
   const user_id = getUserIdFromLocalStorage(); // Lấy userId từ localStorage
+  const [userInfo, setUserInfo] = useState([]);
+
+  const fetchUser = async () => {
+    try {
+      setLoading(true);
+      const response = await userFindByIdService(user_id);
+      setUserInfo(response?.data?.data || []); 
+    } catch (error) {
+      console.error("Error fetching user:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const fetchPosts = async () => {
     try {
@@ -38,6 +52,7 @@ const Homepage = () => {
   };
 
   useEffect(() => {
+    fetchUser();
     fetchPosts();
   }, []);
 
@@ -62,7 +77,7 @@ const Homepage = () => {
 
       <Content style={{ padding: '70px 370px', minHeight: '100vh', overflow: 'unset' }}>
         <div className="page-content" style={{ padding: '16px 30px' }}>
-          <StatusInput />
+          <StatusInput userName = {userInfo?.fullName} onPostCreated={fetchPosts}/>
 
           {loading ? (
             <p>Đang tải bài viết...</p>
@@ -96,14 +111,6 @@ const Homepage = () => {
           ) : (
             <p>Không có bài viết nào để hiển thị.</p>
           )}
-          <Post
-            key={"123"}
-            postId={"123"}
-            content={"123"}
-            createdAt={"123"}
-            userId={"123"}
-            images={""}
-          />
         </div>
       </Content>
 

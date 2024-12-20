@@ -29,6 +29,7 @@ const PhotoPage = () => {
   const [post, setPost] = useState([]);
   const [loading, setLoading] = useState(true);
   const [userInfo, setUserInfo] = useState([]);
+  const [userCommentInfo, setUserCommentInfo] = useState([]);
   const [postReactionCount, setPostReactionCount] = useState([]);
   const [commentCount, setCommentCount] = useState([]);
   const myId = getUserIdFromLocalStorage();
@@ -71,6 +72,18 @@ const PhotoPage = () => {
       setLoading(true);
       const response = await userFindByIdService(post.user_id);
       setUserInfo(response?.data?.data || []);
+    } catch (error) {
+      console.error("Error fetching user:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchCommnetUser = async () => {
+    try {
+      setLoading(true);
+      const response = await userFindByIdService(myId);
+      setUserCommentInfo(response?.data?.data || []); 
     } catch (error) {
       console.error("Error fetching user:", error);
     } finally {
@@ -123,6 +136,7 @@ const PhotoPage = () => {
     fetchComment();
     countReaction();
     countComment();
+    fetchCommnetUser();
   }, [postId]); // Chỉ gọi các fetch ban đầu
   
   useEffect(() => {
@@ -329,7 +343,7 @@ const PhotoPage = () => {
             <Row>
               <Col span={4}>
                 <Avatar
-                  src="https://shopgarena.net/wp-content/uploads/2023/07/Meo-khoc-thet-len.jpg"
+                  src={userCommentInfo.profilePictureUrl}
                   className={styles.avatar}
                   style={{ margin: "6px 0 0 6px" }}
                 />

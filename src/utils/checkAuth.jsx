@@ -9,9 +9,14 @@ export const checkAuth = () => {
 export const useAuthCheck = () => {
     const navigate = useNavigate();
 
-    // useEffect(() => {
-    //     if (!checkAuth()) {
-    //         navigate('/login'); // Chuyển hướng về trang login nếu chưa đăng nhập
-    //     }
-    // }, [navigate]);
+    useEffect(() => {
+        if (!checkAuth()) {
+            navigate('/login'); // Chuyển hướng về trang login nếu chưa đăng nhập
+        }
+    }, [navigate]);
+};
+
+export const logout = () => {
+    localStorage.removeItem('user');
+    useAuthCheck();
 };

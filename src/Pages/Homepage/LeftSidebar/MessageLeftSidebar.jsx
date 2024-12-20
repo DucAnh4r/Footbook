@@ -157,7 +157,7 @@ const styles = {
     padding: '16px',
     maxHeight: '93vh',
     overflowY: 'auto',
-    height: '500px',
+    height: '100%',
   },
   header: {
     display: 'flex',

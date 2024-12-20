@@ -8,7 +8,7 @@ import { FaFacebookMessenger, FaLink, FaRegFileAlt, FaUserFriends, FaUsers, FaWh
 import { getUserIdFromLocalStorage } from "../utils/authUtils";
 import { createPostService } from "../services/postService";
 
-const ShareModal = ({ isModalOpen, onCancel, postId, userInfo }) => {
+const ShareModal = ({ isModalOpen, onCancel, postId, userInfo, onClose }) => {
     const [view, setView] = useState("share");
     const [selectedAudience, setSelectedAudience] = useState("Friends");
     const [isAudienceModalOpen, setIsAudienceModalOpen] = useState(false);

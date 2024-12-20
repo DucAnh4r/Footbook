@@ -4,7 +4,7 @@ import { FaImages, FaSmile } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import CreatePostModal from '../../Modal/CreatePostModal';
 
-const StatusInput = () => {
+const StatusInput = ( { userName, onPostCreated} ) => {
   const navigate = useNavigate();
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -52,7 +52,7 @@ const StatusInput = () => {
           }}
           onClick={showModal} // Mở modal khi bấm
         >
-          Duc oi, bạn đang nghĩ gì thế?
+          {userName} oi, bạn đang nghĩ gì thế?
         </Button>
       </div>
       <div
@@ -76,6 +76,8 @@ const StatusInput = () => {
         <CreatePostModal
           isModalOpen={isModalVisible}
           onClose={closeModal}
+          userName={userName}
+          onPostCreated={onPostCreated} // Gọi lại fetchPosts chỉ khi cần thiết
         />
       )}
     </div>

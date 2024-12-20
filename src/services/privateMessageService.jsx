@@ -1,4 +1,6 @@
 import axiosCreate from "../utils/axiosRelease";
+import { domain } from "./api";
+
 
 export const sendPrivateMessageService = (data) => {
     const formData = new FormData();
@@ -13,7 +15,7 @@ export const sendPrivateMessageService = (data) => {
         });
     }
 
-    return axiosCreate.post("http://localhost:8080/api/v1/private-message/send", formData, {
+    return axiosCreate.post(`${domain}/api/v1/private-message/send`, formData, {
         headers: {
             "Content-Type": "multipart/form-data",
         },
@@ -22,7 +24,7 @@ export const sendPrivateMessageService = (data) => {
 
 export const getMessageHistoryService = (Data) => {
     const { senderId, receiverId, page, size } = Data;
-    return axiosCreate.get(`http://localhost:8080/api/v1/private-message/history`, {
+    return axiosCreate.get(`${domain}/api/v1/private-message/history`, {
         params: {
             senderId, 
             receiverId,
@@ -33,7 +35,7 @@ export const getMessageHistoryService = (Data) => {
 };
 
 export const getUserMessageListService = (userId) => {
-    return axiosCreate.get(`http://localhost:8080/api/v1/private-message/users/last-messages`, {
+    return axiosCreate.get(`${domain}/api/v1/private-message/users/last-messages`, {
       params: {
         userId, // Truyền trực tiếp chuỗi userId
       },
@@ -43,7 +45,7 @@ export const getUserMessageListService = (userId) => {
 
 export const deleteMessageService = (Data, message_id) => {
     const { userId } = Data;
-    return axiosCreate.delete(`http://localhost:8080/api/v1/private-message/delete/${message_id}`,{}, {
+    return axiosCreate.delete(`${domain}/api/v1/private-message/delete/${message_id}`,{}, {
         params: {
             userId,
         },

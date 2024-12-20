@@ -33,6 +33,10 @@ const LeftSidebar = () => {
         navigate('/friends');
     };
 
+    const handleMessageClick = () => {
+        navigate('/messages');
+    };
+
     useEffect(() => {
         if (user_id) {
             fetchUser();
@@ -65,7 +69,7 @@ const LeftSidebar = () => {
                             <span className={styles['text']}>Bạn bè</span>
                         </div>
                     </li>
-                    <li className={styles['list-item']}>
+                    <li className={styles['list-item']}  onClick={handleMessageClick}> 
                         <div className={styles['element-container']}>
                             <div className={styles['image-container']}>
                                 <img

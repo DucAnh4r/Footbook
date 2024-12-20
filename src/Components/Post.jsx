@@ -30,6 +30,7 @@ import { getUserIdFromLocalStorage } from "../utils/authUtils";
 
 import { reactionConfig } from "../assets/Config";
 import { DeletePostByIdService } from "../services/postService";
+import { useNavigate } from "react-router-dom";
 
 const Post = ({ content, createdAt, userId, images, postId, isModalOpen }) => {
   const userId1 = getUserIdFromLocalStorage(); // Lấy userId1 từ localStorage
@@ -43,12 +44,18 @@ const Post = ({ content, createdAt, userId, images, postId, isModalOpen }) => {
   const [CommentCount, setCommentCount] = useState([]);
   const [reactions, setReactions] = useState([]);
   const [loading, setLoading] = useState(true); // Trạng thái tải dữ liệu
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const [likeCount, setLikeCount] = useState(0);
   const [loveCount, setLoveCount] = useState(0);
   const [hahaCount, setHahaCount] = useState(0);
   const [sadCount, setSadCount] = useState(0);
   const [angryCount, setAngryCount] = useState(0);
+  const navigate = useNavigate();
+
+  const handleImageClick = (postId) => {
+    navigate(`/photo/${postId}`);
+  };
 
   const getLikedUsers = () => {
     return reactions
@@ -140,6 +147,10 @@ const Post = ({ content, createdAt, userId, images, postId, isModalOpen }) => {
     } catch (error) {
       console.error("Lỗi khi xóa bài viết:", error);
     }
+  };
+
+  const closeModal = () => {
+    setIsShareModalOpen(false);
   };
 
   useEffect(() => {
@@ -284,6 +295,7 @@ const Post = ({ content, createdAt, userId, images, postId, isModalOpen }) => {
                   src={image}
                   alt={`post-image-${index}`}
                   className={styles.mainImage}
+                  onClick={() => handleImageClick(postId)}
                 />
               ))}
           {/* Hiển thị nút "Xem tất cả" nếu có từ 3 ảnh trở lên */}
@@ -443,12 +455,15 @@ const Post = ({ content, createdAt, userId, images, postId, isModalOpen }) => {
         
       />
       {/* Modal chia sẻ */}
+      {isShareModalOpen &&(
       <ShareModal
         isModalOpen={isShareModalOpen}
         onCancel={() => setIsShareModalOpen(false)}
         postId = {postId}
         userInfo = {userInfo}
+        onClose={closeModal}
       />
+    )}
     </>
   );
 };

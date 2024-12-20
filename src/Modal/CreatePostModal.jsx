@@ -28,7 +28,7 @@ const themes = [
   },
 ];
 
-const CreatePostModal = ({ isModalOpen, onClose }) => {
+const CreatePostModal = ({ isModalOpen, onClose, userName, onPostCreated }) => {
   const [postContent, setPostContent] = useState("");
   const [showUpload, setShowUpload] = useState(false);
   const [selectedTheme, setSelectedTheme] = useState(themes[0]);
@@ -62,6 +62,7 @@ const CreatePostModal = ({ isModalOpen, onClose }) => {
       await createPostService(postData);
 
       console.log("Post created successfully!");
+      onPostCreated(); // Gọi callback để cập nhật danh sách bài viết
       onClose(); // Đóng modal
     } catch (error) {
       console.error("Failed to create post:", error);
@@ -110,7 +111,7 @@ const CreatePostModal = ({ isModalOpen, onClose }) => {
             <div className="user-info">
               <Avatar size={40} icon={<UserOutlined />} />
               <div className="user-details">
-                <div className="user-name">Duc Manh</div>
+                <div className="user-name">{userName}</div>
                 <Button
                   size="small"
                   className="friends-button"
@@ -133,7 +134,7 @@ const CreatePostModal = ({ isModalOpen, onClose }) => {
               <Input.TextArea
                 style={{ backgroundColor: "unset" }}
                 autoSize={{ minRows: 1, maxRows: 100 }}
-                placeholder="What's on your mind, Duc?"
+                placeholder={`Bạn đang nghĩ gì, ${userName}?`} 
                 value={postContent}
                 onChange={(e) => setPostContent(e.target.value)}
                 className="custom-textarea"

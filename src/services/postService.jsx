@@ -1,4 +1,6 @@
 import axiosCreate from "../utils/axiosRelease";
+import { domain } from "./api";
+
 
 export const getPostByIdService = (post_id) => {
     return axiosCreate.get(`http://localhost:8080/api/v1/post/${post_id}`, {
@@ -36,7 +38,7 @@ export const createPostService = (Data) => {
         formData.append("images", Data.images);
     }
 
-    return axiosCreate.post("http://localhost:8080/api/v1/post/create", formData, {
+    return axiosCreate.post(`${domain}/api/v1/post/create`, formData, {
         headers: {
             "Content-Type": "multipart/form-data",
         },
@@ -59,7 +61,7 @@ export const updatePostService = (Data, Post_id) => {
         formData.append("images", Data.images);
     }
 
-    return axiosCreate.put(`http://localhost:8080/api/v1/post/update/${Post_id}`, formData, {
+    return axiosCreate.put(`${domain}/api/v1/post/update/${Post_id}`, formData, {
         headers: {
             "Content-Type": "multipart/form-data",
         },
@@ -67,6 +69,6 @@ export const updatePostService = (Data, Post_id) => {
 };
 
 export const DeletePostByIdService = (post_id) => {
-    return axiosCreate.delete(`http://localhost:8080/api/v1/post/delete/${post_id}`, {
+    return axiosCreate.delete(`${domain}/api/v1/post/delete/${post_id}`, {
     });
 };
