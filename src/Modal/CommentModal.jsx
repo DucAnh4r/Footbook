@@ -131,15 +131,16 @@ const CommentModal = ({
       {/* Section viết bình luận */}
       <div className={styles.writeCommentSection}>
         <Row>
-          <Col span={4}>
+          <Col span={2}>
             <Avatar
               src={userInfo?.profilePictureUrl || "https://via.placeholder.com/40"}
               className={styles.avatar}
             />
           </Col>
-          <Col span={20}>
+          <Col span={22}>
             <div className={styles.writeCommentContainer}>
               <textarea
+                style={{ overflow: 'hidden', height: '100%' }}
                 placeholder="Viết bình luận..."
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}

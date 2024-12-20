@@ -39,7 +39,7 @@ const Homepage = () => {
 
   useEffect(() => {
     fetchPosts();
-  }, []); 
+  }, []);
 
   document.title = "Trang chủ";
   return (
@@ -63,7 +63,7 @@ const Homepage = () => {
       <Content style={{ padding: '70px 370px', minHeight: '100vh', overflow: 'unset' }}>
         <div className="page-content" style={{ padding: '16px 30px' }}>
           <StatusInput />
-          
+
           {loading ? (
             <p>Đang tải bài viết...</p>
           ) : posts.length > 0 ? (
@@ -77,7 +77,7 @@ const Homepage = () => {
                   userId={post.user_id}
                   images={post.images}
                   shareId={post.share}
-                  
+
                 />
               ) : (
                 <Post
@@ -94,14 +94,14 @@ const Homepage = () => {
           ) : (
             <p>Không có bài viết nào để hiển thị.</p>
           )}
-          {/* <Post
+          <Post
             key={"123"}
             postId={"123"}
             content={"123"}
             createdAt={"123"}
             userId={"123"}
             images={""}
-          /> */}
+          />
         </div>
       </Content>
 
@@ -119,7 +119,7 @@ const Homepage = () => {
         }}
         className="scroll-on-hover"
       >
-        <RightSidebar/>
+        <RightSidebar />
       </Sider>
     </>
   );
