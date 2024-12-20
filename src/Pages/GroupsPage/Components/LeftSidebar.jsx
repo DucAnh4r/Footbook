@@ -26,11 +26,12 @@ const LeftSidebar = ({ setActivePage }) => {
 
   // Danh sách nhóm người dùng đã tham gia
   const groups = [
-    { name: 'Brawlhalla Việt Nam 2024', lastActive: '2 giờ trước', pinned: true },
-    { name: 'Brawlhalla Online Việt Nam', lastActive: '5 giờ trước', pinned: true },
-    { name: '66IT4 HUCE', lastActive: '1 năm trước', pinned: false },
-    { name: 'GIAO THÔNG ĐƯỜNG BỘ 24h', lastActive: '2 tuần trước', pinned: false },
+    { name: 'Hội Ricon Việt Nam', lastActive: '5 giờ trước', pinned: true },
+    { name: '66IT4 HUCE', lastActive: '1 năm trước', pinned: true },
+    { name: 'GIAO THÔNG ĐƯỜNG BỘ 24h', lastActive: '2 tuần trước', pinned: true },
     { name: 'Sinh Viên Đại học Xây Dựng Hà Nội (HUCE)', lastActive: 'khoảng 1 tuần trước', pinned: false },
+    { name: 'Brawlhalla Việt Nam 2024', lastActive: '2 giờ trước', pinned: false },
+
   ];
 
   return (

@@ -50,8 +50,6 @@
   border-radius: 8px;
   margin-bottom: 16px;
   position: relative;
-  display: flex;
-  justify-content: center;
   width: 50vh;
 }
 
@@ -74,6 +72,12 @@
 .add-post-text {
   font-size: 16px;
   font-weight: normal;
+
+  &:hover {
+    text-decoration: underline;
+    background-color: #0084ff !important;
+    color: #f0f0f0 !important;
+  }
 }
 
 .icon-container {

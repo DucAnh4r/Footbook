@@ -104,7 +104,7 @@ const GroupProfile = () => {
           </div>
           <Row className={styles['info']} gutter={16}>
             <Col span={9} style={{ display: 'flex', flexDirection: 'column' }}>
-              <span style={{ fontSize: '30px', fontWeight: 700, marginTop: '24px' }}>Hội Ricon VN</span>
+              <span style={{ fontSize: '30px', fontWeight: 700, marginTop: '24px' }}>Hội Ricon Việt Nam</span>
               <div>
                 <FaLock style={{ color: '#65686c' }} />
                 <span style={{ color: '#65686c' }}> Nhóm riêng tư ·  </span>

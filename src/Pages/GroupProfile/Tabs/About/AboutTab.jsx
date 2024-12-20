@@ -13,11 +13,11 @@ const AboutTab = () => {
         className={styles.leftCol}
       >
         <AboutCard />
-        <div style={{height: '16px'}}></div>
+        <div style={{ height: '16px' }}></div>
         <MembersCard />
-        <div style={{height: '16px'}}></div>
+        <div style={{ height: '16px' }}></div>
         <ActionCard />
-       
+
       </Col>
     </Row>
   );

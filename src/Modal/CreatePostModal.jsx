@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Modal, Input, Button, Upload, Avatar, Card, Spin } from "antd";
+import { Modal, Input, Button, Upload, Avatar, Card, Spin, Divider } from "antd";
 import { SmileOutlined, UploadOutlined, UserOutlined } from "@ant-design/icons";
 import { MdInsertEmoticon, MdOutlineAddPhotoAlternate } from "react-icons/md";
 import { HiMiniGif } from "react-icons/hi2";
@@ -164,16 +164,16 @@ const CreatePostModal = ({ isModalOpen, onClose }) => {
                     htmlFor="custom-file-input"
                     className="custom-upload-button"
                   >
-                    <Button icon={<UploadOutlined />} type="text">
+                    <div icon={<UploadOutlined />} type="text">
                       Add photos/videos
-                    </Button>
+                    </div>
                     <div className="upload-hint">or drag and drop</div>
                   </label>
 
                   {/* Hiển thị danh sách file đã upload */}
                   <div style={{ marginTop: "10px" }}>
                     {uploadedFiles.map((file, index) => (
-                      <div key={file.uid} style={{ marginBottom: "5px" }}>
+                      <div key={file.uid} style={{ alignContent: 'center', width: '80%', marginBottom: "5px", display: 'flex', justifyContent: 'space-between', marginLeft: 'auto', marginRight: 'auto', }}>
                         <span>{file.name}</span>
                         <Button
                           type="text"
@@ -208,9 +208,8 @@ const CreatePostModal = ({ isModalOpen, onClose }) => {
                   {themes.map((theme) => (
                     <Button
                       key={theme.id}
-                      className={`theme-button ${
-                        selectedTheme.id === theme.id ? "active" : ""
-                      }`}
+                      className={`theme-button ${selectedTheme.id === theme.id ? "active" : ""
+                        }`}
                       style={{
                         background: theme.background,
                         color: selectedTheme.id === 0 ? "#000" : "#fff",
