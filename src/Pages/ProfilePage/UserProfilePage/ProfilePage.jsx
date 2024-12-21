@@ -102,7 +102,7 @@ const ProfilePage = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case "1":
-        return <Posts />;
+        return <Posts userName={userInfo.fullName} />;
       case "2":
         return <Introduction />;
       case "3":

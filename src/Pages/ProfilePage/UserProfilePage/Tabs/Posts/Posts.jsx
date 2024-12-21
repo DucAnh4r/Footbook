@@ -11,7 +11,7 @@ import { getUserIdFromLocalStorage } from '../../../../../utils/authUtils';
 import { getPostByUserIdService } from '../../../../../services/postService';
 import SharedPost from '../../../../../Components/SharedPost';
 
-const Posts = () => {
+const Posts = ({ userName }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true); 
   const user_id = getUserIdFromLocalStorage(); 
@@ -46,7 +46,7 @@ const Posts = () => {
       </Col>
       <Col style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }} span={14}>
         <Space direction="vertical" size="middle" style={{ width: '100%' }}>
-          <StatusInput />
+          <StatusInput userName = {userName} onPostCreated={fetchPosts}/>
           <PostFilter />
           {loading ? (
             <p>Đang tải bài viết...</p>
